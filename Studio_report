@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dossier Estratégico: Spec-Driven Development (SDD)</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 18mm 20mm 18mm;
+    }
+
+    :root {
+      --primary: #0f172a;
+      --accent: #0284c7;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --bg-code: #f8fafc;
+      --bg-quote: #f0fdf4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 10.5pt;
+      background: #f1f5f9;
+      padding: 2rem 0;
+    }
+
+    .sheet {
+      background: #ffffff;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 2rem auto;
+      padding: 25mm 20mm;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    /* Barra superior para imprimir en pantalla */
+    .no-print-bar {
+      width: 210mm;
+      margin: 0 auto 1rem auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+    }
+
+    .btn-pdf {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      font-weight: 700;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-pdf:hover {
+      background: #7dd3fc;
+    }
+
+    /* Portada / Header */
+    .dossier-header {
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .dossier-tag {
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-size: 22pt;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 12pt;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 9pt;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: var(--primary);
+    }
+
+    /* Tipografía de contenido */
+    h2 {
+      font-size: 14pt;
+      color: var(--primary);
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3rem;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 11pt;
+      color: var(--accent);
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin-bottom: 0.8rem;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    li {
+      margin-bottom: 0.3rem;
+    }
+
+    blockquote {
+      background: var(--bg-quote);
+      border-left: 4px solid #16a34a;
+      padding: 0.8rem 1rem;
+      margin: 1rem 0;
+      font-size: 10pt;
+      color: #14532d;
+    }
+
+    /* Tablas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.7rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-code);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    /* Bloques de Código */
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.7rem 0.9rem;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      margin: 0.8rem 0;
+      white-space: pre-wrap;
+      page-break-inside: avoid;
+    }
+
+    .analogy-card {
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      padding: 0.6rem 0.8rem;
+      margin: 0.6rem 0 1rem 0;
+      font-size: 9.5pt;
+      font-style: italic;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    /* MODO IMPRESIÓN (PDF NATIVO) */
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .no-print-bar {
+        display: none !important;
+      }
+      .sheet {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de control en pantalla -->
+  <div class="no-print-bar">
+    <div>
+      <strong>Documento Estratégico Preparado para Exportación</strong>
+      <span style="font-size:0.8rem; opacity:0.8; display:block;">Pulsa el botón para generar el PDF con márgenes A4 profesionales</span>
+    </div>
+    <button class="btn-pdf" onclick="window.print()">🖨️ Guardar como PDF</button>
+  </div>
+
+  <div class="sheet">
+    <!-- Portada -->
+    <div class="dossier-header">
+      <div class="dossier-tag">Marco de Gobernanza & Arquitectura de Software</div>
+      <h1>Spec-Driven Development (SDD) en Entornos Enterprise</h1>
+      <div class="subtitle">Guía de Aceptación Contractual, Calidad y Control Multi-Proveedor para Product Owners</div>
+      
+      <div class="meta-grid">
+        <div class="meta-item">
+          <strong>Organización:</strong> Gran Empresa (120 Apps)
+        </div>
+        <div class="meta-item">
+          <strong>Audiencia:</strong> Product Owners, Arquitectura, Compras
+        </div>
+        <div class="meta-item">
+          <strong>Enfoque:</strong> Gobernanza de Evolutivos & Legacy
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 1 -->
+    <h2>1. Visión Ejecutiva y Diagnóstico del Entorno</h2>
+    <p>En organizaciones corporativas con parques heterogéneos (~120 aplicaciones que mezclan monolitos <em>legacy</em>, SaaS y servicios modernos) y múltiples contratas externas de software, la causa raíz de los sobrecostes y retrasos reside en la <strong>ambigüedad de los requerimientos y la subjetividad en la aceptación de los entregables</strong>.</p>
+    
+    <blockquote>
+      <strong>Principio Clave:</strong> El SDD no debe entenderse como un truco de programación con IA, sino como un <strong>marco contractual vinculante</strong>. El código es efímero; la especificación formal, estructurada y ejecutable es el activo duradero y la <strong>Única Fuente de Verdad (Single Source of Truth)</strong>.
+    </blockquote>
+
+    <p>El rol del Product Owner evoluciona radicalmente: pasa de perseguir proveedores en reuniones interminables de clarificación a <strong>diseñar y congelar especificaciones rigurosas</strong> contra las que los sistemas de integración continua (CI/CD) validan el código de forma desatendida.</p>
+
+    <!-- Sección 2 -->
+    <h2>2. El Modelo de Doble Capa Desacoplada</h2>
+    <p>Para no atar la gobernanza a la tecnología de cada proveedor (Java, Cobol, .NET o Node), se aplica un desacoplamiento entre intención funcional y contrato técnico:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Capa</th>
+          <th>Responsable</th>
+          <th>Artefactos Utilizados</th>
+          <th>Objetivo Contractual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Capa 1: Intención Funcional</strong></td>
+          <td>Product Owner + Negocio</td>
+          <td>Reglas EARS, Casos Gherkin (<code>.feature</code>), Máquinas de Estado</td>
+          <td>Definir el comportamiento observable de negocio sin ambigüedad.</td>
+        </tr>
+        <tr>
+          <td><strong>Capa 2: Contratos Técnicos</strong></td>
+          <td>Arquitectura + Seguridad</td>
+          <td>OpenAPI v3, AsyncAPI, Esquemas JSON, Políticas Spectral</td>
+          <td>Garantizar seguridad corporativa (OAuth2, cifrado) e interfaces estables.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <!-- Sección 3 -->
+    <h2>3. Anatomía Real de una Especificación ("Cara y Ojos")</h2>
+    <p>En el repositorio Git corporativo, cada nuevo evolutivo se gestiona dentro de un directorio cerrado con tres archivos estándar obligatorios:</p>
+
+    <h3>3.1. Documento 1: Especificación Funcional (`01_especificacion.md`)</h3>
+    <pre># EV-2025-042: Doble Autorización en Pagos > 5.000 €
+Estado: CONGELADO (Aprobado) | PO: Laura Gómez | Proveedor: TechPartner S.L.
+
+## 1. Reglas Invariantes de Negocio (Obligatorias)
+- INV-01: Ningún pago > 5.000 € transicionará a 'PAGADO' con un único aprobador.
+- INV-02: El iniciador del pago NO puede ser ninguno de los dos aprobadores.
+- INV-03: Todo intento de firma debe generar un evento inmutable en el log de auditoría.
+
+## 2. Máquina de Estados
+[BORRADOR] ──(importe > 5000)──► [PENDIENTE_FIRMA_1] ──► [PENDIENTE_FIRMA_2] ──► [ENVIADO_CORE]
+Cualquier estado ──(Rechazo)──► [RECHAZADO]
+
+## 3. Resiliencia y Comportamiento ante Fallos
+- Timeout del Core Legacy (> 3s): El estado vuelve a 'PENDIENTE_REINTENTO'.
+  No se emite cargo y se alerta de inmediato a Operaciones.</pre>
+
+    <h3>3.2. Documento 2: Criterios de Aceptación Ejecutables (`02_criterios_prueba.feature`)</h3>
+    <p>Escrito en lenguaje formal Gherkin para que lo valide tanto un humano como un ejecutor automático:</p>
+    <pre>Característica: Autorización de pagos de indemnización de alto valor
+
+  Contexto:
+    Dado un usuario "operador_1" con rol "Iniciador"
+    Y los usuarios "supervisor_A" y "supervisor_B" con rol "Aprobador"
+
+  Escenario: Pago mayor a 5.000€ requiere dos firmas distintas
+    Dado un pago pendiente de "6.500" € iniciado por "operador_1"
+    Cuando "supervisor_A" aprueba el pago
+    Entonces el estado del pago debe ser "PENDIENTE_FIRMA_2"
+    Y el pago aún NO debe enviarse al sistema legacy de transferencias
+
+  Escenario: Intento de auto-aprobación (Violación de seguridad)
+    Dado un pago pendiente de "6.500" € iniciado por "operador_1"
+    Cuando "operador_1" intenta aprobar el pago
+    Entonces el sistema debe responder con error "403 No Autorizado"
+    Y se debe generar un evento de seguridad de auditoría con severidad "ALTA"</pre>
+
+    <h3>3.3. Documento 3: Contrato Técnico de API (`03_contrato_api.yaml`)</h3>
+    <pre>openapi: 3.0.3
+info:
+  title: API de Pagos
+  version: 2.1.0
+paths:
+  /pagos/{id}/aprobar:
+    post:
+      summary: Registra la firma de aprobación
+      security:
+        - OAuth2_Corporativo: [pagos.aprobar]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Firma registrada con éxito
+        '403':
+          description: Violación de segregación de funciones</pre>
+
+    <div class="page-break"></div>
+
+    <!-- Sección 4 -->
+    <h2>4. Glosario Ejecutivo de Herramientas y Analogías</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Herramienta / Concepto</th>
+          <th>Definición Técnica</th>
+          <th>Analogía Didáctica</th>
+          <th>Uso Práctico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OpenAPI (Swagger)</strong></td>
+          <td>Estándar de definición formal de interfaces REST en YAML/JSON.</td>
+          <td>El <strong>plano visado</strong> por el colegio de arquitectos.</td>
+          <td>Define los contratos de integración entre las 120 apps.</td>
+        </tr>
+        <tr>
+          <td><strong>Spectral</strong></td>
+          <td>Linter y auditor estático de contratos OpenAPI y AsyncAPI.</td>
+          <td>El <strong>inspector municipal</strong> que multa si faltan salidas de incendio.</td>
+          <td>Rechaza la spec del proveedor si viola normas corporativas de seguridad.</td>
+        </tr>
+        <tr>
+          <td><strong>Gherkin / Cucumber</strong></td>
+          <td>Lenguaje natural estructurado y motor de ejecución de pruebas de aceptación.</td>
+          <td>El <strong>notario robot</strong> que comprueba casilla por casilla la entrega.</td>
+          <td>Los criterios del PO se convierten en tests automáticos de caja negra.</td>
+        </tr>
+        <tr>
+          <td><strong>Pact</strong></td>
+          <td>Framework de pruebas de contrato dirigidas por el consumidor (CDCT).</td>
+          <td>El <strong>seguro de acople</strong> de vagones de diferentes fabricantes.</td>
+          <td>Evita que el proveedor de la App A rompa la integración de la App B.</td>
+        </tr>
+        <tr>
+          <td><strong>Contractual DoD</strong></td>
+          <td>Definición de Terminado condicionada al éxito del pipeline de pruebas.</td>
+          <td>El <strong>examen de conducir</strong>: se aprueba con criterios medibles y objetivos.</td>
+          <td>Sin pipeline en verde no se certifica el hito ni se autoriza la factura.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Sección 5 -->
+    <h2>5. Resolución de Puntos de Dolor Críticos</h2>
+
+    <h3>5.1. La Fragilidad del PO: Elicitación Socrática con IA</h3>
+    <p><strong>El problema:</strong> Un PO no tiene tiempo ni conocimientos para escribir YAMLs o Gherkins exhaustivos desde cero.</p>
+    <p><strong>La solución:</strong> El PO <strong>no redacta, valida</strong>. Se utiliza un Agente de Elicitación (mediante GitHub Spec-Kit o Prompts Corporativos en ChatGPT Enterprise / Azure OpenAI):</p>
+    <ol>
+      <li>El PO expone la idea básica (ej. <em>«Doble aprobación para pagos de más de 5k»</em>).</li>
+      <li>El Agente le hace un <strong>interrogatorio socrático</strong> de 5 a 10 preguntas clave: <em>¿Qué ocurre en fin de semana? ¿Qué timeout tiene el Core? ¿Quién audita?</em></li>
+      <li>El PO responde en lenguaje coloquial de negocio.</li>
+      <li>La IA genera automáticamente la terna formal (<code>.spec.md</code>, <code>.feature</code>, <code>.yaml</code>) adaptada a los estándares de la empresa.</li>
+    </ol>
+
+    <h3>5.2. El Arranque en Frío en 120 Aplicaciones (*Spec-on-Touch*)</h3>
+    <p><strong>Error fatal:</strong> Intentar hacer ingeniería inversa de todas las aplicaciones antes de arrancar.</p>
+    <p><strong>Estrategia correcta:</strong> <strong>Spec-on-Touch</strong> (solo se especifica el perímetro del evolutivo a desarrollar).</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tipología de Sistema</th>
+          <th>Estrategia de Documentación Inicial</th>
+          <th>Herramientas Recomendadas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SaaS y Paquetes Cerrados</strong></td>
+          <td><strong>Caja Negra:</strong> Inferencia pasiva de contratos analizando el tráfico HTTP en el API Gateway.</td>
+          <td>Akita, Postman Live Collections.</td>
+        </tr>
+        <tr>
+          <td><strong>Legacy Obsoleto (Cobol, AS400)</strong></td>
+          <td><strong>Fachada:</strong> No abrir el código antiguo; especificar formalmente la API de la capa fachada que lo envuelve.</td>
+          <td>OpenAPI + Spectral.</td>
+        </tr>
+        <tr>
+          <td><strong>Apps Vivas (Java, .NET, Node)</strong></td>
+          <td><strong>Ingeniería Inversa Dinámica:</strong> Ejecutar tests existentes para generar contratos automáticamente a partir del flujo real.</td>
+          <td><strong>AppMap</strong>, Agentes LLM sobre el repositorio.</td>
+        </tr>
+        <tr>
+          <td><strong>Nuevos Desarrollos</strong></td>
+          <td><strong>SDD Nativo:</strong> Contrato-primero desde el día 1 antes de adjudicar el desarrollo.</td>
+          <td>GitHub Spec-Kit, OpenAPI.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <!-- Sección 6 -->
+    <h2>6. Modelo Operativo: Flujo Contractual en 4 Fases</h2>
+    <p>El ciclo de vida de cualquier evolutivo con proveedores externos se rige por las siguientes compuertas de calidad (*Gates*):</p>
+
+    <pre>
+[1. Elicitación & Diseño] ── PO + Agente IA redactan la Spec preliminar.
+            │
+            ▼
+[2. Gate 1: Linter Spectral] ── Seguridad audita automáticamente el contrato OpenAPI.
+            │
+            ▼
+[3. Gate 2: Freeze Contractual] ── Se congela el tag en Git y se anexa a la orden de compra.
+            │
+            ▼
+[4. Construcción Externa] ── El proveedor desarrolla con total libertad tecnológica.
+            │
+            ▼
+[5. Gate 3: Verificación CI/CD] ── El pipeline corporativo corre Cucumber y Pact contra la entrega.
+            │
+            ├─► ❌ Falla: Rechazo automático de la entrega. Sin pase a UAT ni certificación.
+            └─► ✔️ Éxito: Despliegue en producción y visto bueno para la facturación.
+    </pre>
+
+    <!-- Sección 7 -->
+    <h2>7. Plan de Acción Inmediato (Primeros 30 Días)</h2>
+    <ul>
+      <li><strong>Semana 1: Plantilla Estándar:</strong> Publicar en el repositorio Git corporativo la plantilla base de 3 ficheros (`spec.md`, `.feature`, `.yaml`).</li>
+      <li><strong>Semana 2: Asistente de Elicitación:</strong> Configurar el prompt del Agente Socrático en la herramienta de IA interna de la empresa para asistir a los POs.</li>
+      <li><strong>Semana 3: Piloto Único:</strong> Seleccionar un único evolutivo de criticidad media en una aplicación viva y gestionarlo bajo este nuevo flujo.</li>
+      <li><strong>Semana 4: Cláusulas con Compras:</strong> Validar los resultados con el departamento de Compras para incorporar el *Contractual DoD* en los pliegos de contratación futuros.</li>
+    </ul>
+
+    <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 8.5pt; color: var(--text-muted); display:flex; justify-content:space-between;">
+      <span>Dossier de Gobierno Tecnológico • Spec-Driven Development (SDD)</span>
+      <span>Página generada para archivo corporativo</span>
+    </div>
+  </div>
+
+</body>
+</html>
