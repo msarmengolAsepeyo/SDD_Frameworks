@@ -1,0 +1,481 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Guía de adopción de SDD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+/* Layout: columna de lectura con índice lateral fijo; secciones con componentes interactivos pequeños. */
+:root{
+  --bg:#f5f7f8; --surface:#ffffff; --surface2:#eaeff1; --fg:#14232b; --muted:#53666f; --line:#d3dce0;
+  --accent:#0b6e77; --accent-fg:#ffffff; --accent-soft:#d7eef0;
+  --ok:#1f7a45; --ok-soft:#dcf1e4; --warn:#9a5b00; --warn-soft:#fbebc9; --bad:#b0302b; --bad-soft:#f8dedc;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-head:"IBM Plex Serif",Georgia,serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1a1f; --surface:#16252c; --surface2:#1d2f37; --fg:#e4edf0; --muted:#9bb0b8; --line:#2c424b;
+  --accent:#58c4cd; --accent-fg:#06262a; --accent-soft:#17383d;
+  --ok:#6fd49a; --ok-soft:#173826; --warn:#f0b659; --warn-soft:#3d2d10; --bad:#f08a84; --bad-soft:#442120;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1a1f; --surface:#16252c; --surface2:#1d2f37; --fg:#e4edf0; --muted:#9bb0b8; --line:#2c424b;
+  --accent:#58c4cd; --accent-fg:#06262a; --accent-soft:#17383d;
+  --ok:#6fd49a; --ok-soft:#173826; --warn:#f0b659; --warn-soft:#3d2d10; --bad:#f08a84; --bad-soft:#442120;
+  color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--font-body);padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.shell{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:210px minmax(0,1fr);gap:3rem;padding-block:2rem 4rem}
+nav.toc{position:sticky;top:2rem;align-self:start;font-size:.875rem;display:flex;flex-direction:column;gap:.15rem}
+nav.toc .lbl{font:500 .72rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+nav.toc a{color:var(--muted);text-decoration:none;padding:.3rem .6rem;border-left:2px solid var(--line)}
+nav.toc a:hover{color:var(--fg)}
+nav.toc a.on{color:var(--fg);border-left-color:var(--accent);font-weight:500}
+main{min-width:0}
+header.top h1{font:600 2.3rem/1.15 var(--font-head);margin:.2rem 0 .8rem;text-wrap:balance}
+header.top .meta{font:400 .8rem var(--font-mono);color:var(--muted)}
+header.top p.lead{font-size:1.1rem;max-width:62ch;color:var(--fg)}
+section{padding-top:2.6rem}
+h2{font:600 1.55rem/1.25 var(--font-head);margin:0 0 .7rem;text-wrap:balance}
+h3{font:600 1.05rem/1.3 var(--font-body);margin:1.6rem 0 .5rem}
+p{margin:.5rem 0;max-width:68ch}
+.note{font-size:.85rem;color:var(--muted);max-width:68ch}
+.tag{display:inline-block;font:500 .72rem var(--font-mono);padding:.12rem .5rem;border-radius:99px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.warn{background:var(--warn-soft);color:var(--warn)} .tag.bad{background:var(--bad-soft);color:var(--bad)} .tag.acc{background:var(--accent-soft);color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1rem 1.1rem}
+.seg{display:flex;flex-wrap:wrap;gap:.4rem;margin:.9rem 0 .7rem}
+.seg button{font:500 .85rem var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.4rem .8rem;cursor:pointer}
+.seg button:hover{border-color:var(--accent)}
+.seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
+th{font:500 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+ul.tight{margin:.4rem 0;padding-left:1.2rem} ul.tight li{margin:.25rem 0;max-width:66ch}
+code,.mono{font-family:var(--font-mono);font-size:.85em}
+pre{font:400 .82rem/1.6 var(--font-mono);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;overflow-x:auto;margin:.6rem 0}
+pre b{color:var(--accent);font-weight:500}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.9rem}
+.grid2>*{min-width:0}
+.steps{display:flex;flex-wrap:wrap;gap:.4rem;margin:.9rem 0 .6rem}
+.steps button{flex:1 1 130px;text-align:left;font:500 .82rem/1.3 var(--font-body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-top:3px solid var(--line);border-radius:6px;padding:.5rem .7rem;cursor:pointer}
+.steps button .n{display:block;font:500 .7rem var(--font-mono);color:var(--muted)}
+.steps button[aria-selected="true"]{border-top-color:var(--accent);background:var(--accent-soft)}
+.steps button.done{border-top-color:var(--ok)}
+.fw{border:1px solid var(--line);background:var(--surface);border-radius:8px}
+.fw+.fw{margin-top:.6rem}
+.fw summary{cursor:pointer;list-style:none;display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;padding:.7rem 1rem;font-weight:500}
+.fw summary::-webkit-details-marker{display:none}
+.fw summary::before{content:"+";font:500 1rem var(--font-mono);color:var(--muted);width:1ch}
+.fw[open] summary::before{content:"−"}
+.fw .body{padding:0 1rem 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.9rem;font-size:.9rem}
+.fw .body h4{font:500 .7rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .2rem}
+.fw .body p{margin:0}
+.bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:.4rem 0}
+.bar>i{display:block;height:100%;background:var(--ok);width:0;transition:width .25s}
+.sbtn{font:500 .75rem var(--font-mono);border:1px solid var(--line);background:var(--surface2);color:var(--fg);padding:.2rem .6rem;border-radius:99px;cursor:pointer;min-width:6.5rem}
+.sbtn[data-s="1"]{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.sbtn[data-s="2"]{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
+input[type=search],input[type=number]{font:400 .95rem var(--font-body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:.45rem .7rem;width:100%;max-width:340px}
+input[type=range]{width:100%;max-width:340px;accent-color:var(--accent)}
+.out{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.7rem}
+.out>div{min-width:140px}
+.out .k{font:500 .7rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.out .v{font:600 1.5rem var(--font-head);font-variant-numeric:tabular-nums}
+.crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.4rem;margin-top:.7rem}
+.crit div{display:flex;gap:.5rem;align-items:center;font-size:.88rem;padding:.35rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.themebtn{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:5;font:500 .75rem var(--font-mono);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:99px;padding:.4rem .8rem;cursor:pointer}
+dl.gl{margin:.6rem 0;display:grid;grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:.5rem 1rem}
+dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
+.hide{display:none}
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0}
+  nav.toc{position:sticky;top:0;z-index:4;flex-direction:row;overflow-x:auto;background:var(--bg);padding:.6rem 0;gap:.3rem;border-bottom:1px solid var(--line);margin-inline:-4px}
+  nav.toc .lbl{display:none}
+  nav.toc a{border-left:0;border-bottom:2px solid var(--line);white-space:nowrap}
+  nav.toc a.on{border-bottom-color:var(--accent)}
+  header.top h1{font-size:1.8rem}
+  dl.gl{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar>i{transition:none}}
+</style>
+
+<div class="shell">
+<nav class="toc" id="toc" aria-label="Secciones">
+  <span class="lbl">Contenido</span>
+  <a href="#resumen">Resumen</a><a href="#contexto">Contexto</a><a href="#niveles">Niveles de SDD</a>
+  <a href="#herramientas">Herramientas</a><a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a>
+  <a href="#redaccion">Redacción con IA</a><a href="#carga">Carga inicial</a><a href="#sintaxis">Sintaxis y estándares</a>
+  <a href="#practicas">Buenas prácticas</a><a href="#plan">Plan de adopción</a><a href="#glosario">Glosario y fuentes</a>
+</nav>
+
+<main>
+<header class="top">
+  <div class="meta">Actualizado a 9 nov 2026 · Marina, Product Owner</div>
+  <h1>Guía de adopción de SDD para evolutivos con proveedores</h1>
+  <p class="lead">El SDD (Spec-Driven Development) se plantea aquí como un marco de gobernanza, calidad y aceptación contractual para guiar y validar lo que entregan los proveedores.</p>
+</header>
+
+<section id="resumen">
+  <h2>Resumen ejecutivo</h2>
+  <div class="grid2">
+    <div class="panel"><span class="tag acc">Nivel</span><p>Spec-anchored por deltas: la spec vive junto al código y se actualiza en cada evolutivo.</p></div>
+    <div class="panel"><span class="tag acc">Documentos</span><p>Constitución corporativa, spec vigente por aplicación y spec de cambio (delta) como contrato.</p></div>
+    <div class="panel"><span class="tag acc">Framework</span><p>OpenSpec como referencia de formato y flujo; Spec Kit como alternativa más estructurada.</p></div>
+    <div class="panel"><span class="tag acc">Carga inicial</span><p>Incremental: extraer la spec de cada capacidad solo cuando se toca.</p></div>
+    <div class="panel"><span class="tag acc">Fragilidad de requisitos</span><p>La IA ayuda a redactar, pero la calidad la dan el proceso, la constitución y un segundo revisor.</p></div>
+    <div class="panel"><span class="tag acc">Siguiente paso</span><p>Piloto con 3 o 4 aplicaciones que representen cada arquetipo.</p></div>
+  </div>
+</section>
+
+<section id="contexto">
+  <h2>Contexto y objetivo</h2>
+  <p>Usar el SDD para gestionar los evolutivos desde el rol de Product Owner y para guiar y validar los entregables de varios proveedores, con requisitos estrictos de seguridad y fiabilidad.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Elemento</th><th>Situación</th></tr>
+    <tr><td>Aplicaciones en producción</td><td>Unas 120, la mayoría vivas y en evolución constante</td></tr>
+    <tr><td>Tecnología</td><td>Algunas legacy obsoletas, otras de nuevo desarrollo</td></tr>
+    <tr><td>Origen</td><td>Varios proveedores de desarrollo, productos licenciados y SaaS</td></tr>
+    <tr><td>Rol</td><td>Product Owner: define el qué y el porqué, valida lo que otros implementan</td></tr>
+    <tr><td>Planteamiento</td><td>El SDD como gobernanza, calidad y aceptación contractual</td></tr>
+  </table></div>
+  <p>Lo importante no es qué IDE usa cada proveedor, sino qué artefactos se exigen y cómo se revisan. Las specs son texto versionable y no atan a nadie a un producto.</p>
+</section>
+
+<section id="niveles">
+  <h2>Qué es el SDD, tres niveles y cuál adoptar</h2>
+  <p>El SDD toma una especificación versionada y revisable como fuente de verdad; código, pruebas y aceptación se derivan de ella. Aquí es lenguaje natural estructurado en plantillas markdown, no la especificación formal clásica ni el diseño por contrato.</p>
+  <h3>Niveles de ambición (Böckeler)</h3>
+  <div class="seg" role="tablist" id="lvlSeg"></div>
+  <div class="panel" id="lvlOut" aria-live="polite"></div>
+  <h3>Enfoque por tipo de aplicación</h3>
+  <div class="seg" role="tablist" id="appSeg"></div>
+  <div class="panel" id="appOut" aria-live="polite"></div>
+  <p class="note">La extracción «al tocar», el tratamiento de SaaS y la línea base por configuración son criterio propio, no una práctica documentada en las fuentes.</p>
+</section>
+
+<section id="herramientas">
+  <h2>Frameworks y herramientas</h2>
+  <p>OpenSpec como referencia para evolutivos y Spec Kit como alternativa más estructurada. Kiro solo encaja en equipos internos; el resto se descarta por ahora. Se exige el artefacto, no la herramienta.</p>
+  <div class="seg" role="tablist" id="fwSeg"></div>
+  <div id="fwList"></div>
+  <p class="note">Para la carga inicial existen además Reversa (MIT, un mes de vida y un solo caso exploratorio de COBOL a Go), spec-gen (comunidad, formato OpenSpec) y generadores de pruebas de caracterización (plugin de Claude Code para Go, Python, TS, JS, Kotlin y Java; Pinion para .NET). Thoughtworks situó el SDD en «Assess» en su Radar de noviembre de 2025.</p>
+</section>
+
+<section id="documentos">
+  <h2>Modelo documental</h2>
+  <p>Tres documentos: una constitución corporativa, una spec vigente por aplicación y una spec de cambio (delta) por evolutivo.</p>
+  <div class="seg" role="tablist" id="docSeg"></div>
+  <div class="panel" id="docOut" aria-live="polite"></div>
+  <p>La spec de cambio es el contrato. Al cerrar el evolutivo se fusiona en la spec vigente y se archiva. Las cifras son orientativas y de criterio propio.</p>
+
+  <h3>Calculadora de tamaño de un evolutivo</h3>
+  <div class="panel">
+    <label for="reqN">Requisitos del evolutivo: <b id="reqNv" class="mono">10</b></label><br>
+    <input type="range" id="reqN" min="1" max="40" value="10">
+    <div class="out">
+      <div><div class="k">Escenarios (2 a 5 por requisito)</div><div class="v" id="scn"></div></div>
+      <div><div class="k">Valoración</div><div id="sizeTag"></div></div>
+    </div>
+    <p class="note" id="sizeNote"></p>
+  </div>
+
+  <h3>Ejemplo ilustrativo: aplicación GESTEXP</h3>
+  <p class="note">GESTEXP es una aplicación de gestión de expedientes inventada para ilustrar. Pulsa el estado de cada escenario para simular la validación de la matriz de aceptación.</p>
+  <div class="grid2">
+    <div class="panel">
+      <span class="tag">Propuesta</span>
+      <p>Evitar cierres de expediente por usuarios sin permiso y dejar rastro de los intentos.</p>
+      <span class="tag warn">MODIFICADO</span> <code>REQ-EXP-031</code>
+      <p>El sistema DEBE rechazar el cierre de un expediente por un usuario sin el permiso CERRAR.</p>
+      <span class="tag ok">AÑADIDO</span> <code>REQ-EXP-032</code>
+      <p>CUANDO se rechaza un cierre, el sistema DEBE registrar usuario, fecha y expediente.</p>
+      <span class="tag acc">Regla aplicable</span> <code>SEG-02</code>
+    </div>
+    <div class="panel">
+<pre><b>DADO</b> un expediente en estado abierto
+<b>Y</b> un usuario sin permiso CERRAR
+<b>CUANDO</b> intenta cerrar el expediente
+<b>ENTONCES</b> el sistema rechaza el cierre
+<b>Y</b> registra el intento con usuario y fecha</pre>
+    </div>
+  </div>
+  <div class="tablewrap" style="margin-top:.8rem"><table id="matrix"></table></div>
+  <div class="bar" aria-hidden="true"><i id="mbar"></i></div>
+  <p class="note" id="mtxt"></p>
+</section>
+
+<section id="operativo">
+  <h2>Modelo operativo con proveedores</h2>
+  <p>El PO redacta el qué y el porqué, el proveedor cuestiona la viabilidad y la versión 1 se congela como contrato.</p>
+  <div class="steps" id="opSteps" role="tablist"></div>
+  <div class="panel" id="opOut" aria-live="polite"></div>
+  <h3>Cláusulas contractuales</h3>
+  <ul class="tight">
+    <li>Los artefactos (spec, pruebas, matriz) son entregables obligatorios.</li>
+    <li>«Terminado» incluye la spec actualizada y la matriz de aceptación.</li>
+    <li>La aceptación se basa en los escenarios aprobados.</li>
+    <li>Se regula el uso de IA y su trazabilidad.</li>
+  </ul>
+  <p class="note">En entornos regulados la firma humana es indelegable.</p>
+</section>
+
+<section id="redaccion">
+  <h2>Redacción asistida por IA y fragilidad en la toma de requisitos</h2>
+  <p>La IA puede generar borradores rigurosos a partir de texto libre, pero no sustituye el criterio del PM ni la revisión humana. La dependencia de una persona se reduce con un proceso, no con una herramienta.</p>
+  <div class="steps" id="drSteps" role="tablist"></div>
+  <div class="panel" id="drOut" aria-live="polite"></div>
+  <p class="note">Referencia: un benchmark de una sola consultora (Uvik) cifra la mediana en 128 líneas de markdown por ticket. Es un dato aislado. La fragilidad no desaparece, se desplaza: la calidad depende de un buen brief y de una revisión real.</p>
+</section>
+
+<section id="carga">
+  <h2>Carga inicial de especificaciones</h2>
+  <p>No hace falta extraer la especificación de las 120 aplicaciones. La estrategia depende del tipo de aplicación y es incremental.</p>
+  <div class="seg" role="tablist" id="ldSeg"></div>
+  <div class="panel" id="ldOut" aria-live="polite"></div>
+  <p>El patrón Strangler Fig permite sustituir un legacy por partes. Sobre Reversa, el único caso conocido (COBOL a Go) arrojó 517 afirmaciones: 490 confirmadas, 24 inferidas y 3 lagunas. Su índice de confianza del 97,1 % es interno y no tiene auditoría externa.</p>
+  <h3>Comprobaciones previas</h3>
+  <ul class="tight">
+    <li>Asistente de IA aprobado para analizar código.</li>
+    <li>Titularidad del código y condiciones contractuales con el proveedor.</li>
+    <li>Entorno de pruebas disponible.</li>
+  </ul>
+</section>
+
+<section id="sintaxis">
+  <h2>Sintaxis, notaciones y estándares</h2>
+  <p>La semántica es el qué se exige; la sintaxis es cómo se escribe. Se recomienda lenguaje natural estructurado con plantillas markdown, apoyado en notaciones ligeras y estándares conocidos.</p>
+  <h3>EARS: seis patrones de requisito</h3>
+  <p class="note">Creado en Rolls-Royce (Mavin et al., RE'09, 2009). Los ejemplos son ilustrativos.</p>
+  <div class="seg" role="tablist" id="earsSeg"></div>
+  <div class="panel" id="earsOut" aria-live="polite"></div>
+
+  <h3>Gherkin y RFC 2119</h3>
+  <div class="grid2">
+    <div class="panel"><b>Gherkin</b>
+      <p>Feature, Scenario, Given/When/Then, And/But, Background, Scenario Outline/Examples.</p>
+      <ul class="tight"><li>Declarativo, un comportamiento por escenario.</li><li>Valores concretos y actor en tercera persona.</li><li>Redacción colaborativa.</li></ul></div>
+    <div class="panel"><b>RFC 2119 / BCP 14 y RFC 8174</b>
+      <p>MUST, SHOULD, MAY, solo en mayúsculas. Equivalentes DEBE, DEBERÍA, PUEDE (convención propia).</p></div>
+  </div>
+
+  <h3>ISO/IEC/IEEE 29148:2018: revisa un requisito</h3>
+  <p class="note">Estándar de procesos, elementos de información (BRS, StRS, SyRS, SRS, OpsCon) y criterios de calidad. No es certificable. Ejemplo ilustrativo; la fuente consultada nombraba ocho de las nueve características individuales.</p>
+  <div class="seg" role="tablist" id="qSeg"></div>
+  <div class="panel"><div id="qReq" style="font-weight:500"></div><div class="crit" id="qCrit"></div></div>
+  <p class="note">Criterios del conjunto: completo, consistente, viable, comprensible y validable. Contratos de interfaz (OpenAPI, AsyncAPI, JSON Schema) e identificadores estables: recomendación propia, sin fuente.</p>
+</section>
+
+<section id="practicas">
+  <h2>Buenas prácticas, riesgos y críticas</h2>
+  <p>La evidencia sobre el SDD es escasa y las herramientas cambian rápido: conviene adoptarlo con cautela y midiendo.</p>
+  <div class="seg" role="tablist" id="bpSeg"></div>
+  <div class="panel" id="bpOut" aria-live="polite"></div>
+</section>
+
+<section id="plan">
+  <h2>Plan de adopción por fases</h2>
+  <p>Empezar con un piloto acotado antes de extender a las 120 aplicaciones.</p>
+  <div class="steps" id="plSteps" role="tablist"></div>
+  <div class="panel" id="plOut" aria-live="polite"></div>
+</section>
+
+<section id="glosario">
+  <h2>Glosario breve y fuentes</h2>
+  <label for="glq" class="note">Buscar un término</label><br>
+  <input type="search" id="glq" placeholder="Por ejemplo: delta">
+  <dl class="gl" id="glList"></dl>
+  <h3>Fuentes</h3>
+  <ul class="tight">
+    <li><a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a></li>
+    <li><a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec (Fission-AI)</a></li>
+    <li><a href="https://kiro.dev" target="_blank" rel="noopener">Kiro (AWS)</a></li>
+    <li><a href="https://datatracker.ietf.org/doc/html/rfc2119" target="_blank" rel="noopener">RFC 2119</a> y <a href="https://datatracker.ietf.org/doc/html/rfc8174" target="_blank" rel="noopener">RFC 8174</a></li>
+    <li><a href="https://martinfowler.com" target="_blank" rel="noopener">Martin Fowler</a>, críticas y análisis de herramientas SDD</li>
+    <li>Birgitta Böckeler, clasificación de niveles de SDD</li>
+    <li>Mavin et al., EARS (RE'09, 2009)</li>
+    <li>ISO/IEC/IEEE 29148:2018</li>
+    <li>Thoughtworks Technology Radar, noviembre de 2025</li>
+  </ul>
+  <p class="note">Las cifras de volumen, el enfoque para SaaS y la estrategia «extraer al tocar» son criterio propio y deben validarse en el piloto.</p>
+</section>
+</main>
+</div>
+<button class="themebtn" id="themeBtn" type="button">Tema</button>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+function seg(segId,items,onSel,opts){
+  var el=$(segId),sel=0;el.innerHTML="";
+  items.forEach(function(it,i){
+    var b=document.createElement("button");b.type="button";b.setAttribute("role","tab");
+    b.innerHTML=(opts&&opts.num?'<span class="n">'+String(i).padStart(2,"0")+'</span>':"")+it.label;
+    b.addEventListener("click",function(){pick(i)});el.appendChild(b);
+  });
+  function pick(i){sel=i;[].forEach.call(el.children,function(c,j){c.setAttribute("aria-selected",j===i?"true":"false");if(opts&&opts.num)c.classList.toggle("done",j<i)});onSel(items[i],i)}
+  pick(0);
+}
+function list(a){return '<ul class="tight">'+a.map(function(x){return"<li>"+x+"</li>"}).join("")+"</ul>"}
+
+/* Niveles */
+var LV=[
+ {label:"Spec-first",tag:"Entrada",c:"warn",t:"Se escribe la spec antes de implementar y después puede descartarse.",v:"Punto de entrada válido, pero pierde valor tras el cierre."},
+ {label:"Spec-anchored",tag:"Recomendado",c:"ok",t:"La spec se mantiene viva junto al código y se actualiza en cada cambio.",v:"Objetivo recomendado: encaja con el contrato y la trazabilidad."},
+ {label:"Spec-as-source",tag:"No recomendado",c:"bad",t:"Solo se edita la spec y el código se regenera.",v:"Herramientas inmaduras y no deterministas (Tessl está en beta)."}];
+seg("lvlSeg",LV,function(l){$("lvlOut").innerHTML='<span class="tag '+l.c+'">'+l.tag+'</span><p>'+l.t+'</p><p><b>Valoración:</b> '+l.v+'</p>'});
+var AP=[
+ {label:"Viva",t:"Spec-anchored por deltas, con extracción de la spec «al tocar»."},
+ {label:"Legacy",t:"Pruebas de caracterización y spec mínima de las capacidades que se modifican."},
+ {label:"Nueva",t:"Spec-anchored desde el inicio, con spec vigente y deltas."},
+ {label:"Licenciado o SaaS",t:"Sin extracción de código: la línea base es la configuración, las integraciones y la documentación del proveedor."}];
+seg("appSeg",AP,function(a){$("appOut").innerHTML='<p style="margin:0"><b>'+a.label+':</b> '+a.t+'</p>'});
+
+/* Frameworks */
+var FW=[
+ {n:"OpenSpec",v:"Recomendado",c:"ok",a:"Specs vivas y deltas AÑADIDOS/MODIFICADOS/ELIMINADOS, archivo y verificación.",e:"El mejor para aplicaciones existentes (brownfield).",r:"Joven; en una prueba no cuestionó por sí mismo la autorización. Npm, de Fission-AI."},
+ {n:"Spec Kit",v:"Alternativa",c:"acc",a:"Constitución y comandos specify, clarify, checklist y analyze. GitHub, licencia MIT.",e:"Buena base de gobierno por su constitución.",r:"Verboso según Fowler. 96K+ estrellas, 30 integraciones, 91 extensiones."},
+ {n:"Kiro (AWS)",v:"Solo equipos internos",c:"warn",a:"requirements.md, design.md y tasks.md, EARS, hooks y steering.",e:"Seguro: SSO (IAM Identity Center, Okta, Entra), ISO 27001, regiones UE.",r:"Dependencia de AWS y de su IDE."},
+ {n:"BMAD",v:"Descartar",c:"bad",a:"Proceso completo con hasta 21 agentes.",e:"Poco: demasiado pesado.",r:"Más del 40 % de tokens en specs en un benchmark."},
+ {n:"Tessl",v:"Descartar",c:"bad",a:"Spec-as-source.",e:"Ninguno por ahora.",r:"Beta y no determinista; en enero de 2026 se reorientó a gestor de paquetes de skills."}];
+var FF=[{label:"Todos",f:null},{label:"Recomendados",f:["Recomendado","Alternativa"]},{label:"Con reservas",f:["Solo equipos internos","Descartar"]}];
+seg("fwSeg",FF,function(f){
+  $("fwList").innerHTML=FW.filter(function(x){return!f.f||f.f.indexOf(x.v)>-1}).map(function(x){
+    return '<details class="fw"><summary>'+x.n+' <span class="tag '+x.c+'">'+x.v+'</span></summary><div class="body"><div><h4>Qué aporta</h4><p>'+x.a+'</p></div><div><h4>Encaje</h4><p>'+x.e+'</p></div><div><h4>Reservas</h4><p>'+x.r+'</p></div></div></details>'}).join("");
+});
+
+/* Documentos */
+var DOC=[
+ {label:"Constitución corporativa",t:"Reglas con identificador (por ejemplo SEG-02) y nota de verificación.",v:"20 a 40 reglas, 2 a 4 páginas."},
+ {label:"Spec vigente",t:"Por aplicación, organizada en capacidades (CAP-xxx) con requisitos (REQ).",v:"40 a 120 requisitos por aplicación."},
+ {label:"Spec de cambio (delta)",t:"Propuesta, AÑADIDOS/MODIFICADOS/ELIMINADOS, reglas de la constitución aplicables y matriz de aceptación.",v:"5 a 15 requisitos, 10 a 30 escenarios, 2 a 4 páginas."}];
+seg("docSeg",DOC,function(d){$("docOut").innerHTML='<p style="margin:0"><b>Contenido:</b> '+d.t+'</p><p style="margin:.4rem 0 0"><b>Volumen orientativo:</b> '+d.v+'</p>'});
+
+/* Calculadora */
+function calc(){
+  var n=+$("reqN").value;$("reqNv").textContent=n;$("scn").textContent=(2*n)+" a "+(5*n);
+  var t,c,note;
+  if(n<=15){t="Tamaño típico";c="ok";note="Dentro del rango habitual de un evolutivo (5 a 15 requisitos)."}
+  else if(n<=20){t="Amplio";c="warn";note="Por encima del rango típico. Revisa si se puede repartir."}
+  else{t="Dividir";c="bad";note="Con más de 20 o 25 requisitos conviene dividir el evolutivo en piezas entregables."}
+  if(n<5){t="Pequeño";c="";note="Por debajo del rango típico: valora si hace falta una spec completa o basta una nota de cambio."}
+  $("sizeTag").innerHTML='<span class="tag '+c+'">'+t+'</span>';$("sizeNote").textContent=note;
+}
+$("reqN").addEventListener("input",calc);calc();
+
+/* Matriz */
+var M=[
+ {id:"ESC-1",s:"Cierre sin permiso es rechazado",req:"REQ-EXP-031",test:"T-031-a"},
+ {id:"ESC-2",s:"Cierre con permiso funciona",req:"REQ-EXP-031",test:"T-031-b"},
+ {id:"ESC-3",s:"El intento rechazado queda registrado",req:"REQ-EXP-032",test:"T-032-a"},
+ {id:"ESC-4",s:"El registro incluye usuario y fecha",req:"REQ-EXP-032",test:"T-032-b"}];
+var MS=M.map(function(){return 0});
+var LAB=["Pendiente","Pasa","Falla"];
+function drawM(){
+  var h='<tr><th>Escenario</th><th>Requisito</th><th>Prueba</th><th>Estado</th></tr>';
+  M.forEach(function(r,i){h+='<tr><td>'+r.id+' · '+r.s+'</td><td><code>'+r.req+'</code></td><td><code>'+r.test+'</code></td><td><button type="button" class="sbtn" data-i="'+i+'" data-s="'+MS[i]+'">'+LAB[MS[i]]+'</button></td></tr>'});
+  $("matrix").innerHTML=h;
+  var ok=MS.filter(function(x){return x===1}).length,bad=MS.filter(function(x){return x===2}).length;
+  $("mbar").style.width=(ok/M.length*100)+"%";
+  $("mtxt").textContent=bad?bad+" escenario(s) fallan: el entregable no se acepta.":ok===M.length?"Todos los escenarios pasan: el delta se puede aceptar, fusionar en la spec vigente y archivar.":ok+" de "+M.length+" escenarios validados.";
+}
+$("matrix").addEventListener("click",function(e){var b=e.target.closest("button[data-i]");if(!b)return;var i=+b.dataset.i;MS[i]=(MS[i]+1)%3;drawM()});
+drawM();
+
+/* Operativo */
+var OP=[
+ {label:"Borrador",t:"El PO redacta la spec de cambio con apoyo de IA: el qué y el porqué."},
+ {label:"Desafío",t:"El proveedor revisa viabilidad, ambigüedades y estimación."},
+ {label:"Congelación",t:"La versión 1 queda congelada y es el contrato."},
+ {label:"Entrega",t:"El proveedor entrega código, pruebas, spec actualizada y matriz de aceptación rellena."},
+ {label:"Validación",t:"El PO revisa el delta y la cobertura de escenarios por pruebas, y ejecuta pruebas de aceptación propias en el CI del proveedor."},
+ {label:"Cierre",t:"El delta se fusiona en la spec vigente y se archiva."}];
+seg("opSteps",OP,function(o){$("opOut").innerHTML='<b>'+o.label+'</b><p style="margin:.3rem 0 0">'+o.t+'</p>'},{num:true});
+
+/* Redacción */
+var DR=[
+ {label:"Brief libre",t:"El PM describe la necesidad en texto libre."},
+ {label:"Borrador con IA",t:"Se genera la spec de cambio con la plantilla."},
+ {label:"Rondas de entrevista",t:"La IA pregunta lo que falta o es ambiguo."},
+ {label:"Auditoría de calidad",t:"Se contrasta con la constitución y con los criterios de calidad (ver Sintaxis y estándares)."},
+ {label:"Segundo revisor",t:"Otra persona humana valida el borrador."},
+ {label:"Desafío y congelación",t:"El proveedor lo cuestiona y se congela la versión 1."}];
+seg("drSteps",DR,function(o){$("drOut").innerHTML='<b>'+o.label+'</b><p style="margin:.3rem 0 0">'+o.t+'</p>'},{num:true});
+
+/* Carga */
+var LD=[
+ {label:"Aplicación viva",t:"«Extraer al tocar»: se extrae solo la capacidad afectada. Cada afirmación se etiqueta CONFIRMADO, INFERIDO o LAGUNA; negocio valida lo inferido y las lagunas; se ejecutan los escenarios contra la aplicación real."},
+ {label:"Legacy",t:"Pruebas de caracterización (golden master, idea de Feathers) y ejecución en paralelo de lo antiguo y lo nuevo."},
+ {label:"Crítica o a modernizar",t:"Extracción completa, con un piloto de Reversa."},
+ {label:"SaaS o licenciado",t:"Sin extracción: línea base de configuración, integraciones y documentación del proveedor."}];
+seg("ldSeg",LD,function(o){$("ldOut").innerHTML='<b>'+o.label+'</b><p style="margin:.3rem 0 0">'+o.t+'</p>'});
+
+/* EARS */
+var EA=[
+ {label:"Ubicuo",tpl:"El <sistema> DEBE <respuesta>.",ex:"El sistema DEBE registrar toda acción de cierre de expediente."},
+ {label:"Evento",tpl:"CUANDO <evento>, el <sistema> DEBE <respuesta>.",ex:"CUANDO se rechaza un cierre, el sistema DEBE registrar usuario, fecha y expediente."},
+ {label:"Estado",tpl:"MIENTRAS <estado>, el <sistema> DEBE <respuesta>.",ex:"MIENTRAS un expediente está bloqueado, el sistema DEBE impedir su edición."},
+ {label:"Opcional",tpl:"DONDE <característica incluida>, el <sistema> DEBE <respuesta>.",ex:"DONDE el módulo de firma está activo, el sistema DEBE solicitar firma al cerrar."},
+ {label:"No deseado",tpl:"SI <condición no deseada>, ENTONCES el <sistema> DEBE <respuesta>.",ex:"SI el usuario no tiene permiso CERRAR, ENTONCES el sistema DEBE rechazar el cierre."},
+ {label:"Complejo",tpl:"Combina varios patrones, por ejemplo MIENTRAS + CUANDO.",ex:"MIENTRAS un expediente está abierto, CUANDO se solicita el cierre, el sistema DEBE validar los documentos obligatorios."}];
+seg("earsSeg",EA,function(o){$("earsOut").innerHTML='<p style="margin:0"><b>Plantilla</b></p><pre style="margin:.3rem 0">'+o.tpl+'</pre><p style="margin:0"><b>Ejemplo ilustrativo</b></p><p style="margin:.2rem 0 0">'+o.ex+'</p>'});
+
+/* Calidad */
+var CR=["Necesario","Completo","Singular","Inequívoco","Correcto","Verificable","Apropiado","Viable"];
+var Q=[
+ {label:"Borrador flojo",r:"El sistema debería ser rápido y permitir exportar y archivar expedientes cuando sea posible.",bad:["Singular","Inequívoco","Verificable","Completo"]},
+ {label:"Reescrito",r:"CUANDO el usuario solicita exportar un expediente, el sistema DEBE generar un PDF con todos sus documentos.",bad:[]}];
+seg("qSeg",Q,function(q){
+  $("qReq").textContent=q.r;
+  $("qCrit").innerHTML=CR.map(function(c){var f=q.bad.indexOf(c)>-1;return '<div><span class="tag '+(f?"bad":"ok")+'">'+(f?"Falla":"Cumple")+'</span>'+c+'</div>'}).join("");
+});
+
+/* Prácticas */
+var BP=[
+ {label:"Buenas prácticas",a:["Specs pequeñas, revisables por una persona y divididas en piezas entregables de forma independiente (INVEST, MoSCoW).","Editar a mano el texto generado por IA y especificar solo el cambio en curso.","Identificadores estables y trazabilidad entre requisito, escenario y prueba.","Actualizar la spec como parte de «terminado», con validación automatizada contra la deriva.","Analizar las interacciones entre funcionalidades.","Tres niveles de límites: siempre, preguntar antes, nunca."],src:"Osmani, intent-driven.dev"},
+ {label:"Riesgos",a:["Teatro de especificación: documentos que nadie usa para decidir.","Exhaustividad prematura.","Deriva entre spec y código.","Ignorar efectos entre funcionalidades.","Texto de IA sin editar y excesivo."]},
+ {label:"Críticas",a:["Parecido con el modelo en cascada (Beck, Fowler).","Verbosidad: en un caso citado, 2.577 líneas de markdown frente a 689 de código.","Eco del desarrollo dirigido por modelos (MDD) y no determinismo de la generación.","Exceso para cambios pequeños."]}];
+seg("bpSeg",BP,function(b){$("bpOut").innerHTML=list(b.a)+(b.src?'<p class="note" style="margin:.3rem 0 0">Fuente: '+b.src+'</p>':"")});
+
+/* Plan */
+var PL=[
+ {label:"Preparación",t:"Constitución corporativa, plantilla de delta y comprobaciones previas.",r:"Documentos base aprobados."},
+ {label:"Piloto",t:"3 o 4 aplicaciones que representen cada arquetipo: viva, legacy, nueva y con otro proveedor.",r:"Evidencia propia de esfuerzo, calidad y aceptación."},
+ {label:"Ajuste",t:"Revisar plantillas, cláusulas y métricas con lo aprendido.",r:"Modelo ajustado."},
+ {label:"Extensión",t:"Incorporar aplicaciones al tocarlas y renovar contratos con las cláusulas.",r:"Cobertura progresiva."}];
+seg("plSteps",PL,function(p){$("plOut").innerHTML='<b>'+p.label+'</b><p style="margin:.3rem 0">'+p.t+'</p><p style="margin:0"><b>Resultado esperado:</b> '+p.r+'</p>'},{num:true});
+
+/* Glosario */
+var GL=[
+ ["SDD","Desarrollo guiado por especificaciones: la spec versionada es la fuente de verdad."],
+ ["Constitución","Reglas corporativas con identificador que todo cambio debe respetar."],
+ ["Spec vigente","Descripción actual del comportamiento de una aplicación."],
+ ["Delta","Spec de cambio de un evolutivo: añadidos, modificados y eliminados."],
+ ["Escenario","Caso de aceptación en formato DADO/CUANDO/ENTONCES."],
+ ["Matriz de aceptación","Tabla que enlaza cada escenario con su prueba y resultado."],
+ ["Prueba de caracterización","Prueba que fija el comportamiento actual de un código sin documentar."],
+ ["Spec drift","Deriva entre la especificación y el código."]];
+function drawG(){var q=$("glq").value.trim().toLowerCase();
+  var r=GL.filter(function(g){return !q||(g[0]+" "+g[1]).toLowerCase().indexOf(q)>-1});
+  $("glList").innerHTML=r.length?r.map(function(g){return"<dt>"+g[0]+"</dt><dd>"+g[1]+"</dd>"}).join(""):"<dd>Sin resultados.</dd>";}
+$("glq").addEventListener("input",drawG);drawG();
+
+/* Índice activo */
+var links=[].slice.call(document.querySelectorAll("#toc a"));
+var secs=links.map(function(a){return $(a.getAttribute("href").slice(1))});
+function spy(){var y=window.scrollY+120,cur=0;secs.forEach(function(s,i){if(s.offsetTop<=y)cur=i});links.forEach(function(a,i){a.classList.toggle("on",i===cur)})}
+window.addEventListener("scroll",spy,{passive:true});spy();
+
+/* Tema */
+$("themeBtn").addEventListener("click",function(){
+  var r=document.documentElement,d=r.getAttribute("data-theme");
+  var dark=d?d==="dark":window.matchMedia("(prefers-color-scheme:dark)").matches;
+  r.setAttribute("data-theme",dark?"light":"dark");
+});
+})();
+</script>
+
+</body></html>
