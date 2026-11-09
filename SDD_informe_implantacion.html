@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Implantación de SDD como motor de cambio del ecosistema</title>
+<meta name="description" content="Análisis de implantación de Spec-Driven Development en un ecosistema multiproveedor de ~120 aplicaciones: definición, frameworks, DAFO, escenarios, comparativa y hoja de ruta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f6f3; --paper:#ffffff; --ink:#1d1d1b; --quiet:#5f6168; --rule:#e4e2dc; --head:#f1efe9;
+  --accent:#1f5fbf; --accent-soft:rgba(31,95,191,.10);
+  --good:#2e8b57; --good-soft:rgba(46,139,87,.09); --warn:#c98a00; --warn-soft:rgba(201,138,0,.10);
+  --axis:#9a9890;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141517; --paper:#1c1d20; --ink:#ececea; --quiet:#a3a5ab; --rule:#2e3035; --head:#24262a;
+    --accent:#6ea2f0; --accent-soft:rgba(110,162,240,.14);
+    --good:#5cc48a; --good-soft:rgba(92,196,138,.10); --warn:#e5b13a; --warn-soft:rgba(229,177,58,.11);
+    --axis:#6c6e74;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141517; --paper:#1c1d20; --ink:#ececea; --quiet:#a3a5ab; --rule:#2e3035; --head:#24262a;
+  --accent:#6ea2f0; --accent-soft:rgba(110,162,240,.14);
+  --good:#5cc48a; --good-soft:rgba(92,196,138,.10); --warn:#e5b13a; --warn-soft:rgba(229,177,58,.11);
+  --axis:#6c6e74;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:16px}
+body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent)}
+.layout{display:grid; grid-template-columns:260px minmax(0,1fr); max-width:1280px; margin:0 auto; gap:32px; padding:32px 24px}
+nav.toc{position:sticky; top:24px; align-self:start; font-size:14px}
+nav.toc .label{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--quiet); margin:0 0 8px}
+nav.toc ol{list-style:none; margin:0; padding:0; border-left:2px solid var(--rule)}
+nav.toc a{display:block; padding:6px 12px; color:var(--quiet); text-decoration:none; border-left:2px solid transparent; margin-left:-2px; line-height:1.35}
+nav.toc a:hover{color:var(--ink)}
+nav.toc a.on{color:var(--accent); border-left-color:var(--accent); font-weight:600}
+.tools{margin-top:20px; display:flex; gap:8px}
+.tools button{font:inherit; font-size:13px; padding:6px 10px; border:1px solid var(--rule); background:var(--paper); color:var(--ink); border-radius:6px; cursor:pointer}
+main{background:var(--paper); border:1px solid var(--rule); border-radius:12px; padding:48px 56px; min-width:0}
+header.cover{border-bottom:1px solid var(--rule); padding-bottom:24px; margin-bottom:8px}
+header.cover .kicker{font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600; margin:0 0 8px}
+header.cover h1{font-family:"Source Serif 4",Georgia,serif; font-weight:600; font-size:38px; line-height:1.15; margin:0 0 12px}
+header.cover .meta{color:var(--quiet); font-size:14px; margin:0}
+h2{font-family:"Source Serif 4",Georgia,serif; font-weight:600; font-size:27px; line-height:1.25; margin:48px 0 12px; padding-top:8px}
+h3{font-size:17px; margin:32px 0 8px}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px; padding-left:22px}
+li{margin:4px 0}
+.tw{overflow-x:auto; margin:8px 0 20px; border:1px solid var(--rule); border-radius:8px}
+table{border-collapse:collapse; width:100%; font-size:14px; line-height:1.45}
+th,td{text-align:left; vertical-align:top; padding:10px 12px; border-bottom:1px solid var(--rule)}
+th{background:var(--head); font-weight:600}
+th,td{min-width:104px}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:600}
+.fig{margin:16px 0 20px; padding:16px; border:1px solid var(--rule); border-radius:8px}
+.fig svg{display:block; width:100%; height:auto}
+.fig figcaption{font-size:12.5px; color:var(--quiet); margin-top:8px}
+svg text{font-family:Inter,system-ui,sans-serif}
+svg .ink{fill:var(--ink)} svg .quiet{fill:var(--quiet)}
+svg .good{fill:var(--good-soft); stroke:var(--good); stroke-width:1.25}
+svg .warn{fill:var(--warn-soft); stroke:var(--warn); stroke-width:1.25}
+svg .plain{fill:none; stroke:var(--axis); stroke-width:1.25}
+svg .accent{fill:var(--accent-soft); stroke:var(--accent); stroke-width:2}
+svg .axis{stroke:var(--axis); stroke-width:1.25}
+svg .axisfill{fill:var(--axis)} svg .gate{fill:var(--ink)}
+footer{margin-top:48px; padding-top:16px; border-top:1px solid var(--rule); color:var(--quiet); font-size:13px}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr; padding:16px; gap:16px}
+  nav.toc{position:static}
+  main{padding:28px 18px}
+  header.cover h1{font-size:30px}
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  .layout{display:block; padding:0}
+  nav.toc{display:none}
+  main{border:none; padding:0}
+  h2{page-break-after:avoid; margin-top:28px}
+  .tw,.fig{page-break-inside:avoid; overflow:visible}
+  a{color:inherit; text-decoration:none}
+  @page{size:A4; margin:16mm 14mm}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc" aria-label="Índice">
+    <p class="label">Contenido</p>
+    <ol>
+<li><a href="#resumen-ejecutivo">Resumen ejecutivo</a></li>
+<li><a href="#1-que-es-sdd-y-como-ha-evolucionado">1. Qué es SDD y cómo ha evolucionado</a></li>
+<li><a href="#2-frameworks-sdd-que-son-y-como-se-usan-hoy">2. Frameworks SDD: qué son y cómo se usan hoy</a></li>
+<li><a href="#3-contexto-de-aplicacion">3. Contexto de aplicación</a></li>
+<li><a href="#4-escenarios-de-uso">4. Escenarios de uso</a></li>
+<li><a href="#5-frameworks-idoneos-por-escenario">5. Frameworks idóneos por escenario</a></li>
+<li><a href="#6-tabla-comparativa-final">6. Tabla comparativa final</a></li>
+<li><a href="#7-hoja-de-ruta-gobierno-y-riesgos">7. Hoja de ruta, gobierno y riesgos</a></li>
+<li><a href="#8-glosario-breve-y-fuentes">8. Glosario breve y fuentes</a></li>
+    </ol>
+    <div class="tools">
+      <button type="button" id="theme">Tema</button>
+      <button type="button" onclick="window.print()">Imprimir / PDF</button>
+    </div>
+  </nav>
+  <main>
+    <header class="cover">
+      <p class="kicker">Informe de implantación · Spec-Driven Development</p>
+      <h1>Implantación de SDD como motor de cambio del ecosistema</h1>
+      <p class="meta">9 de noviembre de 2026 · Marina, Product Owner</p>
+    </header>
+<h2 id="resumen-ejecutivo">Resumen ejecutivo</h2>
+<p><strong>Recomendación: implantar SDD como capa contractual y de calidad sobre los proveedores, empezando por los evolutivos de aplicaciones vivas, con un piloto de 3–4 aplicaciones en los próximos 5 meses.</strong> Se exige el artefacto (spec de cambio, escenarios de aceptación, contratos de interfaz), no la herramienta con la que cada proveedor lo produce.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Decisión</th>
+<th>Propuesta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nivel de SDD</td>
+<td>Spec-anchored por deltas: la spec vive con la aplicación y cada evolutivo la actualiza</td>
+</tr>
+<tr>
+<td>Modelo documental</td>
+<td>Constitución corporativa + spec vigente por aplicación + spec de cambio por evolutivo (el contrato)</td>
+</tr>
+<tr>
+<td>Escenario prioritario</td>
+<td>A · Evolutivos contractuales; después B · nuevos desarrollos; C (legacy) y D (SaaS) selectivos</td>
+</tr>
+<tr>
+<td>Framework de referencia</td>
+<td>OpenSpec para evolutivos y legacy; Spec Kit para nuevos desarrollos; Kiro opcional en el equipo interno</td>
+</tr>
+<tr>
+<td>Carga inicial</td>
+<td>Incremental, «al tocar»: nunca las 120 aplicaciones de golpe</td>
+</tr>
+<tr>
+<td>Coste</td>
+<td>Licencias casi nulas; el coste real es formación, plantillas y pipeline de aceptación (3–4 personas-mes en el piloto)</td>
+</tr>
+<tr>
+<td>Plazo</td>
+<td>Piloto en 5 meses, extensión a 12, estándar corporativo a 24</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Por qué ahora.</strong> La IA ha desplazado el cuello de botella del desarrollo a la calidad del requisito y de la verificación, que es el terreno del Product Owner. La única medición controlada disponible muestra menos defectos y más entregas aceptadas con spec en cambios medianos y grandes, y ningún beneficio en los pequeños: hay que aplicarlo con filtro.</p>
+<p><strong>Próximos pasos (fase 0).</strong></p>
+<ul>
+<li>☐ Elegir 3–4 aplicaciones piloto, una por arquetipo, y sus proveedores</li>
+<li>☐ Redactar la constitución corporativa v1 con Arquitectura y Seguridad</li>
+<li>☐ Publicar plantillas de delta, spec vigente y escenarios en un repositorio común</li>
+<li>☐ Medir la línea base de retrabajo y defectos de los últimos evolutivos</li>
+<li>☐ Acordar con Compras el texto de las cláusulas para el piloto</li>
+</ul>
+<h2 id="1-que-es-sdd-y-como-ha-evolucionado">1. Qué es SDD y cómo ha evolucionado</h2>
+<p>Spec-Driven Development (SDD) es una forma de construir software en la que una especificación versionada y revisable es la fuente de verdad: el código, las pruebas y la aceptación se derivan de ella y se comprueban contra ella. Su forma actual nace en 2025 con los agentes de IA, pero recoge cuarenta años de ingeniería de requisitos, contratos y pruebas de comportamiento.</p>
+<p><strong>Definición operativa para este informe.</strong> La spec describe el <em>qué</em> y el <em>porqué</em> (comportamiento observable, reglas de negocio, restricciones, criterios de aceptación) en lenguaje natural estructurado. El <em>cómo</em> (stack, arquitectura interna) lo decide quien construye. Esto encaja con el rol de Product Owner que licita: la spec es el artefacto que se entrega al proveedor y contra el que se acepta su trabajo.</p>
+<h3 id="tres-niveles-de-ambicion">Tres niveles de ambición</h3>
+<p>La clasificación de referencia es la de <a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Birgitta Böckeler (Thoughtworks) en martinfowler.com</a>, octubre de 2025:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Nivel</th>
+<th>Qué significa</th>
+<th>Quién edita el código</th>
+<th>Riesgo principal</th>
+<th>Encaje en nuestro contexto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spec-first</td>
+<td>Se escribe la spec antes de construir; después puede abandonarse</td>
+<td>Personas y agentes</td>
+<td>La spec envejece y deja de reflejar el sistema</td>
+<td>Útil como arranque, insuficiente para 120 apps vivas</td>
+</tr>
+<tr>
+<td>Spec-anchored</td>
+<td>La spec vive junto al código y se actualiza en cada cambio; CI y pruebas vigilan la alineación</td>
+<td>Personas y agentes</td>
+<td>Coste de mantener la spec viva</td>
+<td><strong>Nivel objetivo</strong>: da trazabilidad evolutivo a evolutivo</td>
+</tr>
+<tr>
+<td>Spec-as-source</td>
+<td>Solo se edita la spec; el código se regenera</td>
+<td>Nadie a mano</td>
+<td>No determinismo del modelo; repite los problemas del MDD</td>
+<td>No recomendable hoy en sistemas críticos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evolucion-en-el-tiempo">Evolución en el tiempo</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Hito</th>
+<th>Qué aportó al SDD actual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abr 2026</td>
+<td><a href="https://www.thoughtworks.com/es/radar/languages-and-frameworks/github-spec-kit" target="_blank" rel="noopener">Thoughtworks Radar vol. 34</a> evalúa Spec Kit (Assess), con equipos usándolo sobre todo en brownfield</td>
+<td>Primera evidencia de práctica en sistemas existentes</td>
+</tr>
+<tr>
+<td>Nov 2025</td>
+<td><a href="https://www.thoughtworks.com/radar/techniques/spec-driven-development" target="_blank" rel="noopener">Thoughtworks Radar</a> sitúa SDD en «Assess»</td>
+<td>Interés real, pero proceso aún pesado y poco probado</td>
+</tr>
+<tr>
+<td>Oct 2025</td>
+<td>Böckeler define spec-first / spec-anchored / spec-as-source</td>
+<td>Vocabulario común para decidir el nivel</td>
+</tr>
+<tr>
+<td>Sep 2025</td>
+<td>GitHub publica Spec Kit (MIT); Tessl lanza su framework y registro</td>
+<td>Estándar abierto agnóstico de agente; apuesta spec-as-source</td>
+</tr>
+<tr>
+<td>Jul 2025</td>
+<td>AWS lanza Kiro, IDE con requisitos en EARS</td>
+<td>SDD integrado en la herramienta</td>
+</tr>
+<tr>
+<td>Abr 2025</td>
+<td>Se publica BMAD-METHOD (MIT)</td>
+<td>SDD multiagente por roles (analista, PM, arquitecto, QA)</td>
+</tr>
+<tr>
+<td>2015–2017</td>
+<td>OpenAPI Initiative y OpenAPI 3.0</td>
+<td>Contratos de interfaz legibles por máquina</td>
+</tr>
+<tr>
+<td>2009</td>
+<td>EARS (Mavin et al., Rolls-Royce)</td>
+<td>Patrones de requisito sin ambigüedad, base de Kiro</td>
+</tr>
+<tr>
+<td>2006–2008</td>
+<td>BDD (Dan North) y Gherkin/Cucumber</td>
+<td>Criterios de aceptación ejecutables Dado/Cuando/Entonces</td>
+</tr>
+<tr>
+<td>2001</td>
+<td>MDA (OMG), model-driven development</td>
+<td>Precedente del spec-as-source y de sus límites</td>
+</tr>
+<tr>
+<td>1998–2018</td>
+<td>IEEE 830 → ISO/IEC/IEEE 29148</td>
+<td>Criterios de calidad de un requisito</td>
+</tr>
+<tr>
+<td>1986</td>
+<td>Design by Contract (Meyer)</td>
+<td>Precondiciones, poscondiciones e invariantes</td>
+</tr>
+<tr>
+<td>Años 80</td>
+<td>Métodos formales (Z, VDM)</td>
+<td>La idea de especificar antes de construir</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Qué cambia con la IA.</strong> Escribir código ha dejado de ser el cuello de botella: un agente produce cientos de líneas en minutos, y las produce erróneas igual de rápido si la intención es vaga. El cuello de botella se desplaza al requisito y a la verificación, que es justamente donde opera un Product Owner. Por eso SDD interesa aquí aunque no programemos: convierte la calidad de la spec en la palanca principal sobre el resultado del proveedor.</p>
+<h2 id="2-frameworks-sdd-que-son-y-como-se-usan-hoy">2. Frameworks SDD: qué son y cómo se usan hoy</h2>
+<p>Un framework SDD es un conjunto de plantillas, comandos y reglas que guía a personas y agentes desde la spec hasta el código, con puntos de revisión entre fases. Casi todos guardan la spec como ficheros markdown en el repositorio y son gratuitos (MIT), así que lo que se adopta es <strong>un formato y un flujo, no un producto</strong>.</p>
+<h3 id="componentes-tipicos">Componentes típicos</h3>
+<ul>
+<li><strong>Constitución o steering</strong>: reglas permanentes que toda spec hereda (seguridad, estándares, arquitectura, versiones).</li>
+<li><strong>Spec</strong>: requisitos con escenarios de aceptación, en lenguaje natural estructurado (EARS, Gherkin, DEBE/DEBERÍA).</li>
+<li><strong>Plan o diseño</strong>: decisiones técnicas derivadas de la spec.</li>
+<li><strong>Tareas</strong>: desglose implementable y trazable a cada requisito.</li>
+<li><strong>Implementación</strong>: la ejecuta un agente de IA o un equipo humano.</li>
+<li><strong>Verificación y archivo</strong>: se comprueba el resultado contra la spec y se actualiza la spec vigente.</li>
+</ul>
+<h3 id="el-ciclo-habitual">El ciclo habitual</h3>
+<ol>
+<li>Constitución (una vez por organización o repositorio).</li>
+<li>Especificar el cambio (qué y porqué).</li>
+<li>Clarificar ambigüedades (el agente pregunta, la persona responde).</li>
+<li>Planificar (cómo).</li>
+<li>Desglosar en tareas.</li>
+<li>Implementar.</li>
+<li>Analizar coherencia y archivar el cambio en la spec vigente.</li>
+</ol>
+<h3 id="panorama-de-frameworks-noviembre-de-2026">Panorama de frameworks (noviembre de 2026)</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Fabricante y licencia</th>
+<th>Enfoque</th>
+<th>Artefactos</th>
+<th>Puntos fuertes</th>
+<th>Limitaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a></td>
+<td>GitHub · MIT</td>
+<td>Spec-first con aspiración a anchored; fases fijas</td>
+<td>Constitución, spec.md, plan.md, tasks.md por funcionalidad y rama</td>
+<td>Estándar de facto, 30+ agentes, versión 1.x en 2026, catálogo de extensiones (Azure DevOps, Linear, brownfield, gobierno)</td>
+<td>Genera mucho markdown; la deriva spec-código se gestiona a mano</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec</a></td>
+<td>Fission AI · MIT</td>
+<td>Brownfield-first, por deltas</td>
+<td>specs/ (verdad vigente) + changes/ (propuesta, deltas AÑADIDO/MODIFICADO/ELIMINADO, tareas)</td>
+<td>Ligero, spec viva que crece cambio a cambio, validación estricta de escenarios, 25+ herramientas</td>
+<td>Pocos mantenedores; sin compuertas obligatorias entre fases</td>
+</tr>
+<tr>
+<td><a href="https://kiro.dev" target="_blank" rel="noopener">Kiro</a></td>
+<td>AWS · comercial</td>
+<td>IDE y CLI con SDD integrado</td>
+<td>requirements.md en EARS, design.md, tasks.md</td>
+<td>Requisitos más disciplinados del mercado; análisis formal de contradicciones; trazabilidad tarea-requisito</td>
+<td>Ata a su IDE; misma ceremonia para cambios pequeños; coste por créditos</td>
+</tr>
+<tr>
+<td><a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank" rel="noopener">BMAD-METHOD</a></td>
+<td>BMad Code · MIT</td>
+<td>Multiagente por roles</td>
+<td>Brief, PRD, arquitectura, historias</td>
+<td>Detecta fallos de diseño; revisión adversarial; vía rápida para cambios pequeños</td>
+<td>Curva de aprendizaje alta; artefactos pesados de revisar</td>
+</tr>
+<tr>
+<td><a href="https://tessl.io" target="_blank" rel="noopener">Tessl</a></td>
+<td>Tessl · comercial</td>
+<td>Spec-as-source</td>
+<td>Una spec por fichero; registro de 10.000+ specs de librerías</td>
+<td>Visión más ambiciosa; el registro reduce alucinaciones de API</td>
+<td>Framework aún en beta; no determinista; no apto hoy para sistemas críticos</td>
+</tr>
+</tbody>
+</table></div>
+<p>Alrededor de los frameworks hay piezas que no son SDD por sí mismas pero lo hacen verificable: <strong>Gherkin/Cucumber</strong> (aceptación ejecutable), <strong>OpenAPI/AsyncAPI + Spectral</strong> (contratos de interfaz y su lint), <strong>Pact</strong> (pruebas de contrato entre aplicaciones) y gestores de requisitos gobernados como <strong>Jama Connect</strong>, que expone requisitos con aprobación y trazabilidad a los agentes vía MCP.</p>
+<h3 id="que-dice-la-evidencia">Qué dice la evidencia</h3>
+<p>El único ensayo controlado publicado es el <a href="https://uvik.net/blog/spec-driven-development-benchmark/" target="_blank" rel="noopener">benchmark de Uvik (Q4 2026)</a>: 50 tickets reales de Python brownfield, mismo modelo, revisión ciega.</p>
+<ul>
+<li>Con spec se aceptaron 40–42 de 50 tickets frente a 36 sin spec, y los defectos por ticket aceptado bajaron de 0,86 a 0,46.</li>
+<li>La spec compensó en funcionalidades y cambios de 3 o más ficheros; en correcciones pequeñas, refactorizaciones y escritura de pruebas no compensó.</li>
+<li>La fase de spec consumió un 35 % de los tokens; el código aceptado no cumplía su propia spec en un 7,9 % de los casos.</li>
+</ul>
+<p>Es un dato de una sola consultora, en un solo lenguaje, que además vende servicios relacionados. Thoughtworks añade una observación cualitativa coherente: los equipos con buenas prácticas de arquitectura son los que más valor extraen, y personalizar plantillas para generar menos markdown es necesario. <strong>Conclusión para el PO: aplicar SDD de forma selectiva, no a todo evolutivo.</strong></p>
+<h2 id="3-contexto-de-aplicacion">3. Contexto de aplicación</h2>
+<p>El reto no es técnico sino de gobierno: unas 120 aplicaciones en producción, más de 40 años de base tecnológica, varios proveedores con herramientas distintas y un equipo de Product Owners que define y acepta, pero no construye. SDD solo aporta aquí si se adopta como <strong>capa contractual y de calidad agnóstica del proveedor</strong>, no como herramienta de programación.</p>
+<h3 id="rasgos-del-ecosistema">Rasgos del ecosistema</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Situación</th>
+<th>Implicación para SDD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parque</td>
+<td>~120 aplicaciones vivas, en evolución constante</td>
+<td>Imposible especificarlo todo de golpe: carga incremental</td>
+</tr>
+<tr>
+<td>Antigüedad</td>
+<td>+40 años; conviven tecnologías obsoletas y nuevas</td>
+<td>Estrategias distintas por tipo de aplicación</td>
+</tr>
+<tr>
+<td>Origen</td>
+<td>Desarrollo a medida por proveedores, productos licenciados y SaaS</td>
+<td>El artefacto exigido debe ser independiente de la herramienta</td>
+</tr>
+<tr>
+<td>Rol propio</td>
+<td>PO que licita, define el qué y el porqué y valida</td>
+<td>La spec es el entregable natural del PO y la base de la aceptación</td>
+</tr>
+<tr>
+<td>Exigencias</td>
+<td>Seguridad y fiabilidad muy estrictas</td>
+<td>Firma humana indelegable; reglas de seguridad en la constitución</td>
+</tr>
+<tr>
+<td>Capacidad interna</td>
+<td>El área de proyectos ya hace desarrollos propios con IA</td>
+<td>Banco de pruebas para un piloto sin depender de terceros</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="cuatro-arquetipos-de-aplicacion">Cuatro arquetipos de aplicación</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Arquetipo</th>
+<th>Rasgos</th>
+<th>Qué se especifica</th>
+<th>Punto de partida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Legacy obsoleto</td>
+<td>Código antiguo, conocimiento en pocas personas, pocas pruebas</td>
+<td>Comportamiento observable y la API o fachada que lo envuelve</td>
+<td>Pruebas de caracterización antes de tocar nada</td>
+</tr>
+<tr>
+<td>Aplicación viva</td>
+<td>Código accesible, evolutivos frecuentes</td>
+<td>Solo el perímetro de cada evolutivo (delta)</td>
+<td>Spec «al tocar»: la spec vigente crece cambio a cambio</td>
+</tr>
+<tr>
+<td>Nuevo desarrollo</td>
+<td>Se licita desde cero</td>
+<td>Spec completa antes de adjudicar</td>
+<td>SDD nativo desde el pliego</td>
+</tr>
+<tr>
+<td>Producto licenciado o SaaS</td>
+<td>Sin acceso al código</td>
+<td>Configuración, reglas de negocio, integraciones y datos</td>
+<td>Contrato de caja negra: escenarios y APIs</td>
+</tr>
+</tbody>
+</table></div>
+<p>Si las licitaciones se rigen por la normativa de contratación pública, la spec congelada debe poder anexarse al pliego de prescripciones técnicas y los escenarios de aceptación deben ser objetivos y medibles: SDD encaja bien con esa exigencia. Una advertencia previa: sin una práctica mínima de pruebas automatizadas, SDD ordena el camino pero no garantiza el resultado.</p>
+<h3 id="dafo">DAFO</h3>
+<figure class="fig"><svg viewBox="0 0 760 396" role="img" aria-label="DAFO: SDD se apoya en el rol actual del PO; el riesgo está en la adopción" font-size="13">
+<text x="24" y="34" font-size="15" font-weight="600" class="ink">SDD se apoya en el rol actual del PO; el riesgo está en la adopción</text>
+<text x="246" y="72" text-anchor="middle" font-size="11.5" class="quiet">Favorable</text>
+<text x="578" y="72" text-anchor="middle" font-size="11.5" class="quiet">Desfavorable</text>
+<text x="56" y="152" text-anchor="middle" font-size="11.5" class="quiet" transform="rotate(-90 56 152)">Origen interno</text>
+<text x="56" y="304" text-anchor="middle" font-size="11.5" class="quiet" transform="rotate(-90 56 304)">Origen externo</text>
+<rect x="88" y="84" width="316" height="136" rx="8" class="good"/>
+<text x="104" y="110" font-size="14" font-weight="600" class="ink">Fortalezas</text>
+<text x="104" y="134" class="ink">El PO ya define el qué y el porqué</text>
+<text x="104" y="151" class="ink">Experiencia en licitar y aceptar</text>
+<text x="104" y="168" class="ink">Equipo interno con desarrollos de IA</text>
+<text x="104" y="185" class="ink">Guía, dossier y glosario SDD previos</text>
+<text x="104" y="202" class="ink">Cultura de seguridad y fiabilidad</text>
+<rect x="420" y="84" width="316" height="136" rx="8" class="warn"/>
+<text x="436" y="110" font-size="14" font-weight="600" class="ink">Debilidades</text>
+<text x="436" y="134" class="ink">Stacks y proveedores muy heterogéneos</text>
+<text x="436" y="151" class="ink">Saber del legacy en pocas personas</text>
+<text x="436" y="168" class="ink">Specs actuales sin formato común</text>
+<text x="436" y="185" class="ink">Pruebas automatizadas desiguales</text>
+<text x="436" y="202" class="ink">Poco tiempo del PO para redactar</text>
+<rect x="88" y="236" width="316" height="136" rx="8" class="good"/>
+<text x="104" y="262" font-size="14" font-weight="600" class="ink">Oportunidades</text>
+<text x="104" y="286" class="ink">Frameworks abiertos y gratuitos (MIT)</text>
+<text x="104" y="303" class="ink">IA para redactar y extraer specs</text>
+<text x="104" y="320" class="ink">Aceptación objetiva en los pliegos</text>
+<text x="104" y="337" class="ink">La spec queda en la organización</text>
+<text x="104" y="354" class="ink">Modernizar el legacy por partes</text>
+<rect x="420" y="236" width="316" height="136" rx="8" class="warn"/>
+<text x="436" y="262" font-size="14" font-weight="600" class="ink">Amenazas</text>
+<text x="436" y="286" class="ink">Herramientas inmaduras y cambiantes</text>
+<text x="436" y="303" class="ink">Resistencia o sobrecoste de proveedores</text>
+<text x="436" y="320" class="ink">Burocracia y vuelta a la cascada</text>
+<text x="436" y="337" class="ink">Specs de IA aprobadas sin leer</text>
+<text x="436" y="354" class="ink">Fuga de código o datos vía IA</text>
+</svg><figcaption>DAFO de la implantación de SDD</figcaption></figure>
+<p>Las fortalezas están en el rol y la experiencia que ya existen; las debilidades y amenazas se concentran en la heterogeneidad del parque y en la adopción por personas y proveedores, que es donde la hoja de ruta pone sus compuertas.</p>
+<h2 id="4-escenarios-de-uso">4. Escenarios de uso</h2>
+<p>Se identifican cuatro escenarios, uno por arquetipo de aplicación. El <strong>A (evolutivos contractuales)</strong> concentra el volumen de trabajo y es el que se recomienda priorizar; el B es el de mayor retorno técnico por proyecto; C y D son específicos y pueden esperar a que A esté consolidado.</p>
+<h3 id="escenario-a-sdd-contractual-en-evolutivos-de-aplicaciones-vivas">Escenario A · SDD contractual en evolutivos de aplicaciones vivas</h3>
+<p>Nivel spec-anchored por deltas: cada evolutivo es una spec de cambio que se congela como contrato y, al cerrar, se fusiona en la spec vigente de la aplicación.</p>
+<ol>
+<li>El PO redacta el delta (qué se añade, modifica o elimina) con ayuda de un asistente de IA que le pregunta lo que falta.</li>
+<li>El proveedor revisa viabilidad y propone ajustes; la versión 1 se congela y se anexa al pedido.</li>
+<li>El proveedor construye con la herramienta que prefiera.</li>
+<li>La entrega incluye código, spec actualizada, pruebas y matriz de aceptación; el pipeline ejecuta los escenarios.</li>
+<li>Con todo en verde, el PO firma y el delta se archiva en la spec vigente.</li>
+</ol>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>A favor</th>
+<th>En contra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cubre la mayor parte del trabajo diario</td>
+<td>Exige tiempo y disciplina de redacción al PO</td>
+</tr>
+<tr>
+<td>Agnóstico del proveedor y de su herramienta</td>
+<td>Contratos en vigor pueden no exigir los artefactos</td>
+</tr>
+<tr>
+<td>Sin carga inicial masiva: la spec crece al tocar</td>
+<td>Requiere repositorio común y pipeline de aceptación</td>
+</tr>
+<tr>
+<td>Aceptación objetiva, menos discusiones de alcance</td>
+<td>Sobrecoste si se aplica a cambios pequeños (hace falta un filtro)</td>
+</tr>
+<tr>
+<td>El conocimiento funcional queda en la organización, no en el proveedor</td>
+<td>Riesgo de deriva si la spec no se actualiza en cada cierre</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="escenario-b-sdd-nativo-en-nuevos-desarrollos-licitados">Escenario B · SDD nativo en nuevos desarrollos licitados</h3>
+<p>Nivel spec-anchored desde el día uno: la licitación incluye constitución corporativa, spec funcional y contratos de interfaz; el adjudicatario trabaja contra ellos y entrega la spec viva junto al producto.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>A favor</th>
+<th>En contra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Los frameworks rinden mejor en greenfield</td>
+<td>Menor volumen de proyectos</td>
+</tr>
+<tr>
+<td>Ofertas más comparables y presupuestos más ajustados</td>
+<td>Riesgo de cascada si se congela todo demasiado pronto</td>
+</tr>
+<tr>
+<td>Seguridad y arquitectura fijadas desde el inicio</td>
+<td>Necesita capacidad de arquitectura para los contratos técnicos</td>
+</tr>
+<tr>
+<td>Aplicación nacida con documentación viva</td>
+<td>Algunos proveedores pueden encarecer la oferta</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="escenario-c-modernizacion-del-legacy">Escenario C · Modernización del legacy</h3>
+<p>Extraer la spec del comportamiento actual (pruebas de caracterización y análisis asistido por IA), especificar la fachada que lo envuelve y sustituirlo por partes (patrón Strangler Fig). La spec extraída se convierte en el pliego del reemplazo.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>A favor</th>
+<th>En contra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rescata conocimiento que hoy está en pocas personas</td>
+<td>Herramientas de extracción inmaduras y con poca evidencia</td>
+</tr>
+<tr>
+<td>La IA acelera la arqueología del código</td>
+<td>Requiere acceso al código, titularidad clara y entorno de pruebas</td>
+</tr>
+<tr>
+<td>Base objetiva para licitar la sustitución</td>
+<td>Coste alto por aplicación; validación por expertos escasos</td>
+</tr>
+<tr>
+<td>Reduce el riesgo de cada paso de la migración</td>
+<td>La IA puede inferir mal comportamientos no documentados</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="escenario-d-implantacion-de-productos-licenciados-y-saas">Escenario D · Implantación de productos licenciados y SaaS</h3>
+<p>Spec de caja negra: escenarios de negocio, reglas de configuración, contratos de integración y datos. Sirve para seleccionar producto (fit-gap), aceptar la implantación y detectar regresiones en cada actualización del fabricante.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>A favor</th>
+<th>En contra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fit-gap objetivo en la selección del producto</td>
+<td>Los frameworks SDD de código no aplican tal cual</td>
+</tr>
+<tr>
+<td>Regresión automática en cada versión del fabricante</td>
+<td>Automatizar pruebas sobre SaaS puede ser caro</td>
+</tr>
+<tr>
+<td>Los contratos de integración protegen al resto del ecosistema</td>
+<td>El fabricante controla el roadmap y el comportamiento</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5-frameworks-idoneos-por-escenario">5. Frameworks idóneos por escenario</h2>
+<p>La regla de fondo es <strong>exigir el artefacto, no la herramienta</strong>: se define un formato corporativo de spec (estructura tipo OpenSpec, requisitos con DEBE/DEBERÍA y EARS, escenarios Gherkin, contratos OpenAPI) y cada proveedor lo produce con lo que use. El framework elegido por escenario es la referencia de formato y flujo, y el que usará el equipo interno.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Escenario</th>
+<th>Referencia recomendada</th>
+<th>Alternativa válida</th>
+<th>Complementos obligatorios</th>
+<th>Descartados y por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A · Evolutivos</td>
+<td><strong>OpenSpec</strong>: deltas AÑADIDO/MODIFICADO/ELIMINADO, spec vigente separada de cambios, validación estricta</td>
+<td>Spec Kit, si el proveedor ya lo usa (su catálogo incluye una extensión OpenSpec)</td>
+<td>Gherkin + Cucumber para aceptación; Pact entre aplicaciones</td>
+<td>BMAD (demasiado pesado para deltas); Tessl (inmaduro)</td>
+</tr>
+<tr>
+<td>B · Nuevos desarrollos</td>
+<td><strong>Spec Kit</strong>: constitución corporativa, fases con revisión, extensiones de gobierno, 30+ agentes</td>
+<td>Kiro (equipo interno o proveedores en AWS); BMAD en iniciativas grandes con mucho descubrimiento</td>
+<td>OpenAPI + Spectral como compuerta; Gherkin</td>
+<td>Tessl (spec-as-source no apto en crítico)</td>
+</tr>
+<tr>
+<td>C · Legacy</td>
+<td><strong>OpenSpec</strong> con generación de spec inicial desde el código + pruebas de caracterización</td>
+<td>Extensiones brownfield de Spec Kit; extractores como Reversa solo en modo exploratorio</td>
+<td>OpenAPI de la fachada; análisis dinámico (p. ej. AppMap)</td>
+<td>Kiro (pensado para greenfield); Tessl</td>
+</tr>
+<tr>
+<td>D · Licenciado / SaaS</td>
+<td><strong>Formato corporativo</strong> sin framework de código: escenarios de negocio, configuración e integraciones</td>
+<td>Jama Connect si se necesita aprobación y trazabilidad gobernadas entre muchos productos</td>
+<td>Gherkin contra el entorno; OpenAPI/AsyncAPI + Pact en integraciones</td>
+<td>Spec Kit, Kiro, BMAD (su valor está en generar código propio)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Por qué OpenSpec para evolutivos.</strong> Es el único diseñado para sistemas existentes desde el principio: cada cambio documenta solo su perímetro y, al archivarse, enriquece la spec vigente, que es exactamente la estrategia «al tocar». En el <a href="https://uvik.net/blog/spec-driven-development-benchmark/" target="_blank" rel="noopener">benchmark de Uvik</a> fue el que más tickets aceptados logró (42/50), con la fase de spec más corta (12 min de mediana) y la menor deriva (2,4 %), y <a href="https://www.thoughtworks.com/de/radar/tools/openspec" target="_blank" rel="noopener">Thoughtworks</a> destaca ese enfoque por deltas para sistemas existentes. Su riesgo es de continuidad (pocos mantenedores), mitigable porque el formato es markdown y no depende de la herramienta.</p>
+<p><strong>Por qué Spec Kit para nuevos desarrollos.</strong> Es el estándar con más ecosistema, respaldado por GitHub, agnóstico de agente y con una constitución que permite imponer las reglas corporativas de seguridad a todo proveedor. Su verbosidad se corrige limitando plantillas, como recomienda Thoughtworks.</p>
+<p><strong>Dónde encaja Kiro.</strong> Tiene la disciplina de requisitos más alta (EARS y detección formal de contradicciones), pero obliga a usar su IDE. Es buena opción para los desarrollos propios del área de proyectos o para proveedores que ya trabajen en AWS; no debe exigirse a todos.</p>
+<p><strong>Cuándo plantear una herramienta de gestión de requisitos.</strong> Si el modelo escala a decenas de aplicaciones y auditoría necesita ver quién aprobó cada requisito y qué prueba lo verifica, el markdown en Git se queda corto. Una herramienta como Jama Connect cubre ese hueco, con coste y despliegue significativos; conviene evaluarlo en la fase de escalado, no en el piloto.</p>
+<h2 id="6-tabla-comparativa-final">6. Tabla comparativa final</h2>
+<p>El coste de licencia no decide: casi todo es gratuito. Deciden el tiempo de adopción por personas y proveedores, la facilidad para el PO y la dependencia de una herramienta. Los tiempos de configuración técnica proceden del <a href="https://uvik.net/blog/spec-driven-development-benchmark/" target="_blank" rel="noopener">benchmark de Uvik</a>; los tiempos de adopción, la facilidad (1 = difícil, 5 = fácil) y los esfuerzos son <strong>estimaciones de consultoría</strong>, a validar en el piloto. Precios en USD según cada fabricante, sin impuestos.</p>
+<h3 id="por-framework">Por framework</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Configuración técnica (por repositorio)</th>
+<th>Adopción estable PO-proveedor</th>
+<th>Facilidad de uso</th>
+<th>Coste de licencia</th>
+<th>Coste oculto principal</th>
+<th>Dependencia de herramienta</th>
+<th>Madurez</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenSpec</td>
+<td>10 min</td>
+<td>2–3 meses</td>
+<td>4</td>
+<td>0 (MIT)</td>
+<td>Agente de IA del proveedor; formación</td>
+<td>Baja</td>
+<td>Media (pocos mantenedores)</td>
+</tr>
+<tr>
+<td>GitHub Spec Kit</td>
+<td>18 min</td>
+<td>3–4 meses</td>
+<td>3</td>
+<td>0 (MIT)</td>
+<td>Revisar mucho markdown; adaptar plantillas</td>
+<td>Baja</td>
+<td>Alta (GitHub, versión 1.x)</td>
+</tr>
+<tr>
+<td>Kiro</td>
+<td>12 min</td>
+<td>2–3 meses</td>
+<td>4</td>
+<td>Equipos: 20/asiento/mes con 500 créditos; extra 0,04/crédito (<a href="https://kiro.dev/pricing/" target="_blank" rel="noopener">precios</a>)</td>
+<td>Cambio de IDE; consumo variable de créditos</td>
+<td>Alta</td>
+<td>Media-alta (AWS)</td>
+</tr>
+<tr>
+<td>BMAD-METHOD</td>
+<td>28 min</td>
+<td>4–6 meses</td>
+<td>2</td>
+<td>0 (MIT)</td>
+<td>Tiempo de planificación y tokens (44 % en la fase de spec)</td>
+<td>Baja</td>
+<td>Media</td>
+</tr>
+<tr>
+<td>Tessl</td>
+<td>n/d (beta)</td>
+<td>No recomendable aún</td>
+<td>1</td>
+<td>No publicado</td>
+<td>Inmadurez</td>
+<td>Alta</td>
+<td>Baja</td>
+</tr>
+<tr>
+<td>Jama Connect (gestión de requisitos)</td>
+<td>Semanas</td>
+<td>6–12 meses</td>
+<td>3</td>
+<td>Bajo presupuesto, no publicado</td>
+<td>Despliegue, integración y administración</td>
+<td>Alta</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>Pila de estándares (EARS, Gherkin, OpenAPI, Spectral, Pact)</td>
+<td>Horas</td>
+<td>1–3 meses</td>
+<td>3</td>
+<td>0 (abiertos)</td>
+<td>Construir el pipeline de aceptación</td>
+<td>Ninguna</td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table></div>
+<p>A esto se suma el coste del agente de IA que use cada equipo (Claude Code, Copilot, Cursor u otros), del orden de 20 a 200 USD por usuario y mes según el plan. En el modelo propuesto lo asume el proveedor; para el equipo interno es coste propio.</p>
+<h3 id="por-escenario">Por escenario</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Escenario</th>
+<th>Referencia</th>
+<th>Hasta piloto</th>
+<th>Hasta escala</th>
+<th>Facilidad para el PO</th>
+<th>Esfuerzo interno de implantación</th>
+<th>Impacto esperado</th>
+<th>Prioridad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A · Evolutivos</td>
+<td>OpenSpec + pila de estándares</td>
+<td>2–3 meses (3–4 apps)</td>
+<td>12–18 meses</td>
+<td>Media-alta</td>
+<td>3–4 personas-mes en el piloto</td>
+<td>Alto: volumen y aceptación objetiva</td>
+<td>1</td>
+</tr>
+<tr>
+<td>B · Nuevos desarrollos</td>
+<td>Spec Kit + OpenAPI/Spectral</td>
+<td>3–4 meses (primera licitación)</td>
+<td>12 meses (todas las licitaciones nuevas)</td>
+<td>Media</td>
+<td>2–3 personas-mes por la primera licitación</td>
+<td>Alto por proyecto</td>
+<td>2</td>
+</tr>
+<tr>
+<td>C · Legacy</td>
+<td>OpenSpec + pruebas de caracterización</td>
+<td>4–6 meses por aplicación</td>
+<td>24+ meses (programa)</td>
+<td>Baja</td>
+<td>4–6 personas-mes por aplicación</td>
+<td>Medio-alto, selectivo</td>
+<td>3</td>
+</tr>
+<tr>
+<td>D · Licenciado / SaaS</td>
+<td>Formato corporativo + Gherkin + contratos</td>
+<td>2–4 meses</td>
+<td>12–18 meses</td>
+<td>Alta</td>
+<td>2–3 personas-mes por producto</td>
+<td>Medio</td>
+<td>3 (o con la próxima selección de producto)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="7-hoja-de-ruta-gobierno-y-riesgos">7. Hoja de ruta, gobierno y riesgos</h2>
+<p>La implantación se plantea en cuatro fases a lo largo de 24 meses, con una compuerta de decisión al final de cada una: no se extiende nada que el piloto no haya demostrado con datos.</p>
+<figure class="fig"><svg viewBox="0 0 760 300" role="img" aria-label="Hoja de ruta: nada se extiende sin que el piloto lo demuestre con datos" font-size="13"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="axisfill"/></marker></defs><text x="24" y="34" font-size="15" font-weight="600" class="ink">Nada se extiende sin que el piloto lo demuestre con datos</text><rect x="24" y="60" width="166" height="140" rx="8" class="plain"/>
+<text x="36" y="84" font-weight="600" class="ink">Fase 0 · Preparación</text>
+<text x="36" y="102" font-size="11.5" class="quiet">Meses 0–2</text>
+<text x="36" y="128" font-size="12" class="ink">Constitución v1</text>
+<text x="36" y="146" font-size="12" class="ink">Plantillas y repositorio</text>
+<text x="36" y="164" font-size="12" class="ink">Elegir 3–4 pilotos</text>
+<text x="36" y="182" font-size="12" class="ink">Medir línea base</text><rect x="206" y="60" width="166" height="140" rx="8" class="accent"/>
+<text x="218" y="84" font-weight="600" class="ink">Fase 1 · Piloto</text>
+<text x="218" y="102" font-size="11.5" class="quiet">Meses 2–5</text>
+<text x="218" y="128" font-size="12" class="ink">6–10 evolutivos (A)</text>
+<text x="218" y="146" font-size="12" class="ink">3–4 aplicaciones</text>
+<text x="218" y="164" font-size="12" class="ink">Un caso interno</text>
+<text x="218" y="182" font-size="12" class="ink">Medir resultados</text><rect x="388" y="60" width="166" height="140" rx="8" class="plain"/>
+<text x="400" y="84" font-weight="600" class="ink">Fase 2 · Extensión</text>
+<text x="400" y="102" font-size="11.5" class="quiet">Meses 6–12</text>
+<text x="400" y="128" font-size="12" class="ink">Cláusulas en pliegos (B)</text>
+<text x="400" y="146" font-size="12" class="ink">A en más aplicaciones</text>
+<text x="400" y="164" font-size="12" class="ink">Pipeline común</text>
+<text x="400" y="182" font-size="12" class="ink">Formar a todos los PO</text><rect x="570" y="60" width="166" height="140" rx="8" class="plain"/>
+<text x="582" y="84" font-weight="600" class="ink">Fase 3 · Escalado</text>
+<text x="582" y="102" font-size="11.5" class="quiet">Meses 12–24</text>
+<text x="582" y="128" font-size="12" class="ink">Legacy selectivo (C)</text>
+<text x="582" y="146" font-size="12" class="ink">SaaS y paquetes (D)</text>
+<text x="582" y="164" font-size="12" class="ink">Evaluar gestión</text>
+<text x="582" y="182" font-size="12" class="ink">de requisitos</text><line x1="24" y1="228" x2="744" y2="228" class="axis" marker-end="url(#arr)"/><path d="M198 219l9 9l-9 9l-9 -9z" class="gate"/><text x="198" y="258" text-anchor="middle" font-size="11.5" font-weight="600" class="ink">Compuerta 1</text><text x="198" y="274" text-anchor="middle" font-size="11.5" class="quiet">Constitución aprobada</text><path d="M380 219l9 9l-9 9l-9 -9z" class="gate"/><text x="380" y="258" text-anchor="middle" font-size="11.5" font-weight="600" class="ink">Compuerta 2</text><text x="380" y="274" text-anchor="middle" font-size="11.5" class="quiet">Mejora medible</text><path d="M562 219l9 9l-9 9l-9 -9z" class="gate"/><text x="562" y="258" text-anchor="middle" font-size="11.5" font-weight="600" class="ink">Compuerta 3</text><text x="562" y="274" text-anchor="middle" font-size="11.5" class="quiet">Mitad en SDD</text><path d="M728 219l9 9l-9 9l-9 -9z" class="gate"/><text x="736" y="258" text-anchor="end" font-size="11.5" font-weight="600" class="ink">Decisión</text><text x="736" y="274" text-anchor="end" font-size="11.5" class="quiet">Estándar corporativo</text></svg><figcaption>Hoja de ruta · 4 fases, 4 compuertas, 24 meses</figcaption></figure>
+<p>La fase 1 es la que decide: si el piloto no mejora retrabajo y defectos sin disparar el tiempo del PO, se ajusta el modelo antes de extenderlo.</p>
+<h3 id="que-se-hace-en-cada-fase">Qué se hace en cada fase</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Fase</th>
+<th>Meses</th>
+<th>Actividades clave</th>
+<th>Compuerta para pasar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 · Preparación</td>
+<td>0–2</td>
+<td>Constitución corporativa v1; plantillas de delta, spec vigente y escenarios; asistente de redacción con IA; repositorio común; filtro de cuándo aplicar SDD; elegir 3–4 apps piloto, una por arquetipo; comprobar IA aprobada, titularidad del código y entorno de pruebas</td>
+<td>Constitución aprobada por Arquitectura y Seguridad; proveedores del piloto adheridos</td>
+</tr>
+<tr>
+<td>1 · Piloto</td>
+<td>2–5</td>
+<td>6–10 evolutivos bajo el nuevo flujo (escenario A), al menos uno con el equipo interno; medición frente a la línea base</td>
+<td>Mejora medible en retrabajo y defectos sin disparar el tiempo del PO</td>
+</tr>
+<tr>
+<td>2 · Extensión</td>
+<td>6–12</td>
+<td>Cláusulas en pliegos nuevos (escenario B); A extendido a las apps con más evolutivos; pipeline común de aceptación; formación de todos los PO</td>
+<td>Más de la mitad de los evolutivos elegibles bajo SDD</td>
+</tr>
+<tr>
+<td>3 · Escalado</td>
+<td>12–24</td>
+<td>Programa selectivo de legacy (C); SDD en selecciones de producto (D); evaluar gestión de requisitos gobernada; revisión semestral de herramientas</td>
+<td>Decisión de consolidar como estándar corporativo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="filtro-cuando-un-evolutivo-merece-spec-completa">Filtro: cuándo un evolutivo merece spec completa</h3>
+<p>Adaptado del criterio del benchmark de Uvik. Se aplica SDD completo cuando se cumplen <strong>tres o más</strong> condiciones; si no, basta una descripción con criterios de aceptación.</p>
+<ul>
+<li>El cambio afecta a varios módulos o a 3 o más ficheros (a juicio del proveedor).</li>
+<li>Tiene 4 o más criterios de aceptación.</li>
+<li>Cruza la frontera entre aplicaciones o con un proveedor distinto.</li>
+<li>Cambia un esquema de datos o una API pública.</li>
+<li>Intervienen varios equipos.</li>
+<li>Toca seguridad, datos sensibles o requisitos regulatorios.</li>
+</ul>
+<h3 id="roles">Roles</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Responsabilidad en SDD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>Redacta el delta (con IA), resuelve ambigüedades, firma la aceptación</td>
+</tr>
+<tr>
+<td>Arquitectura y Seguridad</td>
+<td>Mantiene la constitución, los contratos técnicos y las reglas de lint</td>
+</tr>
+<tr>
+<td>Compras y Legal</td>
+<td>Incorpora cláusulas y Definición de Terminado en pliegos y adendas</td>
+</tr>
+<tr>
+<td>Proveedor</td>
+<td>Cuestiona viabilidad, construye, entrega spec actualizada, pruebas y matriz</td>
+</tr>
+<tr>
+<td>QA / DevOps</td>
+<td>Pipeline que ejecuta escenarios y contratos en cada entrega</td>
+</tr>
+<tr>
+<td>Oficina SDD (2–3 personas)</td>
+<td>Plantillas, formación, métricas y revisión de herramientas</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="clausulas-contractuales-minimas">Cláusulas contractuales mínimas</h3>
+<ul>
+<li>Spec actualizada, pruebas y matriz de aceptación son entregables obligatorios.</li>
+<li>«Terminado» exige escenarios aprobados en verde y la spec vigente actualizada.</li>
+<li>La spec es propiedad de la organización, sea cual sea la herramienta usada para producirla.</li>
+<li>El uso de IA por el proveedor se declara y es trazable: qué herramientas, con qué datos y con revisión humana.</li>
+<li>En contratos vigentes, adhesión voluntaria en el piloto y obligatoriedad en renovaciones.</li>
+</ul>
+<h3 id="indicadores">Indicadores</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Indicador</th>
+<th>Qué mide</th>
+<th>Cómo se obtiene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aceptación a la primera</td>
+<td>% de entregas sin devolución</td>
+<td>Registro de aceptación</td>
+</tr>
+<tr>
+<td>Rondas de retrabajo</td>
+<td>Devoluciones por evolutivo</td>
+<td>Registro de aceptación</td>
+</tr>
+<tr>
+<td>Defectos en UAT y producción</td>
+<td>Defectos por evolutivo</td>
+<td>Gestor de incidencias</td>
+</tr>
+<tr>
+<td>Tiempo del PO</td>
+<td>Horas de redacción y aclaración por evolutivo</td>
+<td>Imputación del PO</td>
+</tr>
+<tr>
+<td>Deriva spec-código</td>
+<td>% de cierres sin spec vigente actualizada</td>
+<td>Auditoría muestral</td>
+</tr>
+<tr>
+<td>Automatización</td>
+<td>% de escenarios ejecutados por el pipeline</td>
+<td>Pipeline de aceptación</td>
+</tr>
+</tbody>
+</table></div>
+<p>Los objetivos se fijan tras medir la línea base en la fase 0; sin línea base no hay forma de demostrar el retorno.</p>
+<h3 id="riesgos">Riesgos</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Riesgo</th>
+<th>Mitigación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Burocracia y vuelta a la cascada</td>
+<td>Filtro de aplicación, deltas cortos, límite de extensión por plantilla</td>
+</tr>
+<tr>
+<td>Resistencia o sobrecoste de proveedores</td>
+<td>Piloto con voluntarios; obligatoriedad en renovaciones; menos aclaraciones como beneficio para ellos</td>
+</tr>
+<tr>
+<td>Specs generadas por IA aprobadas sin leer</td>
+<td>Segundo revisor y lista de calidad de requisitos (ISO/IEC/IEEE 29148)</td>
+</tr>
+<tr>
+<td>Herramientas que cambian o se abandonan</td>
+<td>Formato propio en markdown; exigir artefacto, no herramienta; revisión semestral</td>
+</tr>
+<tr>
+<td>Fuga de código o datos a través de la IA</td>
+<td>Solo asistentes aprobados; prohibido usar datos reales en prompts; cláusula específica</td>
+</tr>
+<tr>
+<td>Deriva entre spec y código</td>
+<td>Definición de Terminado contractual y validación en el pipeline</td>
+</tr>
+<tr>
+<td>Falta de pruebas automatizadas</td>
+<td>Empezar con aceptación manual guiada por escenarios y automatizar por fases</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="8-glosario-breve-y-fuentes">8. Glosario breve y fuentes</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Término</th>
+<th>Definición</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brownfield / greenfield</td>
+<td>Trabajo sobre un sistema existente / sobre uno nuevo</td>
+</tr>
+<tr>
+<td>Constitución</td>
+<td>Reglas permanentes (seguridad, estándares, arquitectura) que toda spec hereda</td>
+</tr>
+<tr>
+<td>Definición de Terminado</td>
+<td>Condiciones objetivas para dar por aceptada una entrega</td>
+</tr>
+<tr>
+<td>Deriva (spec drift)</td>
+<td>Diferencia entre lo que dice la spec y lo que hace el código</td>
+</tr>
+<tr>
+<td>EARS</td>
+<td>Patrones de redacción de requisitos sin ambigüedad («CUANDO… el sistema DEBE…»)</td>
+</tr>
+<tr>
+<td>Gherkin</td>
+<td>Escenarios Dado/Cuando/Entonces ejecutables como pruebas de aceptación</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Model Context Protocol: forma estándar de conectar agentes de IA con herramientas y datos</td>
+</tr>
+<tr>
+<td>OpenAPI / AsyncAPI</td>
+<td>Contratos de interfaz legibles por máquina para APIs síncronas / por eventos</td>
+</tr>
+<tr>
+<td>Pact</td>
+<td>Pruebas de contrato que evitan que un cambio en una aplicación rompa a otra</td>
+</tr>
+<tr>
+<td>Pruebas de caracterización</td>
+<td>Pruebas que fijan el comportamiento actual de un sistema antes de cambiarlo</td>
+</tr>
+<tr>
+<td>RFC 2119 / 8174</td>
+<td>Convención DEBE / DEBERÍA / PUEDE para la fuerza de un requisito</td>
+</tr>
+<tr>
+<td>Spec vigente</td>
+<td>Descripción actual del comportamiento de una aplicación</td>
+</tr>
+<tr>
+<td>Spec de cambio (delta)</td>
+<td>Lo que un evolutivo añade, modifica o elimina; actúa como contrato</td>
+</tr>
+<tr>
+<td>Spectral</td>
+<td>Linter que comprueba contratos OpenAPI/AsyncAPI contra reglas corporativas</td>
+</tr>
+<tr>
+<td>Strangler Fig</td>
+<td>Patrón para sustituir un sistema legacy por partes</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="fuentes">Fuentes</h3>
+<p>Material previo propio:</p>
+<ul>
+<li><a href="https://msarmengolasepeyo.github.io/SDD_Frameworks/Claude_report.html" target="_blank" rel="noopener">Guía de adopción de SDD (versión Claude)</a></li>
+<li><a href="https://msarmengolasepeyo.github.io/SDD_Frameworks/Studio_report.html" target="_blank" rel="noopener">Dossier estratégico SDD (versión Studio)</a></li>
+<li><a href="https://msarmengolasepeyo.github.io/SDD_Frameworks/" target="_blank" rel="noopener">Glosario interactivo</a> y <a href="https://msarmengolasepeyo.github.io/SDD_Frameworks/glosario.html" target="_blank" rel="noopener">glosario de marcas</a></li>
+</ul>
+<p>Fuentes externas:</p>
+<ul>
+<li><a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Böckeler, Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl</a> (martinfowler.com, oct. 2025)</li>
+<li><a href="https://www.thoughtworks.com/radar/techniques/spec-driven-development" target="_blank" rel="noopener">Thoughtworks Radar: Spec-driven development</a>, <a href="https://www.thoughtworks.com/es/radar/languages-and-frameworks/github-spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a> y <a href="https://www.thoughtworks.com/de/radar/tools/openspec" target="_blank" rel="noopener">OpenSpec</a></li>
+<li><a href="https://uvik.net/blog/spec-driven-development-benchmark/" target="_blank" rel="noopener">Uvik Software, SDD Benchmark 2026</a> (ensayo controlado; la empresa vende servicios relacionados)</li>
+<li><a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a> y <a href="https://github.com/github/spec-kit/releases/tag/v1.0.13" target="_blank" rel="noopener">notas de versión</a></li>
+<li><a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec (Fission AI)</a></li>
+<li><a href="https://kiro.dev/pricing/" target="_blank" rel="noopener">Kiro: precios</a></li>
+<li><a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank" rel="noopener">BMAD-METHOD</a></li>
+<li><a href="https://tessl.io/blog/tessl-launches-spec-driven-framework-and-registry/" target="_blank" rel="noopener">Tessl: framework y registro</a></li>
+<li><a href="https://arxiv.org/html/2602.00180v1" target="_blank" rel="noopener">Piskala, Spec-Driven Development: From Code to Contract</a> (arXiv, 2026)</li>
+<li><a href="https://www.augmentcode.com/tools/best-spec-driven-development-tools" target="_blank" rel="noopener">Augment Code, comparativa de herramientas SDD</a> (fabricante de una de las herramientas)</li>
+<li><a href="https://hackernoon.com/8-best-spec-driven-development-tools-for-software-engineers-in-regulated-industries-2026" target="_blank" rel="noopener">HackerNoon, herramientas SDD en sectores regulados</a> (artículo patrocinado)</li>
+<li><a href="https://visualstudiomagazine.com/articles/2026/05/12/github-spec-kit-takes-off-as-antidote-to-piecemeal-vibe-coding.aspx" target="_blank" rel="noopener">Visual Studio Magazine sobre Spec Kit</a> (mayo 2026)</li>
+</ul>
+    <footer>Los tiempos de adopción, la facilidad de uso y los esfuerzos son estimaciones de consultoría a validar en el piloto. Precios según cada fabricante a noviembre de 2026.</footer>
+  </main>
+</div>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('theme');
+  try{var s=localStorage.getItem('sdd-theme'); if(s) root.setAttribute('data-theme',s);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('sdd-theme',next);}catch(e){}
+  });
+  var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+  var heads=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+      links.forEach(function(l){l.classList.toggle('on', l.getAttribute('href')==='#'+e.target.id);});}});},{rootMargin:'0px 0px -70% 0px'});
+    heads.forEach(function(h){if(h) io.observe(h);});
+  }
+})();
+</script>
+</body>
+</html>
