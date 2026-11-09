@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glosario Interactivo: Spec-Driven Development (SDD)</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-rgb: 56, 189, 248;
+      --accent-green: #34d399;
+      --accent-purple: #c084fc;
+      --accent-amber: #fbbf24;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+    }
+
+    .header-content {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge-enterprise {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .title-group p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+    }
+
+    .btn.active {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      max-width: 1300px;
+      margin: 1.5rem auto 0;
+      padding: 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-right: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .pill-filter {
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .pill-filter:hover {
+      color: var(--text-main);
+      border-color: var(--accent);
+    }
+
+    .pill-filter.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1300px;
+      margin: 1.5rem auto;
+      padding: 0 2rem 3rem;
+      width: 100%;
+    }
+
+    /* Grid View */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .category-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cat-metodologia { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+    .cat-artefacto { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); }
+    .cat-herramienta { background: rgba(192, 132, 252, 0.15); color: var(--accent-purple); }
+    .cat-legacy { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); }
+
+    .card-summary {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .analogy-box {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid var(--accent);
+      padding: 0.6rem 0.8rem;
+      border-radius: 0.25rem;
+      font-size: 0.825rem;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      padding-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .role-tags {
+      display: flex;
+      gap: 0.3rem;
+    }
+
+    .role-tag {
+      background: #0f172a;
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Modal / Detail View */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    /* Slide Presentation View */
+    .slide-view {
+      display: none;
+      width: 100%;
+      min-height: 520px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 3rem;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .slide-view.active {
+      display: flex;
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .slide-counter {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .slide-body {
+      margin: 2rem 0;
+    }
+
+    .slide-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .slide-desc {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .slide-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .slide-box {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .slide-box h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .slide-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.5rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      background: #0b1120;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-content">
+      <div class="title-group">
+        <h1>
+          Frameworks Spec-Driven Development (SDD)
+          <span class="badge-enterprise">Enterprise Ready</span>
+        </h1>
+        <p>Glosario ejecutivo, arquitectónico y operativo para la gobernanza multi-proveedor</p>
+      </div>
+      <div class="nav-actions">
+        <button id="viewGridBtn" class="btn active" onclick="switchView('grid')">
+          <span>🗂️</span> Vista Cuadrícula
+        </button>
+        <button id="viewSlideBtn" class="btn" onclick="switchView('slide')">
+          <span>🖥️</span> Modo Presentación
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTROLS & FILTERS (Visible en Grid) -->
+  <div id="controlsBar" class="controls-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar concepto, herramienta o analogía (ej. Spectral, Gherkin, PO, Legacy, Pact)...">
+    
+    <div class="filters-row">
+      <span class="filter-label">Categoría:</span>
+      <button class="pill-filter active" onclick="filterByCategory('all')">Todos</button>
+      <button class="pill-filter" onclick="filterByCategory('metodologia')">Metodología & Paradigmas</button>
+      <button class="pill-filter" onclick="filterByCategory('artefacto')">Artefactos & Estándares</button>
+      <button class="pill-filter" onclick="filterByCategory('herramienta')">Herramientas de Gobernanza & IA</button>
+      <button class="pill-filter" onclick="filterByCategory('legacy')">Ingeniería Inversa & Legacy</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT AREA -->
+  <main>
+    <!-- GRID VIEW -->
+    <div id="cardsGrid" class="cards-grid">
+      <!-- Los datos se renderizan dinámicamente con JS -->
+    </div>
+
+    <!-- PRESENTATION SLIDE VIEW -->
+    <div id="slideView" class="slide-view">
+      <div class="slide-header">
+        <span id="slideCategory" class="category-badge cat-metodologia">Categoría</span>
+        <span id="slideCounter" class="slide-counter">1 / 15</span>
+      </div>
+      <div class="slide-body">
+        <h2 id="slideTitle" class="slide-title">Título del Concepto</h2>
+        <p id="slideDesc" class="slide-desc">Descripción principal clara y ejecutiva.</p>
+        
+        <div class="slide-meta-grid">
+          <div class="slide-box">
+            <h4>💡 Analogía del Mundo Real</h4>
+            <p id="slideAnalogy" style="font-style: italic; color: #cbd5e1;">Analogía explicativa.</p>
+          </div>
+          <div class="slide-box">
+            <h4>🏢 Impacto para el Product Owner & Proveedor</h4>
+            <p id="slideImpact" style="color: #cbd5e1;">Cómo se usa contractualmente.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="btn" onclick="prevSlide()">⬅️ Anterior</button>
+        <span style="font-size:0.8rem; color:var(--text-muted);">Usa las flechas ← / → del teclado</span>
+        <button class="btn" onclick="nextSlide()">Siguiente ➡️</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL PARA VISTA DETALLADA -->
+  <div id="modalBackdrop" class="modal-backdrop" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <span id="modalCategory" class="category-badge cat-metodologia" style="margin-bottom:0.75rem; display:inline-block;">Categoría</span>
+      <h2 id="modalTitle" style="font-size:1.6rem; margin-bottom:0.5rem; color:#fff;">Título</h2>
+      <p id="modalDesc" style="color:var(--text-muted); line-height:1.5; margin-bottom:1.5rem;"></p>
+      
+      <div class="analogy-box" style="margin-bottom:1.5rem;">
+        <strong>Analogía didáctica:</strong> <span id="modalAnalogy"></span>
+      </div>
+
+      <div style="background:#0f172a; padding:1rem; border-radius:0.5rem; border:1px solid var(--border-color); margin-bottom:1rem;">
+        <h4 style="font-size:0.85rem; color:var(--accent); text-transform:uppercase; margin-bottom:0.4rem;">Aplicación práctica en su contexto (120 Apps):</h4>
+        <p id="modalImpact" style="font-size:0.9rem; line-height:1.4; color:#e2e8f0;"></p>
+      </div>
+
+      <div id="modalRoles" style="display:flex; gap:0.5rem; font-size:0.75rem; color:var(--text-muted);">
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Glosario de Spec-Driven Development • Marco de Gobernanza Contractual y Calidad de Software
+  </footer>
+
+  <script>
+    // BASE DE CONOCIMIENTO (CONCEPTOS Y MARCAS)
+    const glossaryData = [
+      {
+        id: "sdd",
+        title: "Spec-Driven Development (SDD)",
+        category: "metodologia",
+        categoryName: "Metodología",
+        roles: ["PO", "Arquitecto", "Proveedor"],
+        summary: "Metodología donde la especificación formal y estructurada actúa como la única fuente de verdad antes de escribir código.",
+        analogy: "Construir un rascacielos: ningún albañil pone un ladrillo antes de que el plano de arquitectura esté visado y firmado.",
+        impact: "Permite al PO congelar el alcance y exigir al proveedor que los entregables pasen pruebas automáticas antes de facturar."
+      },
+      {
+        id: "openapi",
+        title: "OpenAPI Specification (OAS)",
+        category: "artefacto",
+        categoryName: "Artefacto / Estándar",
+        roles: ["Arquitecto", "Proveedor"],
+        summary: "Estándar de facto (en YAML o JSON) para describir APIs REST de forma neutral respecto al lenguaje de programación.",
+        analogy: "El plano del electricista: define exactamente el voltaje, el tamaño del enchufe y la conexión para que cualquier aparato encaje sin cortocircuitos.",
+        impact: "Desacopla la tecnología interna del proveedor. El proveedor puede usar Java, Node o Cobol; la interfaz debe respetar estrictamente el archivo OpenAPI."
+      },
+      {
+        id: "gherkin",
+        title: "Gherkin (Sintaxis .feature)",
+        category: "artefacto",
+        categoryName: "Artefacto / Estándar",
+        roles: ["PO", "QA", "Proveedor"],
+        summary: "Lenguaje formal y legible por humanos que describe el comportamiento del sistema mediante la fórmula: Dado (Given), Cuando (When), Entonces (Then).",
+        analogy: "La cláusula del seguro: 'SI usted tiene contratada la póliza (Dado) Y sufre una fuga de agua (Cuando) EL SEGURO cubrirá la reparación (Entonces)'.",
+        impact: "Es la herramienta reina para el PO: escribe los criterios de aceptación en español claro y una máquina los ejecuta para comprobar si el proveedor cumplió."
+      },
+      {
+        id: "spectral",
+        title: "Spectral (Stoplight)",
+        category: "herramienta",
+        categoryName: "Herramienta",
+        roles: ["Seguridad", "Arquitecto"],
+        summary: "Linter/auditor automatizado de contratos OpenAPI. Valida reglas corporativas de diseño, nomenclatura y seguridad sin mirar el código.",
+        analogy: "El inspector de obras municipal que revisa el plano sobre el papel y te multa al instante si no has dibujado salidas de emergencia.",
+        impact: "Impide que un proveedor empiece a desarrollar una API insegura. El pipeline rechaza la especificación antes de que se gaste una sola hora de desarrollo."
+      },
+      {
+        id: "pact",
+        title: "Pact (Contract Testing)",
+        category: "herramienta",
+        categoryName: "Herramienta",
+        roles: ["Arquitecto", "QA", "Proveedor"],
+        summary: "Framework de pruebas de contrato dirigidas por el consumidor (Consumer-Driven Contract Testing) para ecosistemas de microservicios y APIs.",
+        analogy: "El seguro de acople ferroviario: garantiza que el nuevo vagón de la empresa B encaja milimétricamente en la locomotora de la empresa A.",
+        impact: "Vital para su parque de 120 apps: evita que un evolutivo hecho por un proveedor en una aplicación rompa silenciosamente la integración de otra."
+      },
+      {
+        id: "spec-on-touch",
+        title: "Spec-on-Touch (Strangler Spec)",
+        category: "legacy",
+        categoryName: "Estrategia Legacy",
+        roles: ["PO", "Arquitecto"],
+        summary: "Estrategia para gobernar sistemas legacy sin documentar todo el sistema de golpe: se especifica exclusivamente el perímetro que el nuevo evolutivo modifica.",
+        analogy: "Reparar la red de fontanería de un edificio histórico: solo cambias y dibujas en el plano la tubería del tramo en el que vas a intervenir hoy.",
+        impact: "Evita el colapso presupuestario. No exige ingeniería inversa de las 120 apps antes de arrancar; el catálogo se formaliza paulatinamente con cada evolutivo."
+      },
+      {
+        id: "elicitation-agent",
+        title: "Agente de Elicitación Socrática",
+        category: "herramienta",
+        categoryName: "IA / Gobernanza",
+        roles: ["PO"],
+        summary: "Agente de IA configurado para interrogar al Product Owner con preguntas de frontera y casos borde a partir de una petición informal.",
+        analogy: "El médico especialista que, tras decirle 'me duele el hombro', te bombardea a preguntas específicas para emitir un diagnóstico quirúrgico certero.",
+        impact: "Elimina la carga pesada del PO. El PO no escribe especificaciones complejas en blanco: solo responde preguntas y la IA genera el documento formal."
+      },
+      {
+        id: "ears",
+        title: "EARS (Easy Approach to Requirements Syntax)",
+        category: "metodologia",
+        categoryName: "Metodología",
+        roles: ["PO", "Analista"],
+        summary: "Mecanismo estructurado de redacción de requisitos que utiliza 5 patrones simples para eliminar la ambigüedad del lenguaje natural.",
+        analogy: "El reglamento de tráfico: frases directas sin rodeos poéticos que no admiten doble lectura ('CUANDO el semáforo esté en rojo, el coche SE DETENDRÁ').",
+        impact: "Blindaje contractual: el proveedor no puede escudarse en ambigüedades de redacción para justificar sobrecostes o retrasos."
+      },
+      {
+        id: "appmap",
+        title: "AppMap",
+        category: "legacy",
+        categoryName: "Herramienta Legacy",
+        roles: ["Arquitecto", "Proveedor"],
+        summary: "Herramienta que analiza el código fuente en ejecución (Java, Node, Python, Ruby) y genera automáticamente diagramas y contratos OpenAPI.",
+        analogy: "Poner un trazador fluorescente en las tuberías para ver exactamente por dónde fluye el agua sin necesidad de romper las paredes.",
+        impact: "Resuelve el problema de las apps vivas sin documentación: corre los tests existentes y en 10 minutos obtienes el contrato OpenAPI real del sistema."
+      },
+      {
+        id: "akita",
+        title: "Akita / Postman Live Collections",
+        category: "legacy",
+        categoryName: "Herramienta Legacy",
+        roles: ["Arquitecto", "Seguridad"],
+        summary: "Herramientas de observación pasiva de tráfico de red que deducen modelos de datos y APIs a partir de peticiones reales en tiempo de ejecución.",
+        analogy: "Un radar de tráfico que anota la matrícula, modelo y velocidad de cada coche que pasa sin pedirle los papeles al conductor.",
+        impact: "Ideal para paquetes SaaS o sistemas obsoletos de los que no tienes el código fuente: levanta la especificación escuchando el tráfico del Gateway."
+      },
+      {
+        id: "cucumber",
+        title: "Cucumber / Behave (BDD)",
+        category: "herramienta",
+        categoryName: "Herramienta",
+        roles: ["QA", "Proveedor"],
+        summary: "Motores de pruebas de aceptación que ejecutan los archivos Gherkin (.feature) directamente contra el entorno de la aplicación.",
+        analogy: "El notario automatizado que llega con la lista de verificación del PO y comprueba ante notario digital si el sistema cumple cada punto.",
+        impact: "El 'Gating' de aceptación: si Cucumber arroja un solo fallo, el pipeline bloquea el paso a producción y la certificación del hito de pago."
+      },
+      {
+        id: "contractual-dod",
+        title: "DoD Contractual (Definition of Done)",
+        category: "metodologia",
+        categoryName: "Gobernanza / Legal",
+        roles: ["PO", "Compras", "Proveedor"],
+        summary: "Cláusula que supedita la aceptación del trabajo y la facturación al cumplimiento estricto y automatizado de la especificación congelada.",
+        analogy: "El examen práctico de conducir: no apruebas por decir que sabes conducir o por caerle bien al examinador; apruebas si no cometes faltas eliminatorias.",
+        impact: "Transforma la relación con el proveedor: pasa de reuniones de discusión subjetiva a la verificación objetiva de un informe en verde."
+      }
+    ];
+
+    let currentCategory = 'all';
+    let currentSlideIndex = 0;
+
+    // INICIALIZACIÓN
+    document.addEventListener("DOMContentLoaded", () => {
+      renderCards();
+      setupSearch();
+      setupKeyboard();
+    });
+
+    // RENDERIZAR CUADRÍCULA
+    function renderCards() {
+      const grid = document.getElementById("cardsGrid");
+      const searchVal = document.getElementById("searchInput").value.toLowerCase();
+      
+      const filtered = glossaryData.filter(item => {
+        const matchesCategory = currentCategory === 'all' || item.category === currentCategory;
+        const matchesSearch = item.title.toLowerCase().includes(searchVal) ||
+                              item.summary.toLowerCase().includes(searchVal) ||
+                              item.analogy.toLowerCase().includes(searchVal) ||
+                              item.roles.some(r => r.toLowerCase().includes(searchVal));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 3rem; color:var(--text-muted);">
+          No se encontraron conceptos para ese criterio de búsqueda.
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="card" onclick="openModal('${item.id}')">
+          <div class="card-top">
+            <h3 class="card-title">${item.title}</h3>
+            <span class="category-badge cat-${item.category}">${item.categoryName}</span>
+          </div>
+          <p class="card-summary">${item.summary}</p>
+          <div class="analogy-box">
+            💡 <strong>Analogía:</strong> ${item.analogy}
+          </div>
+          <div class="card-footer">
+            <span style="font-weight:600; color:var(--accent);">Click para ver detalle ➔</span>
+            <div class="role-tags">
+              ${item.roles.map(r => `<span class="role-tag">${r}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // BUSCADOR EN VIVO
+    function setupSearch() {
+      document.getElementById("searchInput").addEventListener("input", renderCards);
+    }
+
+    // FILTRO DE CATEGORÍAS
+    function filterByCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll(".pill-filter").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      renderCards();
+    }
+
+    // CAMBIO DE VISTA (GRID VS SLIDE)
+    function switchView(view) {
+      const gridBtn = document.getElementById("viewGridBtn");
+      const slideBtn = document.getElementById("viewSlideBtn");
+      const cardsGrid = document.getElementById("cardsGrid");
+      const controlsBar = document.getElementById("controlsBar");
+      const slideView = document.getElementById("slideView");
+
+      if (view === 'grid') {
+        gridBtn.classList.add("active");
+        slideBtn.classList.remove("active");
+        cardsGrid.style.display = "grid";
+        controlsBar.style.display = "flex";
+        slideView.classList.remove("active");
+      } else {
+        slideBtn.classList.add("active");
+        gridBtn.classList.remove("active");
+        cardsGrid.style.display = "none";
+        controlsBar.style.display = "none";
+        slideView.classList.add("active");
+        updateSlide();
+      }
+    }
+
+    // CONTROL DE SLIDES
+    function updateSlide() {
+      const item = glossaryData[currentSlideIndex];
+      document.getElementById("slideCounter").innerText = `${currentSlideIndex + 1} / ${glossaryData.length}`;
+      document.getElementById("slideTitle").innerText = item.title;
+      document.getElementById("slideCategory").innerText = item.categoryName;
+      document.getElementById("slideCategory").className = `category-badge cat-${item.category}`;
+      document.getElementById("slideDesc").innerText = item.summary;
+      document.getElementById("slideAnalogy").innerText = item.analogy;
+      document.getElementById("slideImpact").innerText = item.impact;
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < glossaryData.length - 1) {
+        currentSlideIndex++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        updateSlide();
+      }
+    }
+
+    function setupKeyboard() {
+      document.addEventListener("keydown", (e) => {
+        if (document.getElementById("slideView").classList.contains("active")) {
+          if (e.key === "ArrowRight") nextSlide();
+          if (e.key === "ArrowLeft") prevSlide();
+        }
+        if (e.key === "Escape") closeModal();
+      });
+    }
+
+    // MODAL DETALLE
+    function openModal(id) {
+      const item = glossaryData.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById("modalTitle").innerText = item.title;
+      document.getElementById("modalCategory").innerText = item.categoryName;
+      document.getElementById("modalCategory").className = `category-badge cat-${item.category}`;
+      document.getElementById("modalDesc").innerText = item.summary;
+      document.getElementById("modalAnalogy").innerText = item.analogy;
+      document.getElementById("modalImpact").innerText = item.impact;
+      document.getElementById("modalRoles").innerHTML = item.roles.map(r => `<span class="role-tag" style="background:#1e293b; padding:0.2rem 0.5rem;">Rol: ${r}</span>`).join('');
+      
+      document.getElementById("modalBackdrop").classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("modalBackdrop").classList.remove("active");
+    }
+  </script>
+</body>
+</html>
