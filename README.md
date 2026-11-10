@@ -14,4 +14,5 @@ Investigación y análisis sobre framworks SDD
 
 ---------------------------
 ARTEFACTOS CLAUDE
+
 https://claude.ai/artifact/LuMHSr6eJqyhvqQD8E5cT3?sk=vbsTFAEmvYMERQAVshpnSQ#play-15dd8cd198dd
