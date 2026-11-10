@@ -373,52 +373,127 @@ paths:
 
     <div class="page-break"></div>
 
-    <!-- Sección 4 -->
-    <h2>4. Glosario Ejecutivo de Herramientas y Analogías</h2>
-    
+<!-- Sección 4 -->
+    <h2>4. Mapa de Herramientas y Conceptos por Roles Operativos</h2>
+    <p>Para evitar confusión de competencias en un parque de 120 aplicaciones, las herramientas y conceptos del SDD se distribuyen según el rol responsable dentro del ciclo contractual:</p>
+
+    <!-- BLOQUE 1: PO & NEGOCIO -->
+    <h3>4.1. Bloque: Product Owner & Negocio (Definición de Intención Funcional y Reglas)</h3>
     <table>
       <thead>
         <tr>
-          <th>Herramienta / Concepto</th>
-          <th>Definición Técnica</th>
-          <th>Analogía Didáctica</th>
-          <th>Uso Práctico</th>
+          <th style="width: 22%;">Herramienta / Concepto</th>
+          <th style="width: 28%;">Definición Técnica</th>
+          <th style="width: 25%;">Analogía Didáctica</th>
+          <th style="width: 25%;">Uso Práctico Contractual</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>OpenAPI (Swagger)</strong></td>
-          <td>Estándar de definición formal de interfaces REST en YAML/JSON.</td>
-          <td>El <strong>plano visado</strong> por el colegio de arquitectos.</td>
-          <td>Define los contratos de integración entre las 120 apps.</td>
-        </tr>
-        <tr>
-          <td><strong>Spectral</strong></td>
-          <td>Linter y auditor estático de contratos OpenAPI y AsyncAPI.</td>
-          <td>El <strong>inspector municipal</strong> que multa si faltan salidas de incendio.</td>
-          <td>Rechaza la spec del proveedor si viola normas corporativas de seguridad.</td>
-        </tr>
-        <tr>
           <td><strong>Gherkin / Cucumber</strong></td>
-          <td>Lenguaje natural estructurado y motor de ejecución de pruebas de aceptación.</td>
-          <td>El <strong>notario robot</strong> que comprueba casilla por casilla la entrega.</td>
-          <td>Los criterios del PO se convierten en tests automáticos de caja negra.</td>
+          <td>Lenguaje natural estructurado (<em>Dado / Cuando / Entonces</em>) legible por humanos y ejecutable por CI/CD.</td>
+          <td>El <strong>notario robot</strong> que verifica casilla por casilla si la casa cumple el contrato.</td>
+          <td>Convierte los criterios de aceptación del PO en la batería de pruebas de caja negra obligatoria.</td>
         </tr>
         <tr>
-          <td><strong>Pact</strong></td>
-          <td>Framework de pruebas de contrato dirigidas por el consumidor (CDCT).</td>
-          <td>El <strong>seguro de acople</strong> de vagones de diferentes fabricantes.</td>
-          <td>Evita que el proveedor de la App A rompa la integración de la App B.</td>
+          <td><strong>Sintaxis EARS</strong><br><em>(Easy Approach to Requirements Syntax)</em></td>
+          <td>Patrón formal de redacción de requisitos basado en cláusulas (<em>Ubiquitous, Event-driven, State-driven</em>).</td>
+          <td>El <strong>código de circulación</strong>: reglas universales sin margen para la libre interpretación.</td>
+          <td>Estructura las invariantes de negocio del PO antes de programar, eliminando ambigüedades semánticas.</td>
         </tr>
         <tr>
-          <td><strong>Contractual DoD</strong></td>
-          <td>Definición de Terminado condicionada al éxito del pipeline de pruebas.</td>
-          <td>El <strong>examen de conducir</strong>: se aprueba con criterios medibles y objetivos.</td>
-          <td>Sin pipeline en verde no se certifica el hito ni se autoriza la factura.</td>
+          <td><strong>Agente Socrático IA</strong><br><em>(GitHub Spec-Kit / LLM PO Assistant)</em></td>
+          <td>Agente conversacional especializado en someter al PO a preguntas de borde (edge cases) para formalizar la spec.</td>
+          <td>El <strong>abogado minucioso</strong> que te hace pensar en las trampas del contrato antes de firmar.</td>
+          <td>Evita que el PO tenga que escribir YAMLs desde cero; traduce lenguaje coloquial a contratos técnicos.</td>
+        </tr>
+        <tr>
+          <td><strong>Contractual DoD</strong><br><em>(Definition of Done)</em></td>
+          <td>Cláusula de finiquito condicionada a la ejecución exitosa de pruebas automatizadas sobre la especificación.</td>
+          <td>El <strong>examen de conducir</strong>: solo se aprueba si se completan los requisitos sin faltas graves objetivas.</td>
+          <td>Sin pipeline de tests en verde, Compras no certifica el hito ni libera la orden de pago al proveedor.</td>
         </tr>
       </tbody>
     </table>
 
+    <!-- BLOQUE 2: PROVEEDOR EXTERNO -->
+    <h3>4.2. Bloque: Proveedor y Factoría de Software (Construcción, Simulación y Autocontrol)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Herramienta / Concepto</th>
+          <th style="width: 28%;">Definición Técnica</th>
+          <th style="width: 25%;">Analogía Didáctica</th>
+          <th style="width: 25%;">Uso Práctico Contractual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Prism / WireMock</strong><br><em>(API Mocking Servers)</em></td>
+          <td>Servidores ligeros que exponen endpoints sintéticos basados estrictamente en el contrato OpenAPI.</td>
+          <td>El <strong>simulador de vuelo</strong> que permite entrenar antes de tocar el avión real.</td>
+          <td>El proveedor desarrolla y prueba su componente de inmediato sin esperar a que el Core Legacy esté disponible.</td>
+        </tr>
+        <tr>
+          <td><strong>OpenAPI Generator</strong></td>
+          <td>Herramienta de generación de código que crea esqueletos de servidor y modelos cliente a partir de la spec.</td>
+          <td>El <strong>molde de fundición industrial</strong>: asegura que la pieza encaje al milímetro en la estructura.</td>
+          <td>Evita errores de tipeo manual y garantiza que el código respete los tipos de datos exigidos por la empresa.</td>
+        </tr>
+        <tr>
+          <td><strong>Dredd / Schemathesis</strong><br><em>(Fuzzing & Conformance Testing)</em></td>
+          <td>Herramientas de testing que bombardean la API del proveedor para certificar si cumple 100% el YAML pactado.</td>
+          <td>El <strong>calibre digital de precisión</strong> que comprueba tolerancias micrométricas en fábrica.</td>
+          <td>Autochequeo que el proveedor debe ejecutar localmente antes de entregar el Pull Request a revisión.</td>
+        </tr>
+        <tr>
+          <td><strong>Test-Driven Spec</strong><br><em>(Pruebas de Aceptación Pre-Construcción)</em></td>
+          <td>Metodología donde los tests de aceptación del PO se entregan al proveedor como batería inicial en rojo (fallida).</td>
+          <td>La <strong>plantilla de examen con las soluciones</strong>: el objetivo es que todas las respuestas queden en verde.</td>
+          <td>Elimina discusiones sobre el alcance durante los Sprints; el proveedor sabe exactamente qué debe pasar el test.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- BLOQUE 3: SISTEMAS, SEGURIDAD & ARQUITECTURA -->
+    <h3>4.3. Bloque: Arquitectura, Seguridad y Sistemas (Gobernanza, Integración e Infraestructura)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Herramienta / Concepto</th>
+          <th style="width: 28%;">Definición Técnica</th>
+          <th style="width: 25%;">Analogía Didáctica</th>
+          <th style="width: 25%;">Uso Práctico Contractual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OpenAPI v3 & AsyncAPI</strong></td>
+          <td>Estándares agnósticos de serialización técnica para describir APIs síncronas (REST) y asíncronas (eventos/colas).</td>
+          <td>El <strong>plano visado y sellado</strong> por el colegio oficial de arquitectos.</td>
+          <td>El contrato técnico inmutable que rige las interfaces entre las 120 aplicaciones corporativas.</td>
+        </tr>
+        <tr>
+          <td><strong>Spectral</strong><br><em>(API Linter Corporativo)</em></td>
+          <td>Motor de análisis estático que audita esquemas OpenAPI/AsyncAPI contra políticas corporativas predefinidas.</td>
+          <td>El <strong>inspector municipal de obras</strong> que precinta si faltan extintores o salidas de emergencia.</td>
+          <td>Bloquea automáticamente contratos que no incluyan autenticación OAuth2 corporativa o trazabilidad.</td>
+        </tr>
+        <tr>
+          <td><strong>Pact</strong><br><em>(Consumer-Driven Contract Testing)</em></td>
+          <td>Marco de pruebas que valida que los cambios en un proveedor no rompan las dependencias de los consumidores.</td>
+          <td>El <strong>enganche universal de vagones de tren</strong>: garantiza que locomotoras de distintos fabricantes acoplen.</td>
+          <td>Impide que el evolutivo entregado por un proveedor para la App A destruya la integración con la App B.</td>
+        </tr>
+        <tr>
+          <td><strong>AppMap / Akita</strong><br><em>(Inferencia Dinámica de Contratos)</em></td>
+          <td>Sondas que analizan la ejecución y el tráfico HTTP en tiempo real para generar contratos OpenAPI a posteriori.</td>
+          <td>La <strong>cámara termográfica</strong> para descubrir tuberías empotradas en paredes sin demoler la casa.</td>
+          <td>Permite aplicar <em>Spec-on-Touch</em> sobre aplicaciones monolíticas legacy o SaaS cerrados sin documentación previa.</td>
+        </tr>
+      </tbody>
+    </table>
+    
     <!-- Sección 5 -->
     <h2>5. Resolución de Puntos de Dolor Críticos</h2>
 
