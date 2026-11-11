@@ -73,7 +73,11 @@ pre b{color:var(--accent);font-weight:500}
 .fw summary::-webkit-details-marker{display:none}
 .fw summary::before{content:"+";font:500 1rem var(--font-mono);color:var(--muted);width:1ch}
 .fw[open] summary::before{content:"−"}
-.fw .body{padding:0 1rem 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.9rem;font-size:.9rem}
+.fw .body{padding:0 1rem 1rem;display:grid;grid-template-columns:minmax(0,1fr);gap:.8rem;font-size:.92rem}
+.fw .body p{max-width:none}
+.fw .fwlink{font-size:.85rem}
+.tag.aud{background:transparent;border:1px solid var(--line);color:var(--fg)}
+.stars{color:var(--warn);letter-spacing:.1em;white-space:nowrap}.stars i{font-style:normal;color:var(--line)}
 .fw .body h4{font:500 .7rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .2rem}
 .fw .body p{margin:0}
 .bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:.4rem 0}
@@ -128,7 +132,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
     <div class="panel"><span class="tag acc">Spec propuesta</span><p><i>Spec-anchored</i>: vive junto al código y se actualiza con un delta en cada evolutivo.</p></div>
     <div class="panel"><span class="tag acc">Documentos</span><p>Constitución corporativa, spec vigente por aplicación y spec de cambio (delta) como contrato.</p></div>
     <div class="panel"><span class="tag acc">Herramientas proveedor</span><p>Al proveedor se le exigen los artefactos (spec, escenarios y matriz de aceptación), no una herramienta concreta.</p></div>
-    <div class="panel"><span class="tag acc">Herramientas PO</span><p>En este estudio se valoran distintas opciones de framework para el trabajo del PO, entre ellas <a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec</a>, <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">Spec Kit</a> y <a href="https://kiro.dev" target="_blank" rel="noopener">Kiro</a>.</p></div>
+    <div class="panel"><span class="tag acc">Herramientas PO</span><p>En este estudio se valoran distintas opciones de framework para el trabajo del PO, entre ellas <a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec</a>, <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a>, <a href="https://github.com/nahisaho/MUSUBI" target="_blank" rel="noopener">MUSUBI</a>, <a href="https://github.com/gotalab/cc-sdd" target="_blank" rel="noopener">cc-sdd</a> y <a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank" rel="noopener">BMAD-METHOD</a>.</p></div>
     <div class="panel"><span class="tag acc">Carga inicial</span><p>Incremental: extraer la spec de cada capacidad solo cuando se toca.</p></div>
     <div class="panel"><span class="tag acc">Próximos pasos</span><p>Contrastar el documento con las otras áreas implicadas: Sistemas, Seguridad y Arquitectura.</p></div>
   </div>
@@ -155,10 +159,20 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 
 <section id="herramientas">
   <h2>Frameworks y herramientas</h2>
-  <p>OpenSpec como referencia para evolutivos y Spec Kit como alternativa más estructurada. Kiro solo encaja en equipos internos; el resto se descarta por ahora. Se exige el artefacto, no la herramienta.</p>
+  <p>Se analizan siete opciones: referencias del sector, alternativas de mayor rigor, productos comerciales y una propuesta de nicho. Cada una indica a quién aplica desde nuestra perspectiva: al PO, que redacta y valida las specs, o al proveedor, que las implementa. En cualquier caso, al proveedor se le exige el artefacto, no la herramienta.</p>
   <div class="seg" role="tablist" id="fwSeg"></div>
   <div id="fwList"></div>
-  <p class="note">Para la carga inicial existen además Reversa (MIT, un mes de vida y un solo caso exploratorio de COBOL a Go), spec-gen (comunidad, formato OpenSpec) y generadores de pruebas de caracterización (plugin de Claude Code para Go, Python, TS, JS, Kotlin y Java; Pinion para .NET). Thoughtworks situó el SDD en «Assess» en su Radar de noviembre de 2025.</p>
+  <h3>Comparativa de opciones para el PO</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Framework</th><th>Curva de aprendizaje</th><th>Grado de encaje</th><th>Facilidad de implantación</th><th>Coste</th></tr>
+    <tr><td><b>OpenSpec</b></td><td>Baja</td><td><span class="stars" aria-label="5 de 5">★★★★★</span></td><td>Alta: un paquete npm ligero, sin IDE propio</td><td>Gratuito (MIT)</td></tr>
+    <tr><td><b>GitHub Spec Kit</b></td><td>Media</td><td><span class="stars" aria-label="4 de 5">★★★★<i>★</i></span></td><td>Media: requiere Python y uv; presets corporativos</td><td>Gratuito (MIT)</td></tr>
+    <tr><td><b>MUSUBI</b></td><td>Alta</td><td><span class="stars" aria-label="4 de 5">★★★★<i>★</i></span></td><td>Baja: muchas piezas y un solo mantenedor</td><td>Gratuito (MIT)</td></tr>
+    <tr><td><b>cc-sdd</b></td><td>Baja</td><td><span class="stars" aria-label="3 de 5">★★★<i>★★</i></span></td><td>Media: la trazabilidad hay que añadirla con plantillas</td><td>Gratuito (MIT)</td></tr>
+    <tr><td><b>BMAD-METHOD</b></td><td>Alta</td><td><span class="stars" aria-label="3 de 5">★★★<i>★★</i></span></td><td>Baja: supone adoptar un método de trabajo completo</td><td>Gratuito (MIT)</td></tr>
+  </table></div>
+  <p class="note">Valoración de criterio propio, pendiente de contrastar en las pruebas. El coste es el de la herramienta: todas necesitan además la licencia del asistente de IA que se use (Claude Code, GitHub Copilot, etc.). Kiro y Tessl no se incluyen porque se dirigen al trabajo del proveedor o de los equipos de desarrollo.</p>
+  <p class="note">Para la carga inicial existen además Reversa (MIT, un mes de vida y un solo caso exploratorio de COBOL a Go), spec-gen (comunidad, formato OpenSpec) y generadores de pruebas de caracterización (plugin de Claude Code para Go, Python, TS, JS, Kotlin y Java; Pinion para .NET). <a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Thoughtworks</a> situó el SDD en «Assess» en su Technology Radar de noviembre de 2025.</p>
 </section>
 
 <section id="documentos">
@@ -332,15 +346,40 @@ seg("appSeg",AP,function(a){$("appOut").innerHTML='<p style="margin:0"><b>'+a.la
 
 /* Frameworks */
 var FW=[
- {n:"OpenSpec",v:"Recomendado",c:"ok",a:"Specs vivas y deltas AÑADIDOS/MODIFICADOS/ELIMINADOS, archivo y verificación.",e:"El mejor para aplicaciones existentes (brownfield).",r:"Joven; en una prueba no cuestionó por sí mismo la autorización. Npm, de Fission-AI."},
- {n:"Spec Kit",v:"Alternativa",c:"acc",a:"Constitución y comandos specify, clarify, checklist y analyze. GitHub, licencia MIT.",e:"Buena base de gobierno por su constitución.",r:"Verboso según Fowler. 96K+ estrellas, 30 integraciones, 91 extensiones."},
- {n:"Kiro (AWS)",v:"Solo equipos internos",c:"warn",a:"requirements.md, design.md y tasks.md, EARS, hooks y steering.",e:"Seguro: SSO (IAM Identity Center, Okta, Entra), ISO 27001, regiones UE.",r:"Dependencia de AWS y de su IDE."},
- {n:"BMAD",v:"Descartar",c:"bad",a:"Proceso completo con hasta 21 agentes.",e:"Poco: demasiado pesado.",r:"Más del 40 % de tokens en specs en un benchmark."},
- {n:"Tessl",v:"Descartar",c:"bad",a:"Spec-as-source.",e:"Ninguno por ahora.",r:"Beta y no determinista; en enero de 2026 se reorientó a gestor de paquetes de skills."}];
-var FF=[{label:"Todos",f:null},{label:"Recomendados",f:["Recomendado","Alternativa"]},{label:"Con reservas",f:["Solo equipos internos","Descartar"]}];
+ {n:"OpenSpec",u:"https://github.com/Fission-AI/OpenSpec",who:["PO","Proveedor"],v:"Candidato",c:"ok",
+  a:"Trabaja con dos piezas: la spec vigente de cada capacidad y una carpeta por cambio con la propuesta, las tareas y los deltas (AÑADIDOS, MODIFICADOS, ELIMINADOS). Al cerrar el cambio, los deltas se fusionan en la spec vigente y el cambio se archiva, así que la spec refleja siempre lo que hay en producción. Es ligero, funciona con la mayoría de asistentes de IA y no impone IDE.",
+  e:"Es el que mejor encaja con nuestro modelo documental (spec vigente y delta) y con aplicaciones que ya existen.",
+  r:"Proyecto joven de una empresa pequeña (Fission-AI). No cuestiona por sí mismo requisitos como la autorización: eso lo tiene que aportar la constitución."},
+ {n:"GitHub Spec Kit",u:"https://github.com/github/spec-kit",who:["PO","Proveedor"],v:"Candidato",c:"ok",
+  a:"Toolkit de código abierto de GitHub que guía el trabajo por fases con comandos: constitución del proyecto, especificación, plan técnico, tareas, implementación y comprobación de que el resultado converge con la spec. Para entornos corporativos ofrece presets para imponer estándares organizativos o regulatorios, catálogos privados de componentes aprobados y uso sin conexión (air-gapped). Es la referencia más extendida del sector: unas 145.000 estrellas en GitHub y versión 1.2 en octubre de 2026.",
+  e:"Referencia neutral: su formato y su constitución sirven de base común con cualquier proveedor, y los presets permiten trasladar nuestras reglas corporativas.",
+  r:"Más pesado que OpenSpec y pensado sobre todo para funcionalidades nuevas; para evolutivos hay que adaptar el flujo. Requiere Python y uv. Böckeler lo critica por verboso."},
+ {n:"BMAD-METHOD",u:"https://github.com/bmad-code-org/BMAD-METHOD",who:["PO","Proveedor"],v:"Con reservas",c:"warn",
+  a:"Más que un formato de spec, es un método ágil completo asistido por IA, con agentes especializados por rol (producto, arquitectura, UX, desarrollo y pruebas) que generan briefs, especificaciones y arquitectura y se pasan el contexto entre ellos. El proceso se ajusta al tamaño del trabajo: los cambios pequeños van directos a construcción y los complejos pasan por más fases. Tiene módulos adicionales, como un arquitecto de pruebas orientado a empresa. Código abierto (MIT), unas 55.000 estrellas.",
+  e:"Su enfoque multirrol podría alinearse con la estructura por áreas de DTIC: cada área asumiría las fases de su rol.",
+  r:"Es el más pesado: implica adoptar un método de trabajo, no solo un formato. En un benchmark, más del 40 % de los tokens se iban en specs. No declara funciones de gobierno ni de cumplimiento, y la versión 7 está en preview."},
+ {n:"MUSUBI",u:"https://github.com/nahisaho/MUSUBI",who:["PO","Proveedor"],v:"A explorar",c:"acc",
+  a:"Combina ideas de Spec Kit, OpenSpec y cc-sdd con énfasis en el rigor: requisitos en EARS, diseño con el <a href=\"https://c4model.com\" target=\"_blank\" rel=\"noopener\">modelo C4</a> y registros de decisiones de arquitectura (ADR), una constitución de 9 artículos con validación automática y una matriz de trazabilidad requisito ↔ diseño ↔ código ↔ prueba que detecta requisitos huérfanos y código sin probar. Admite deltas para evolutivos y funciona con siete asistentes de IA. Licencia MIT.",
+  e:"Es la opción de mayor rigor metodológico: la trazabilidad y las puertas de validación encajan con requisitos estrictos de seguridad y con la aceptación contractual.",
+  r:"Lo mantiene una sola persona, tiene muy poca comunidad (menos de 100 estrellas) y parte de la documentación está en japonés. Riesgo de continuidad: más útil como fuente de ideas que como herramienta corporativa."},
+ {n:"cc-sdd",u:"https://github.com/gotalab/cc-sdd",who:["PO","Proveedor"],v:"A explorar",c:"acc",
+  a:"Lleva el flujo de Kiro (requisitos, diseño y tareas) a cualquier asistente de IA: Claude Code y Codex de forma estable, y Cursor, GitHub Copilot o Gemini CLI en beta. Los requisitos se escriben en EARS con criterios de aceptación, y cada fase termina en una puerta de aprobación humana antes de pasar a la siguiente. Las plantillas y reglas se pueden personalizar y el instalador genera los documentos en español. Licencia MIT, unas 3.700 estrellas.",
+  e:"Propuesta propia de nicho. Combina el formato de Kiro con independencia de herramienta: el PO aprueba el contrato en cada fase y las specs son portables entre proveedores.",
+  r:"No trae trazabilidad requisito ↔ prueba ni funciones de seguridad: habría que añadirlas con plantillas. Está orientado sobre todo al desarrollo y su madurez es moderada."},
+ {n:"Kiro (AWS)",u:"https://kiro.dev",who:["Proveedor"],v:"Con reservas",c:"warn",
+  a:"IDE de AWS, también con CLI y versión web, con el SDD integrado: genera requirements.md, design.md y tasks.md, analiza los requisitos para detectar huecos e incoherencias, ejecuta tareas en paralelo y ofrece hooks y steering para mantener el contexto. La versión empresarial incluye SSO (Okta, Entra ID, IAM Identity Center), datos en la región de Fráncfort, consola de administración y control de qué modelos y servidores MCP se pueden usar. Desde 20 USD por usuario y mes.",
+  e:"Encaja en equipos de desarrollo internos o en proveedores que ya trabajen con AWS. Su formato de spec es el mismo que usa cc-sdd.",
+  r:"Ata a un IDE y a AWS, y no permite usar modelos propios. Al PO le aporta poco frente a una herramienta independiente, y al proveedor no le exigimos IDE."},
+ {n:"Tessl",u:"https://tessl.io",who:["Proveedor"],v:"Descartado por ahora",c:"bad",
+  a:"Nació como plataforma spec-as-source (la spec es el código fuente y el código se regenera), pero en enero de 2026 se reorientó a plataforma de contexto para agentes de IA: un registro de skills con políticas de uso, evaluaciones y revisiones automáticas de código y seguridad. El plan Enterprise incluye logs de auditoría, SAML SSO, uso de un LLM propio (BYO LLM), despliegue dedicado o en instalaciones propias y residencia de datos en la UE bajo petición. La fundó Guy Podjarny, cofundador de Snyk.",
+  e:"Sus controles empresariales son los más completos, pero sirven para gobernar el trabajo de los agentes de desarrollo, no para especificar requisitos.",
+  r:"Su motor spec-as-source sigue en beta cerrada, así que hoy no es un framework de SDD para el PO. Podría interesar a Sistemas para gobernar el uso de IA de los equipos de desarrollo."}];
+var FF=[{label:"Todos",f:null},{label:"Para el PO",f:"PO"},{label:"Para el proveedor",f:"Proveedor"}];
 seg("fwSeg",FF,function(f){
-  $("fwList").innerHTML=FW.filter(function(x){return!f.f||f.f.indexOf(x.v)>-1}).map(function(x){
-    return '<details class="fw"><summary>'+x.n+' <span class="tag '+x.c+'">'+x.v+'</span></summary><div class="body"><div><h4>Qué aporta</h4><p>'+x.a+'</p></div><div><h4>Encaje</h4><p>'+x.e+'</p></div><div><h4>Reservas</h4><p>'+x.r+'</p></div></div></details>'}).join("");
+  $("fwList").innerHTML=FW.filter(function(x){return!f.f||x.who.indexOf(f.f)>-1}).map(function(x){
+    return '<details class="fw"><summary>'+x.n+' '+x.who.map(function(w){return'<span class="tag aud">'+w+'</span>'}).join(" ")+' <span class="tag '+x.c+'">'+x.v+'</span></summary><div class="body">'
+      +'<div><h4>Qué aporta</h4><p>'+x.a+'</p></div><div><h4>Encaje</h4><p>'+x.e+'</p></div><div><h4>Reservas</h4><p>'+x.r+'</p></div>'
+      +'<p class="fwlink"><a href="'+x.u+'" target="_blank" rel="noopener">Web oficial de '+x.n+' ↗</a></p></div></details>'}).join("");
 });
 
 /* Documentos */
