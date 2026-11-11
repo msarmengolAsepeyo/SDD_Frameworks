@@ -51,12 +51,16 @@ p{margin:.5rem 0;max-width:68ch}
 .seg button{font:500 .85rem var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.4rem .8rem;cursor:pointer}
 .seg button:hover{border-color:var(--accent)}
 .seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.fwbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.4rem}
+.fwtools{display:flex;gap:.4rem}
+.fwtools button{font:500 .8rem var(--font-body);color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:6px;padding:.35rem .7rem;cursor:pointer}
+.fwtools button:hover{border-color:var(--accent)}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;font-size:.9rem}
 th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
 th{font:500 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
 tr:last-child td{border-bottom:0}
-ul.tight{margin:.4rem 0;padding-left:1.2rem} ul.tight li{margin:.25rem 0;max-width:66ch}
+ul.tight,ol.tight{margin:.4rem 0;padding-left:1.2rem} ul.tight li,ol.tight li{margin:.25rem 0;max-width:66ch}
 code,.mono{font-family:var(--font-mono);font-size:.85em}
 pre{font:400 .82rem/1.6 var(--font-mono);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;overflow-x:auto;margin:.6rem 0}
 pre b{color:var(--accent);font-weight:500}
@@ -160,19 +164,37 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <section id="herramientas">
   <h2>Frameworks y herramientas</h2>
   <p>Se analizan siete opciones: referencias del sector, alternativas de mayor rigor, productos comerciales y una propuesta de nicho. Cada una indica a quién aplica desde nuestra perspectiva: al PO, que redacta y valida las specs, o al proveedor, que las implementa. En cualquier caso, al proveedor se le exige el artefacto, no la herramienta.</p>
-  <div class="seg" role="tablist" id="fwSeg"></div>
+  <div class="fwbar"><div class="seg" role="tablist" id="fwSeg"></div><div class="fwtools"><button type="button" id="fwOpen">Desplegar todo</button><button type="button" id="fwClose">Plegar todo</button></div></div>
   <div id="fwList"></div>
+  <p class="note">Las opciones dirigidas al proveedor (Kiro y Tessl) se mantienen porque serían aplicables a los desarrollos propios, aunque ese escenario queda fuera de este análisis.</p>
   <h3>Comparativa de opciones para el PO</h3>
   <div class="tablewrap"><table>
     <tr><th>Framework</th><th>Curva de aprendizaje</th><th>Grado de encaje</th><th>Facilidad de implantación</th><th>Coste</th></tr>
-    <tr><td><b>OpenSpec</b></td><td>Baja</td><td><span class="stars" aria-label="5 de 5">★★★★★</span></td><td>Alta: un paquete npm ligero, sin IDE propio</td><td>Gratuito (MIT)</td></tr>
-    <tr><td><b>GitHub Spec Kit</b></td><td>Media</td><td><span class="stars" aria-label="4 de 5">★★★★<i>★</i></span></td><td>Media: requiere Python y uv; presets corporativos</td><td>Gratuito (MIT)</td></tr>
-    <tr><td><b>MUSUBI</b></td><td>Alta</td><td><span class="stars" aria-label="4 de 5">★★★★<i>★</i></span></td><td>Baja: muchas piezas y un solo mantenedor</td><td>Gratuito (MIT)</td></tr>
-    <tr><td><b>cc-sdd</b></td><td>Baja</td><td><span class="stars" aria-label="3 de 5">★★★<i>★★</i></span></td><td>Media: la trazabilidad hay que añadirla con plantillas</td><td>Gratuito (MIT)</td></tr>
-    <tr><td><b>BMAD-METHOD</b></td><td>Alta</td><td><span class="stars" aria-label="3 de 5">★★★<i>★★</i></span></td><td>Baja: supone adoptar un método de trabajo completo</td><td>Gratuito (MIT)</td></tr>
+    <tr><td><b>OpenSpec</b></td><td>Baja</td><td><span class="stars" aria-label="5 de 5">★★★★★</span></td><td>Alta: un paquete npm ligero, sin IDE propio</td><td>Gratuito (código abierto, licencia <a href="https://opensource.org/license/mit" target="_blank" rel="noopener">MIT</a>)</td></tr>
+    <tr><td><b>GitHub Spec Kit</b></td><td>Media</td><td><span class="stars" aria-label="4 de 5">★★★★<i>★</i></span></td><td>Media: requiere Python y uv; presets corporativos</td><td>Gratuito (código abierto, licencia <a href="https://opensource.org/license/mit" target="_blank" rel="noopener">MIT</a>)</td></tr>
+    <tr><td><b>MUSUBI</b></td><td>Alta</td><td><span class="stars" aria-label="4 de 5">★★★★<i>★</i></span></td><td>Baja: muchas piezas y un solo mantenedor</td><td>Gratuito (código abierto, licencia <a href="https://opensource.org/license/mit" target="_blank" rel="noopener">MIT</a>)</td></tr>
+    <tr><td><b>cc-sdd</b></td><td>Baja</td><td><span class="stars" aria-label="3 de 5">★★★<i>★★</i></span></td><td>Media: la trazabilidad hay que añadirla con plantillas</td><td>Gratuito (código abierto, licencia <a href="https://opensource.org/license/mit" target="_blank" rel="noopener">MIT</a>)</td></tr>
+    <tr><td><b>BMAD-METHOD</b></td><td>Alta</td><td><span class="stars" aria-label="3 de 5">★★★<i>★★</i></span></td><td>Baja: supone adoptar un método de trabajo completo</td><td>Gratuito (código abierto, licencia <a href="https://opensource.org/license/mit" target="_blank" rel="noopener">MIT</a>)</td></tr>
   </table></div>
-  <p class="note">Valoración de criterio propio, pendiente de contrastar en las pruebas. El coste es el de la herramienta: todas necesitan además la licencia del asistente de IA que se use (Claude Code, GitHub Copilot, etc.). Kiro y Tessl no se incluyen porque se dirigen al trabajo del proveedor o de los equipos de desarrollo.</p>
-  <p class="note">Para la carga inicial existen además Reversa (MIT, un mes de vida y un solo caso exploratorio de COBOL a Go), spec-gen (comunidad, formato OpenSpec) y generadores de pruebas de caracterización (plugin de Claude Code para Go, Python, TS, JS, Kotlin y Java; Pinion para .NET). <a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Thoughtworks</a> situó el SDD en «Assess» en su Technology Radar de noviembre de 2025.</p>
+  <p class="note">Valoración de criterio propio, pendiente de contrastar en las pruebas. La licencia MIT es una licencia de código abierto permisiva: permite usar, modificar y distribuir el software libremente, también con fines comerciales, sin pagar licencias. El coste indicado es el de la herramienta: todas necesitan además la licencia del asistente de IA que se use (Claude Code, GitHub Copilot, etc.). Kiro y Tessl no se incluyen porque se dirigen al trabajo del proveedor o de los equipos de desarrollo.</p>
+  <h3>Especificar y validar: combinaciones posibles</h3>
+  <p>En nuestro modelo hay tres momentos distintos: especificar, validar la spec antes de congelarla y validar la entrega del proveedor. Ninguna herramienta cubre bien los tres.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Framework</th><th>Especificar</th><th>Validar la spec</th><th>Validar la entrega</th></tr>
+    <tr><td><b>OpenSpec</b></td><td>Fuerte: deltas sobre la spec vigente</td><td>Básica: formato y estructura</td><td>No</td></tr>
+    <tr><td><b>GitHub Spec Kit</b></td><td>Fuerte</td><td>Media: comprobaciones de calidad y coherencia</td><td>Parcial: verifica que la implementación converge con la spec</td></tr>
+    <tr><td><b>MUSUBI</b></td><td>Fuerte: EARS y C4</td><td>Fuerte: validación contra la constitución</td><td>Fuerte: matriz de trazabilidad y detección de huecos</td></tr>
+    <tr><td><b>cc-sdd</b></td><td>Media</td><td>Puertas de aprobación humana</td><td>No</td></tr>
+    <tr><td><b>BMAD-METHOD</b></td><td>Fuerte</td><td>Por roles</td><td>Parcial: agente de QA y arquitecto de pruebas</td></tr>
+  </table></div>
+  <p>La validación de la entrega, es decir, que cada escenario tenga su prueba y que la prueba pase, es la que sostiene la aceptación contractual. No la hace el framework, sino la batería de pruebas del proveedor y nuestra matriz de aceptación. Por eso tiene sentido combinar tres piezas:</p>
+  <ol class="tight">
+    <li><b>Un formato de spec común</b> para todos los proveedores: OpenSpec por su modelo de deltas, o Spec Kit si se prefiere la referencia del sector.</li>
+    <li><b>La trazabilidad de MUSUBI como modelo</b>, no necesariamente como herramienta: identificadores estables que unen requisito, escenario y prueba, con una comprobación automática de que no queda ningún requisito sin escenario ni ningún escenario sin prueba.</li>
+    <li><b>Escenarios <a href="https://cucumber.io/docs/gherkin/" target="_blank" rel="noopener">Gherkin</a> ejecutables</b> en la batería de pruebas del proveedor, que alimentan la matriz de aceptación con independencia de la herramienta que use.</li>
+  </ol>
+  <p class="note">Capacidades según la documentación de cada proyecto; valoración de criterio propio, pendiente de contrastar en las pruebas.</p>
+  <p class="note"><a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Thoughtworks</a> situó el SDD en «Assess» en su Technology Radar de noviembre de 2025.</p>
 </section>
 
 <section id="documentos">
@@ -246,6 +268,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <p>No hace falta extraer la especificación de las 120 aplicaciones. La estrategia depende del tipo de aplicación y es incremental.</p>
   <div class="seg" role="tablist" id="ldSeg"></div>
   <div class="panel" id="ldOut" aria-live="polite"></div>
+  <p><b>Herramientas de apoyo.</b> Para extraer specs de código existente están <a href="https://sandeco.github.io/reversa/" target="_blank" rel="noopener">Reversa</a> (licencia MIT, publicado en mayo de 2026, con un solo caso exploratorio de COBOL a Go) y <a href="https://github.com/clay-good/spec-gen" target="_blank" rel="noopener">spec-gen</a> (proyecto de la comunidad que genera specs en formato OpenSpec). Para fijar el comportamiento actual antes de tocar el código existen generadores de pruebas de caracterización: un plugin de Claude Code para Go, Python, TypeScript, JavaScript, Kotlin y Java, y <a href="https://www.nuget.org/packages/Pinion" target="_blank" rel="noopener">Pinion</a> para .NET.</p>
   <p>El patrón Strangler Fig permite sustituir un legacy por partes. Sobre Reversa, el único caso conocido (COBOL a Go) arrojó 517 afirmaciones: 490 confirmadas, 24 inferidas y 3 lagunas. Su índice de confianza del 97,1 % es interno y no tiene auditoría externa.</p>
   <h3>Comprobaciones previas</h3>
   <ul class="tight">
@@ -374,6 +397,8 @@ var FW=[
   a:"Nació como plataforma spec-as-source (la spec es el código fuente y el código se regenera), pero en enero de 2026 se reorientó a plataforma de contexto para agentes de IA: un registro de skills con políticas de uso, evaluaciones y revisiones automáticas de código y seguridad. El plan Enterprise incluye logs de auditoría, SAML SSO, uso de un LLM propio (BYO LLM), despliegue dedicado o en instalaciones propias y residencia de datos en la UE bajo petición. La fundó Guy Podjarny, cofundador de Snyk.",
   e:"Sus controles empresariales son los más completos, pero sirven para gobernar el trabajo de los agentes de desarrollo, no para especificar requisitos.",
   r:"Su motor spec-as-source sigue en beta cerrada, así que hoy no es un framework de SDD para el PO. Podría interesar a Sistemas para gobernar el uso de IA de los equipos de desarrollo."}];
+function fwAll(o){[].forEach.call(document.querySelectorAll("#fwList details"),function(d){d.open=o})}
+$("fwOpen").addEventListener("click",function(){fwAll(true)});$("fwClose").addEventListener("click",function(){fwAll(false)});
 var FF=[{label:"Todos",f:null},{label:"Para el PO",f:"PO"},{label:"Para el proveedor",f:"Proveedor"}];
 seg("fwSeg",FF,function(f){
   $("fwList").innerHTML=FW.filter(function(x){return!f.f||x.who.indexOf(f.f)>-1}).map(function(x){
