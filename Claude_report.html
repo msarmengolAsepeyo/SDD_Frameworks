@@ -53,8 +53,8 @@ p{margin:.5rem 0;max-width:68ch}
 .seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .fwbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.4rem}
 .fwtools{display:flex;gap:.4rem}
-.fwtools button{font:500 .8rem var(--font-body);color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:6px;padding:.35rem .7rem;cursor:pointer}
-.fwtools button:hover{border-color:var(--accent)}
+.fwtools button{font:500 .85rem var(--font-body);color:var(--accent);background:none;border:0;padding:.35rem 0;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.fwtools button:hover{color:var(--fg)}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;font-size:.9rem}
 th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--line)}
@@ -62,6 +62,16 @@ th{font:500 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercas
 tr:last-child td{border-bottom:0}
 ul.tight,ol.tight{margin:.4rem 0;padding-left:1.2rem} ul.tight li,ol.tight li{margin:.25rem 0;max-width:66ch}
 code,.mono{font-family:var(--font-mono);font-size:.85em}
+.doc{border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.doc[hidden]{display:none}
+.dochead{font:500 .78rem var(--font-mono);padding:.55rem 1rem;background:var(--surface2);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem 1rem}
+.dochead span{font-family:var(--font-body);color:var(--muted)}
+pre.docbody{margin:0;border:0;border-radius:0}
+.docpad{padding:.9rem 1rem}
+.docbody .hl{background:var(--accent-soft);color:var(--accent)}
+.docbody .add{background:var(--ok-soft);color:var(--ok)}
+.docbody .mod{background:var(--warn-soft);color:var(--warn)}
+.docbody i{color:var(--muted)}
 pre{font:400 .82rem/1.6 var(--font-mono);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;overflow-x:auto;margin:.6rem 0}
 pre b{color:var(--accent);font-weight:500}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.9rem}
@@ -117,7 +127,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <nav class="toc" id="toc" aria-label="Secciones">
   <span class="lbl">Contenido</span>
   <a href="#resumen">Resumen</a><a href="#niveles">Niveles de SDD</a>
-  <a href="#herramientas">Herramientas</a><a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a>
+  <a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a><a href="#herramientas">Herramientas</a>
   <a href="#redaccion">Redacción con IA</a><a href="#carga">Carga inicial</a><a href="#sintaxis">Sintaxis y estándares</a>
   <a href="#practicas">Buenas prácticas</a><a href="#plan">Hoja de ruta</a><a href="#glosario">Glosario y fuentes</a>
 </nav>
@@ -161,12 +171,106 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <p class="note fn" id="nota1"><a href="#ref1">1</a>. Birgitta Böckeler es Distinguished Engineer en <a href="https://www.thoughtworks.com" target="_blank" rel="noopener">Thoughtworks</a>, consultora tecnológica internacional, y experta en desarrollo asistido por IA. Definición y niveles tomados de su artículo «<a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl</a>» (martinfowler.com, 15 de octubre de 2025).</p>
 </section>
 
+<section id="documentos">
+  <h2>Modelo documental</h2>
+  <p>Tres documentos: una constitución corporativa, una spec vigente por aplicación y una spec de cambio (delta) por evolutivo.</p>
+  <div class="seg" role="tablist" id="docSeg"></div>
+  <div class="panel" id="docOut" aria-live="polite"></div>
+  <p>La spec de cambio es el contrato. Al cerrar el evolutivo se fusiona en la spec vigente y se archiva. En una aplicación nueva no hay delta: la primera spec que se redacta pasa a ser directamente la spec vigente inicial.</p>
+  <p>La matriz de aceptación no es un documento aparte, sino una sección del delta: el PO la prepara con los escenarios y el proveedor la completa con sus pruebas y resultados.</p>
+  <p class="note"><i>Las cifras son orientativas y de criterio propio.</i></p>
+
+  <h3>Calculadora de tamaño de un evolutivo</h3>
+  <div class="panel">
+    <label for="reqN">Requisitos del evolutivo: <b id="reqNv" class="mono">10</b></label><br>
+    <input type="range" id="reqN" min="1" max="40" value="10">
+    <div class="out">
+      <div><div class="k">Escenarios (2 a 5 por requisito)</div><div class="v" id="scn"></div></div>
+      <div><div class="k">Valoración</div><div id="sizeTag"></div></div>
+    </div>
+    <p class="note" id="sizeNote"></p>
+  </div>
+
+  <h3>Ejemplo ilustrativo: aplicación GESTEXP</h3>
+  <p class="note">GESTEXP es una aplicación de gestión de expedientes inventada para ilustrar. Recorre los pasos para ver cada documento y cómo se relacionan en un evolutivo.</p>
+  <div class="seg" role="tablist" id="exSeg"></div>
+  <p id="exLead" style="margin:.2rem 0 .5rem"></p>
+
+  <div class="doc" data-step="0"><div class="dochead">constitucion.md <span>Corporativa · común a todas las aplicaciones</span></div>
+<pre class="docbody"><b># Constitución corporativa (extracto)</b>
+<span class="hl">SEG-02</span>  Toda acción que cambie el estado de un expediente DEBE comprobar
+        el permiso del usuario y registrar los intentos rechazados.
+SEG-05  Los registros de auditoría DEBEN conservarse 5 años.
+TRZ-01  Todo requisito DEBE tener al menos un escenario de aceptación
+        con su prueba asociada.</pre></div>
+
+  <div class="doc" data-step="1"><div class="dochead">gestexp/specs/cierre-expedientes/spec.md <span>Spec vigente · antes del cambio</span></div>
+<pre class="docbody"><b># GESTEXP · Spec vigente</b>
+<b>## CAP-EXP-03 · Cierre de expedientes</b>
+REQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con
+             documentos obligatorios pendientes.
+<span class="hl">REQ-EXP-031</span>  El sistema DEBE permitir cerrar un expediente abierto.</pre></div>
+
+  <div class="doc" data-step="2"><div class="dochead">gestexp/changes/cierre-con-permiso/delta.md <span>Spec de cambio · el contrato del evolutivo</span></div>
+<pre class="docbody"><b>## Propuesta</b>
+Evitar cierres de expediente por usuarios sin permiso y dejar rastro
+de los intentos.
+
+<b>## Reglas de la constitución aplicables</b>
+SEG-02, SEG-05, TRZ-01
+
+<b>## MODIFICADOS</b>
+<span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un
+             usuario sin el permiso CERRAR.
+<b>## AÑADIDOS</b>
+<span class="add">REQ-EXP-032</span>  CUANDO se rechaza un cierre, el sistema DEBE registrar
+             usuario, fecha y expediente.
+
+<b>## Escenarios de aceptación</b>
+ESC-1 · Cierre sin permiso es rechazado (REQ-EXP-031)
+  DADO un expediente en estado abierto
+  Y un usuario sin permiso CERRAR
+  CUANDO intenta cerrar el expediente
+  ENTONCES el sistema rechaza el cierre
+ESC-2 · Cierre con permiso funciona (REQ-EXP-031)
+ESC-3 · El intento rechazado queda registrado (REQ-EXP-032)
+ESC-4 · El registro incluye usuario y fecha (REQ-EXP-032)
+
+<b>## Matriz de aceptación</b>  → paso 4</pre></div>
+
+  <div class="doc" data-step="3"><div class="dochead">delta.md · sección «Matriz de aceptación» <span>La completa el proveedor con sus pruebas</span></div>
+    <div class="docpad">
+      <p class="note" style="margin-top:0">Pulsa el estado de cada escenario para simular los resultados que entrega el proveedor.</p>
+      <div class="tablewrap"><table id="matrix"></table></div>
+      <div class="bar" aria-hidden="true"><i id="mbar"></i></div>
+      <p class="note" id="mtxt"></p>
+    </div></div>
+
+  <div class="doc" data-step="4"><div class="dochead">gestexp/specs/cierre-expedientes/spec.md <span id="mergeTag">Spec vigente · tras el cierre</span></div>
+<pre class="docbody" id="mergeBody"></pre></div>
+</section>
+
+<section id="operativo">
+  <h2>Modelo operativo</h2>
+  <p>El PO redacta el qué y el porqué, el proveedor cuestiona la viabilidad y la versión 1 se congela como contrato.</p>
+  <div class="steps" id="opSteps" role="tablist"></div>
+  <div class="panel" id="opOut" aria-live="polite"></div>
+  <h3>Cláusulas contractuales</h3>
+  <ul class="tight">
+    <li>Los artefactos (spec, pruebas, matriz) son entregables obligatorios.</li>
+    <li>«Terminado» incluye la spec actualizada y la matriz de aceptación.</li>
+    <li>La aceptación se basa en los escenarios aprobados.</li>
+    <li>Se regula el uso de IA y su trazabilidad.</li>
+  </ul>
+  <p class="note">En entornos regulados la firma humana es indelegable.</p>
+</section>
+
 <section id="herramientas">
   <h2>Frameworks y herramientas</h2>
   <p>Se analizan siete opciones: referencias del sector, alternativas de mayor rigor, productos comerciales y una propuesta de nicho. Cada una indica a quién aplica desde nuestra perspectiva: al PO, que redacta y valida las specs, o al proveedor, que las implementa. En cualquier caso, al proveedor se le exige el artefacto, no la herramienta.</p>
-  <div class="fwbar"><div class="seg" role="tablist" id="fwSeg"></div><div class="fwtools"><button type="button" id="fwOpen">Desplegar todo</button><button type="button" id="fwClose">Plegar todo</button></div></div>
+  <div class="fwbar"><div class="seg" role="tablist" id="fwSeg"></div><div class="fwtools"><button type="button" id="fwClose">Plegar todo</button></div></div>
   <div id="fwList"></div>
-  <p class="note">Las opciones dirigidas al proveedor (Kiro y Tessl) se mantienen porque serían aplicables a los desarrollos propios, aunque ese escenario queda fuera de este análisis.</p>
+  <p class="note">Las opciones dirigidas exclusivamente al proveedor (Kiro y Tessl) se mantienen porque serían aplicables a los desarrollos propios, aunque ese escenario queda fuera de este análisis.</p>
   <h3>Comparativa de opciones para el PO</h3>
   <div class="tablewrap"><table>
     <tr><th>Framework</th><th>Curva de aprendizaje</th><th>Grado de encaje</th><th>Facilidad de implantación</th><th>Coste</th></tr>
@@ -194,65 +298,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
     <li><b>Escenarios <a href="https://cucumber.io/docs/gherkin/" target="_blank" rel="noopener">Gherkin</a> ejecutables</b> en la batería de pruebas del proveedor, que alimentan la matriz de aceptación con independencia de la herramienta que use.</li>
   </ol>
   <p class="note">Capacidades según la documentación de cada proyecto; valoración de criterio propio, pendiente de contrastar en las pruebas.</p>
-  <p class="note"><a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Thoughtworks</a> situó el SDD en «Assess» en su Technology Radar de noviembre de 2025.</p>
-</section>
-
-<section id="documentos">
-  <h2>Modelo documental</h2>
-  <p>Tres documentos: una constitución corporativa, una spec vigente por aplicación y una spec de cambio (delta) por evolutivo.</p>
-  <div class="seg" role="tablist" id="docSeg"></div>
-  <div class="panel" id="docOut" aria-live="polite"></div>
-  <p>La spec de cambio es el contrato. Al cerrar el evolutivo se fusiona en la spec vigente y se archiva. Las cifras son orientativas y de criterio propio.</p>
-
-  <h3>Calculadora de tamaño de un evolutivo</h3>
-  <div class="panel">
-    <label for="reqN">Requisitos del evolutivo: <b id="reqNv" class="mono">10</b></label><br>
-    <input type="range" id="reqN" min="1" max="40" value="10">
-    <div class="out">
-      <div><div class="k">Escenarios (2 a 5 por requisito)</div><div class="v" id="scn"></div></div>
-      <div><div class="k">Valoración</div><div id="sizeTag"></div></div>
-    </div>
-    <p class="note" id="sizeNote"></p>
-  </div>
-
-  <h3>Ejemplo ilustrativo: aplicación GESTEXP</h3>
-  <p class="note">GESTEXP es una aplicación de gestión de expedientes inventada para ilustrar. Pulsa el estado de cada escenario para simular la validación de la matriz de aceptación.</p>
-  <div class="grid2">
-    <div class="panel">
-      <span class="tag">Propuesta</span>
-      <p>Evitar cierres de expediente por usuarios sin permiso y dejar rastro de los intentos.</p>
-      <span class="tag warn">MODIFICADO</span> <code>REQ-EXP-031</code>
-      <p>El sistema DEBE rechazar el cierre de un expediente por un usuario sin el permiso CERRAR.</p>
-      <span class="tag ok">AÑADIDO</span> <code>REQ-EXP-032</code>
-      <p>CUANDO se rechaza un cierre, el sistema DEBE registrar usuario, fecha y expediente.</p>
-      <span class="tag acc">Regla aplicable</span> <code>SEG-02</code>
-    </div>
-    <div class="panel">
-<pre><b>DADO</b> un expediente en estado abierto
-<b>Y</b> un usuario sin permiso CERRAR
-<b>CUANDO</b> intenta cerrar el expediente
-<b>ENTONCES</b> el sistema rechaza el cierre
-<b>Y</b> registra el intento con usuario y fecha</pre>
-    </div>
-  </div>
-  <div class="tablewrap" style="margin-top:.8rem"><table id="matrix"></table></div>
-  <div class="bar" aria-hidden="true"><i id="mbar"></i></div>
-  <p class="note" id="mtxt"></p>
-</section>
-
-<section id="operativo">
-  <h2>Modelo operativo con proveedores</h2>
-  <p>El PO redacta el qué y el porqué, el proveedor cuestiona la viabilidad y la versión 1 se congela como contrato.</p>
-  <div class="steps" id="opSteps" role="tablist"></div>
-  <div class="panel" id="opOut" aria-live="polite"></div>
-  <h3>Cláusulas contractuales</h3>
-  <ul class="tight">
-    <li>Los artefactos (spec, pruebas, matriz) son entregables obligatorios.</li>
-    <li>«Terminado» incluye la spec actualizada y la matriz de aceptación.</li>
-    <li>La aceptación se basa en los escenarios aprobados.</li>
-    <li>Se regula el uso de IA y su trazabilidad.</li>
-  </ul>
-  <p class="note">En entornos regulados la firma humana es indelegable.</p>
+  <p class="note"><b>Referencia externa de madurez.</b> El <a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Technology Radar</a> de Thoughtworks es un informe semestral que clasifica tecnologías en cuatro anillos: adoptar, probar, evaluar y evitar. En noviembre de 2025 incluyó el <a href="https://www.thoughtworks.com/radar/techniques/spec-driven-development" target="_blank" rel="noopener">SDD</a> en «Assess» (evaluar): algo que conviene estudiar de cerca, pero que todavía no se recomienda probar salvo que encaje especialmente. En la edición de noviembre de 2026, <a href="https://www.thoughtworks.com/radar/tools/openspec" target="_blank" rel="noopener">OpenSpec</a> ha subido a «Trial» (probar) tras buenos resultados en varios equipos, sobre todo en aplicaciones existentes.</p>
 </section>
 
 <section id="redaccion">
@@ -371,7 +417,7 @@ seg("appSeg",AP,function(a){$("appOut").innerHTML='<p style="margin:0"><b>'+a.la
 var FW=[
  {n:"OpenSpec",u:"https://github.com/Fission-AI/OpenSpec",who:["PO","Proveedor"],v:"Candidato",c:"ok",
   a:"Trabaja con dos piezas: la spec vigente de cada capacidad y una carpeta por cambio con la propuesta, las tareas y los deltas (AÑADIDOS, MODIFICADOS, ELIMINADOS). Al cerrar el cambio, los deltas se fusionan en la spec vigente y el cambio se archiva, así que la spec refleja siempre lo que hay en producción. Es ligero, funciona con la mayoría de asistentes de IA y no impone IDE.",
-  e:"Es el que mejor encaja con nuestro modelo documental (spec vigente y delta) y con aplicaciones que ya existen.",
+  e:"Es el que mejor encaja con nuestro modelo documental (spec vigente y delta) y con aplicaciones que ya existen. En noviembre de 2026, el Technology Radar de Thoughtworks lo subió a «Trial» (probar).",
   r:"Proyecto joven de una empresa pequeña (Fission-AI). No cuestiona por sí mismo requisitos como la autorización: eso lo tiene que aportar la constitución."},
  {n:"GitHub Spec Kit",u:"https://github.com/github/spec-kit",who:["PO","Proveedor"],v:"Candidato",c:"ok",
   a:"Toolkit de código abierto de GitHub que guía el trabajo por fases con comandos: constitución del proyecto, especificación, plan técnico, tareas, implementación y comprobación de que el resultado converge con la spec. Para entornos corporativos ofrece presets para imponer estándares organizativos o regulatorios, catálogos privados de componentes aprobados y uso sin conexión (air-gapped). Es la referencia más extendida del sector: unas 145.000 estrellas en GitHub y versión 1.2 en octubre de 2026.",
@@ -398,7 +444,7 @@ var FW=[
   e:"Sus controles empresariales son los más completos, pero sirven para gobernar el trabajo de los agentes de desarrollo, no para especificar requisitos.",
   r:"Su motor spec-as-source sigue en beta cerrada, así que hoy no es un framework de SDD para el PO. Podría interesar a Sistemas para gobernar el uso de IA de los equipos de desarrollo."}];
 function fwAll(o){[].forEach.call(document.querySelectorAll("#fwList details"),function(d){d.open=o})}
-$("fwOpen").addEventListener("click",function(){fwAll(true)});$("fwClose").addEventListener("click",function(){fwAll(false)});
+$("fwClose").addEventListener("click",function(){fwAll(false)});
 var FF=[{label:"Todos",f:null},{label:"Para el PO",f:"PO"},{label:"Para el proveedor",f:"Proveedor"}];
 seg("fwSeg",FF,function(f){
   $("fwList").innerHTML=FW.filter(function(x){return!f.f||x.who.indexOf(f.f)>-1}).map(function(x){
@@ -426,7 +472,17 @@ function calc(){
 }
 $("reqN").addEventListener("input",calc);calc();
 
-/* Matriz */
+/* Ejemplo GESTEXP */
+var EX=[
+ {label:"1 · Constitución",t:"Reglas corporativas con identificador. Cada delta indica cuáles le aplican."},
+ {label:"2 · Spec vigente",t:"Cómo se comporta hoy la aplicación, organizada por capacidades y requisitos."},
+ {label:"3 · Delta",t:"Qué cambia en este evolutivo: propuesta, requisitos modificados y añadidos, reglas aplicables y escenarios."},
+ {label:"4 · Matriz de aceptación",t:"Cada escenario enlazado con su requisito, la prueba del proveedor y el resultado."},
+ {label:"5 · Cierre",t:"Si todos los escenarios pasan, el delta se fusiona en la spec vigente y se archiva."}];
+seg("exSeg",EX,function(x,i){
+  $("exLead").textContent=x.t;
+  [].forEach.call(document.querySelectorAll(".doc[data-step]"),function(d){d.hidden=+d.dataset.step!==i});
+});
 var M=[
  {id:"ESC-1",s:"Cierre sin permiso es rechazado",req:"REQ-EXP-031",test:"T-031-a"},
  {id:"ESC-2",s:"Cierre con permiso funciona",req:"REQ-EXP-031",test:"T-031-b"},
@@ -435,12 +491,16 @@ var M=[
 var MS=M.map(function(){return 0});
 var LAB=["Pendiente","Pasa","Falla"];
 function drawM(){
-  var h='<tr><th>Escenario</th><th>Requisito</th><th>Prueba</th><th>Estado</th></tr>';
+  var h='<tr><th>Escenario</th><th>Requisito</th><th>Prueba del proveedor</th><th>Estado</th></tr>';
   M.forEach(function(r,i){h+='<tr><td>'+r.id+' · '+r.s+'</td><td><code>'+r.req+'</code></td><td><code>'+r.test+'</code></td><td><button type="button" class="sbtn" data-i="'+i+'" data-s="'+MS[i]+'">'+LAB[MS[i]]+'</button></td></tr>'});
   $("matrix").innerHTML=h;
-  var ok=MS.filter(function(x){return x===1}).length,bad=MS.filter(function(x){return x===2}).length;
+  var ok=MS.filter(function(x){return x===1}).length,bad=MS.filter(function(x){return x===2}).length,all=ok===M.length;
   $("mbar").style.width=(ok/M.length*100)+"%";
-  $("mtxt").textContent=bad?bad+" escenario(s) fallan: el entregable no se acepta.":ok===M.length?"Todos los escenarios pasan: el delta se puede aceptar, fusionar en la spec vigente y archivar.":ok+" de "+M.length+" escenarios validados.";
+  $("mtxt").textContent=bad?bad+" escenario(s) fallan: el entregable no se acepta.":all?"Todos los escenarios pasan: el delta se puede aceptar. Mira el paso 5.":ok+" de "+M.length+" escenarios validados.";
+  $("mergeTag").textContent=all?"Spec vigente · tras el cierre":"Spec vigente · fusión bloqueada";
+  $("mergeBody").innerHTML=all
+   ?'<b># GESTEXP · Spec vigente</b>\n<b>## CAP-EXP-03 · Cierre de expedientes</b>\nREQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con\n             documentos obligatorios pendientes.\n<span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un\n             usuario sin el permiso CERRAR.          <i>← modificado</i>\n<span class="add">REQ-EXP-032</span>  CUANDO se rechaza un cierre, el sistema DEBE registrar\n             usuario, fecha y expediente.            <i>← añadido</i>\n\n<i>El delta queda archivado en changes/archive/cierre-con-permiso/</i>'
+   :'<i>La fusión está bloqueada: el delta solo se incorpora a la spec vigente\ncuando todos los escenarios de la matriz pasan (paso 4).\n\nEstado actual: '+ok+' de '+M.length+' escenarios pasan'+(bad?', '+bad+' fallan':'')+'.</i>';
 }
 $("matrix").addEventListener("click",function(e){var b=e.target.closest("button[data-i]");if(!b)return;var i=+b.dataset.i;MS[i]=(MS[i]+1)%3;drawM()});
 drawM();
