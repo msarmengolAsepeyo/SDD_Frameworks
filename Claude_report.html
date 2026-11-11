@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Viabilidad del SDD para el PO</title>
+<title>Viabilidad del SDD</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
 <style>
@@ -117,8 +117,8 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <main>
 <header class="top">
   <div class="meta">Actualizado a 11 nov 2026 · Marina, Product Owner</div>
-  <h1>Estudio de viabilidad del SDD en el rol de Product Owner</h1>
-  <p class="lead">El SDD (Spec-Driven Development) se analiza aquí como posible marco de gobernanza, calidad y aceptación contractual para guiar y validar lo que entregan los proveedores.</p>
+  <h1>Viabilidad del SDD en nuestro entorno corporativo</h1>
+  <p class="lead">Análisis y evaluación del enfoque SDD (Spec-Driven Development) como posible marco de gobernanza, calidad y aceptación contractual para guiar y validar las entregas de proveedores.</p>
 </header>
 
 <section id="resumen">
@@ -319,9 +319,9 @@ function list(a){return '<ul class="tight">'+a.map(function(x){return"<li>"+x+"<
 
 /* Niveles */
 var LV=[
- {label:"Spec-first",tag:"Entrada",c:"warn",t:"Se escribe la spec antes de implementar y después puede descartarse.",v:"Punto de entrada válido, pero pierde valor tras el cierre."},
- {label:"Spec-anchored",tag:"Recomendado",c:"ok",t:"La spec se mantiene viva junto al código y se actualiza en cada cambio.",v:"Objetivo recomendado: encaja con el contrato y la trazabilidad."},
- {label:"Spec-as-source",tag:"No recomendado",c:"bad",t:"Solo se edita la spec y el código se regenera.",v:"Herramientas inmaduras y no deterministas (Tessl está en beta)."}];
+ {label:"Spec-first",tag:"Insuficiente",c:"warn",t:"Se escribe la spec antes de implementar y después puede descartarse.",v:"Punto de entrada válido, pero pierde valor tras el cierre."},
+ {label:"Spec-anchored",tag:"Más adecuado",c:"ok",t:"La spec se mantiene viva junto al código y se actualiza en cada cambio.",v:"Objetivo recomendado: encaja con el contrato y la trazabilidad."},
+ {label:"Spec-as-source",tag:"Prematuro",c:"bad",t:"Solo se edita la spec y el código se regenera.",v:"Herramientas inmaduras y no deterministas (Tessl está en beta)."}];
 seg("lvlSeg",LV,function(l){$("lvlOut").innerHTML='<span class="tag '+l.c+'">'+l.tag+'</span><p>'+l.t+'</p><p><b>Valoración:</b> '+l.v+'</p>'});
 var AP=[
  {label:"Viva",t:"Spec-anchored por deltas, con extracción de la spec «al tocar»."},
