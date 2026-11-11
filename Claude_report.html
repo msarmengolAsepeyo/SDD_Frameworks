@@ -109,12 +109,12 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <a href="#resumen">Resumen</a><a href="#contexto">Contexto</a><a href="#niveles">Niveles de SDD</a>
   <a href="#herramientas">Herramientas</a><a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a>
   <a href="#redaccion">Redacción con IA</a><a href="#carga">Carga inicial</a><a href="#sintaxis">Sintaxis y estándares</a>
-  <a href="#practicas">Buenas prácticas</a><a href="#plan">Plan de adopción</a><a href="#glosario">Glosario y fuentes</a>
+  <a href="#practicas">Buenas prácticas</a><a href="#plan">Hoja de ruta</a><a href="#glosario">Glosario y fuentes</a>
 </nav>
 
 <main>
 <header class="top">
-  <div class="meta">Actualizado a 9 nov 2026 · Marina, Product Owner</div>
+  <div class="meta">Actualizado a 11 nov 2026 · Marina, Product Owner</div>
   <h1>Guía de adopción de SDD para evolutivos con proveedores</h1>
   <p class="lead">El SDD (Spec-Driven Development) se plantea aquí como un marco de gobernanza, calidad y aceptación contractual para guiar y validar lo que entregan los proveedores.</p>
 </header>
@@ -122,12 +122,12 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <section id="resumen">
   <h2>Resumen ejecutivo</h2>
   <div class="grid2">
-    <div class="panel"><span class="tag acc">Nivel</span><p>Spec-anchored por deltas: la spec vive junto al código y se actualiza en cada evolutivo.</p></div>
+    <div class="panel"><span class="tag acc">Spec propuesta</span><p><i>Spec-anchored</i>: vive junto al código y se actualiza con un delta en cada evolutivo.</p></div>
     <div class="panel"><span class="tag acc">Documentos</span><p>Constitución corporativa, spec vigente por aplicación y spec de cambio (delta) como contrato.</p></div>
-    <div class="panel"><span class="tag acc">Framework</span><p>OpenSpec como referencia de formato y flujo; Spec Kit como alternativa más estructurada.</p></div>
+    <div class="panel"><span class="tag acc">Herramientas</span><p>Al proveedor se le exigen los artefactos (spec, escenarios y matriz de aceptación), no una herramienta concreta. OpenSpec sirve de referencia para el formato y Spec Kit es la opción si se quiere un flujo más guiado.</p></div>
     <div class="panel"><span class="tag acc">Carga inicial</span><p>Incremental: extraer la spec de cada capacidad solo cuando se toca.</p></div>
-    <div class="panel"><span class="tag acc">Fragilidad de requisitos</span><p>La IA ayuda a redactar, pero la calidad la dan el proceso, la constitución y un segundo revisor.</p></div>
-    <div class="panel"><span class="tag acc">Siguiente paso</span><p>Piloto con 3 o 4 aplicaciones que representen cada arquetipo.</p></div>
+    <div class="panel"><span class="tag acc">Madurez</span><p>Práctica emergente: Thoughtworks la sitúa en <i>Assess</i>, la evidencia es escasa y las herramientas cambian rápido.</p></div>
+    <div class="panel"><span class="tag acc">Siguiente paso</span><p>Contrastar la propuesta con las áreas implicadas (sistemas, arquitectura, compras) y probarla sobre papel con 1 o 2 evolutivos reales antes de decidir si se pilota.</p></div>
   </div>
 </section>
 
@@ -277,8 +277,8 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 </section>
 
 <section id="plan">
-  <h2>Plan de adopción por fases</h2>
-  <p>Empezar con un piloto acotado antes de extender a las 120 aplicaciones.</p>
+  <h2>Posible hoja de ruta (si se decide avanzar)</h2>
+  <p>Solo si la valoración resulta positiva: empezar con un piloto acotado antes de plantear su extensión a las 120 aplicaciones.</p>
   <div class="steps" id="plSteps" role="tablist"></div>
   <div class="panel" id="plOut" aria-live="polite"></div>
 </section>
@@ -300,7 +300,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
     <li>ISO/IEC/IEEE 29148:2018</li>
     <li>Thoughtworks Technology Radar, noviembre de 2025</li>
   </ul>
-  <p class="note">Las cifras de volumen, el enfoque para SaaS y la estrategia «extraer al tocar» son criterio propio y deben validarse en el piloto.</p>
+  <p class="note">Las cifras de volumen, el enfoque para SaaS y la estrategia «extraer al tocar» son criterio propio y deben validarse antes de cualquier decisión de implantación.</p>
 </section>
 </main>
 </div>
