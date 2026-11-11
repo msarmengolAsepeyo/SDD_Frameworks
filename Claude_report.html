@@ -437,8 +437,8 @@ seg("qSeg",Q,function(q){
 var BP=[
  {label:"Buenas prácticas",a:["Specs pequeñas, revisables por una persona y divididas en piezas entregables de forma independiente (INVEST, MoSCoW).","Editar a mano el texto generado por IA y especificar solo el cambio en curso.","Identificadores estables y trazabilidad entre requisito, escenario y prueba.","Actualizar la spec como parte de «terminado», con validación automatizada contra la deriva.","Analizar las interacciones entre funcionalidades.","Tres niveles de límites: siempre, preguntar antes, nunca."],src:"Osmani, intent-driven.dev"},
  {label:"Riesgos",a:["Teatro de especificación: documentos que nadie usa para decidir.","Exhaustividad prematura.","Deriva entre spec y código.","Ignorar efectos entre funcionalidades.","Texto de IA sin editar y excesivo."]},
- {label:"Críticas",a:["Parecido con el modelo en cascada (Beck, Fowler).","Verbosidad: en un caso citado, 2.577 líneas de markdown frente a 689 de código.","Eco del desarrollo dirigido por modelos (MDD) y no determinismo de la generación.","Exceso para cambios pequeños."]}];
-seg("bpSeg",BP,function(b){$("bpOut").innerHTML=list(b.a)+(b.src?'<p class="note" style="margin:.3rem 0 0">Fuente: '+b.src+'</p>':"")});
+ {label:"Críticas",a:["Parecido con el modelo en cascada (Beck, Fowler).","Verbosidad: en un caso citado, 2.577 líneas de markdown frente a 689 de código.","Eco del desarrollo dirigido por modelos (MDD) y no determinismo de la generación.","Exceso para cambios pequeños."],n:"<b>Sobre el MDD.</b> No es una alternativa al SDD, sino su precedente. El desarrollo dirigido por modelos (MDA de la OMG, 2001) usaba modelos formales como fuente de verdad y generaba el código de forma determinista. Triunfó en nichos como sistemas embebidos y automoción, pero no en el software de negocio por la rigidez de los modelos y la deriva entre modelo y código. El SDD sustituye el modelo por lenguaje natural estructurado y el generador por un LLM: gana flexibilidad y pierde determinismo. Esta guía mitiga el riesgo descartando spec-as-source en favor de spec-anchored, validando con escenarios y matriz de aceptación, y reservando el modelo formal para los contratos de interfaz (OpenAPI, AsyncAPI, JSON Schema). Ambos enfoques se complementan."}];
+seg("bpSeg",BP,function(b){$("bpOut").innerHTML=list(b.a)+(b.n?'<p class="note" style="margin:.5rem 0 0">'+b.n+'</p>':"")+(b.src?'<p class="note" style="margin:.3rem 0 0">Fuente: '+b.src+'</p>':"")});
 
 /* Plan */
 var PL=[
@@ -457,7 +457,8 @@ var GL=[
  ["Escenario","Caso de aceptación en formato DADO/CUANDO/ENTONCES."],
  ["Matriz de aceptación","Tabla que enlaza cada escenario con su prueba y resultado."],
  ["Prueba de caracterización","Prueba que fija el comportamiento actual de un código sin documentar."],
- ["Spec drift","Deriva entre la especificación y el código."]];
+ ["Spec drift","Deriva entre la especificación y el código."],
+ ["MDD","Desarrollo dirigido por modelos: un modelo formal es la fuente de verdad y el código se genera de forma determinista. Precedente del SDD."]];
 function drawG(){var q=$("glq").value.trim().toLowerCase();
   var r=GL.filter(function(g){return !q||(g[0]+" "+g[1]).toLowerCase().indexOf(q)>-1});
   $("glList").innerHTML=r.length?r.map(function(g){return"<dt>"+g[0]+"</dt><dd>"+g[1]+"</dd>"}).join(""):"<dd>Sin resultados.</dd>";}
