@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Guía de adopción de SDD</title>
+<title>Viabilidad del SDD para el PO</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
 <style>
@@ -26,6 +26,8 @@
 html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
 body{background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--font-body);padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 a{color:var(--accent)}
+sup a{text-decoration:none;font-size:.75em;padding:0 .1em}
+.fn{border-top:1px solid var(--line);padding-top:.6rem;margin-top:1.2rem}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 .shell{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:210px minmax(0,1fr);gap:3rem;padding-block:2rem 4rem}
 nav.toc{position:sticky;top:2rem;align-self:start;font-size:.875rem;display:flex;flex-direction:column;gap:.15rem}
@@ -106,7 +108,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <div class="shell">
 <nav class="toc" id="toc" aria-label="Secciones">
   <span class="lbl">Contenido</span>
-  <a href="#resumen">Resumen</a><a href="#contexto">Contexto</a><a href="#niveles">Niveles de SDD</a>
+  <a href="#resumen">Resumen</a><a href="#niveles">Niveles de SDD</a>
   <a href="#herramientas">Herramientas</a><a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a>
   <a href="#redaccion">Redacción con IA</a><a href="#carga">Carga inicial</a><a href="#sintaxis">Sintaxis y estándares</a>
   <a href="#practicas">Buenas prácticas</a><a href="#plan">Hoja de ruta</a><a href="#glosario">Glosario y fuentes</a>
@@ -115,46 +117,40 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <main>
 <header class="top">
   <div class="meta">Actualizado a 11 nov 2026 · Marina, Product Owner</div>
-  <h1>Guía de adopción de SDD para evolutivos con proveedores</h1>
-  <p class="lead">El SDD (Spec-Driven Development) se plantea aquí como un marco de gobernanza, calidad y aceptación contractual para guiar y validar lo que entregan los proveedores.</p>
+  <h1>Estudio de viabilidad del SDD en el rol de Product Owner</h1>
+  <p class="lead">El SDD (Spec-Driven Development) se analiza aquí como posible marco de gobernanza, calidad y aceptación contractual para guiar y validar lo que entregan los proveedores.</p>
 </header>
 
 <section id="resumen">
   <h2>Resumen ejecutivo</h2>
+  <p>El objetivo de este estudio es analizar la viabilidad de usar el SDD para gestionar, desde el rol de Product Owner, nuevos desarrollos y procesos de implantación (nuevas aplicaciones y evolutivos), y para guiar y validar los entregables de distintos proveedores, con requisitos estrictos de seguridad y fiabilidad.</p>
   <div class="grid2">
     <div class="panel"><span class="tag acc">Spec propuesta</span><p><i>Spec-anchored</i>: vive junto al código y se actualiza con un delta en cada evolutivo.</p></div>
     <div class="panel"><span class="tag acc">Documentos</span><p>Constitución corporativa, spec vigente por aplicación y spec de cambio (delta) como contrato.</p></div>
-    <div class="panel"><span class="tag acc">Herramientas</span><p>Al proveedor se le exigen los artefactos (spec, escenarios y matriz de aceptación), no una herramienta concreta. OpenSpec sirve de referencia para el formato y Spec Kit es la opción si se quiere un flujo más guiado.</p></div>
+    <div class="panel"><span class="tag acc">Herramientas proveedor</span><p>Al proveedor se le exigen los artefactos (spec, escenarios y matriz de aceptación), no una herramienta concreta.</p></div>
+    <div class="panel"><span class="tag acc">Herramientas PO</span><p>En este estudio se valoran distintas opciones de framework para el trabajo del PO, entre ellas <a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec</a>, <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">Spec Kit</a> y <a href="https://kiro.dev" target="_blank" rel="noopener">Kiro</a>.</p></div>
     <div class="panel"><span class="tag acc">Carga inicial</span><p>Incremental: extraer la spec de cada capacidad solo cuando se toca.</p></div>
-    <div class="panel"><span class="tag acc">Madurez</span><p>Práctica emergente: Thoughtworks la sitúa en <i>Assess</i>, la evidencia es escasa y las herramientas cambian rápido.</p></div>
-    <div class="panel"><span class="tag acc">Siguiente paso</span><p>Contrastar la propuesta con las áreas implicadas (sistemas, arquitectura, compras) y probarla sobre papel con 1 o 2 evolutivos reales antes de decidir si se pilota.</p></div>
+    <div class="panel"><span class="tag acc">Próximos pasos</span><p>Contrastar el documento con las otras áreas implicadas: Sistemas, Seguridad y Arquitectura.</p></div>
   </div>
 </section>
 
-<section id="contexto">
-  <h2>Contexto y objetivo</h2>
-  <p>Usar el SDD para gestionar los evolutivos desde el rol de Product Owner y para guiar y validar los entregables de varios proveedores, con requisitos estrictos de seguridad y fiabilidad.</p>
-  <div class="tablewrap"><table>
-    <tr><th>Elemento</th><th>Situación</th></tr>
-    <tr><td>Aplicaciones en producción</td><td>Unas 120, la mayoría vivas y en evolución constante</td></tr>
-    <tr><td>Tecnología</td><td>Algunas legacy obsoletas, otras de nuevo desarrollo</td></tr>
-    <tr><td>Origen</td><td>Varios proveedores de desarrollo, productos licenciados y SaaS</td></tr>
-    <tr><td>Rol</td><td>Product Owner: define el qué y el porqué, valida lo que otros implementan</td></tr>
-    <tr><td>Planteamiento</td><td>El SDD como gobernanza, calidad y aceptación contractual</td></tr>
-  </table></div>
-  <p>Lo importante no es qué IDE usa cada proveedor, sino qué artefactos se exigen y cómo se revisan. Las specs son texto versionable y no atan a nadie a un producto.</p>
-</section>
-
 <section id="niveles">
-  <h2>Qué es el SDD, tres niveles y cuál adoptar</h2>
-  <p>El SDD toma una especificación versionada y revisable como fuente de verdad; código, pruebas y aceptación se derivan de ella. Aquí es lenguaje natural estructurado en plantillas markdown, no la especificación formal clásica ni el diseño por contrato.</p>
-  <h3>Niveles de ambición (Böckeler)</h3>
+  <h2>Qué es el SDD, tres niveles y cuál encaja mejor</h2>
+  <p><b>Qué es.</b> El SDD (Spec-Driven Development, desarrollo guiado por especificaciones) es un enfoque en el que una especificación, la spec, describe qué debe hacer el software y actúa como fuente de verdad: el código, las pruebas y la aceptación se derivan de ella y se validan contra ella.<sup><a href="#nota1" id="ref1">1</a></sup> La spec es un documento estructurado y centrado en el comportamiento del sistema, que suele combinar dos formatos de texto:</p>
+  <ul class="tight">
+    <li><b>Markdown</b>, para los requisitos y los criterios de aceptación DADO/CUANDO/ENTONCES en lenguaje natural. Lo redactan y revisan las personas y lo interpretan los agentes de IA.</li>
+    <li><b>YAML o JSON</b>, para los contratos de interfaz (<a href="https://www.openapis.org" target="_blank" rel="noopener">OpenAPI</a>, <a href="https://json-schema.org" target="_blank" rel="noopener">JSON Schema</a>). Las personas también pueden leerlos, pero además las herramientas los procesan para validar, generar código o lanzar pruebas automáticas.</li>
+  </ul>
+  <p><b>Cómo se usa.</b> La spec se escribe y se revisa antes de implementar. Los agentes de IA y los equipos de desarrollo la siguen como guía, y la aceptación se comprueba contra sus escenarios.</p>
+  <p><b>Qué no es.</b> No es una especificación formal matemática ni el <a href="https://es.wikipedia.org/wiki/Dise%C3%B1o_por_contrato" target="_blank" rel="noopener">diseño por contrato</a> en sentido estricto (precondiciones y postcondiciones escritas dentro del código). No pretende demostrar que el software es correcto, sino fijar de forma revisable qué debe hacer.</p>
+  <h3>Niveles de ambición según Böckeler<sup><a href="#nota1">1</a></sup></h3>
   <div class="seg" role="tablist" id="lvlSeg"></div>
   <div class="panel" id="lvlOut" aria-live="polite"></div>
   <h3>Enfoque por tipo de aplicación</h3>
   <div class="seg" role="tablist" id="appSeg"></div>
   <div class="panel" id="appOut" aria-live="polite"></div>
   <p class="note">La extracción «al tocar», el tratamiento de SaaS y la línea base por configuración son criterio propio, no una práctica documentada en las fuentes.</p>
+  <p class="note fn" id="nota1"><a href="#ref1">1</a>. Birgitta Böckeler es Distinguished Engineer en <a href="https://www.thoughtworks.com" target="_blank" rel="noopener">Thoughtworks</a>, consultora tecnológica internacional, y experta en desarrollo asistido por IA. Definición y niveles tomados de su artículo «<a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl</a>» (martinfowler.com, 15 de octubre de 2025).</p>
 </section>
 
 <section id="herramientas">
@@ -295,7 +291,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
     <li><a href="https://kiro.dev" target="_blank" rel="noopener">Kiro (AWS)</a></li>
     <li><a href="https://datatracker.ietf.org/doc/html/rfc2119" target="_blank" rel="noopener">RFC 2119</a> y <a href="https://datatracker.ietf.org/doc/html/rfc8174" target="_blank" rel="noopener">RFC 8174</a></li>
     <li><a href="https://martinfowler.com" target="_blank" rel="noopener">Martin Fowler</a>, críticas y análisis de herramientas SDD</li>
-    <li>Birgitta Böckeler, clasificación de niveles de SDD</li>
+    <li>Birgitta Böckeler, <a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">definición de SDD y clasificación en niveles</a></li>
     <li>Mavin et al., EARS (RE'09, 2009)</li>
     <li>ISO/IEC/IEEE 29148:2018</li>
     <li>Thoughtworks Technology Radar, noviembre de 2025</li>
