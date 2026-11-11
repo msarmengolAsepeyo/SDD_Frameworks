@@ -62,6 +62,20 @@ th{font:500 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercas
 tr:last-child td{border-bottom:0}
 ul.tight,ol.tight{margin:.4rem 0;padding-left:1.2rem} ul.tight li,ol.tight li{margin:.25rem 0;max-width:66ch}
 code,.mono{font-family:var(--font-mono);font-size:.85em}
+.exwrap{display:grid;grid-template-columns:minmax(190px,230px) minmax(0,1fr);gap:.8rem;align-items:start}
+.tree{font:400 .78rem/1.5 var(--font-mono);border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:.6rem .4rem;position:sticky;top:1rem}
+.tree .tl{padding:.12rem .5rem;border-radius:4px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree .tl em{font-style:normal;font-family:var(--font-body);font-size:.72rem;opacity:.8}
+.tree .i1{padding-left:1.3rem}.tree .i2{padding-left:2.1rem}.tree .i3{padding-left:2.9rem}
+.tree .tl.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+#matrix th.c,#matrix td.c{text-align:center;white-space:nowrap}
+#matrix .dot{color:var(--accent)}
+#matrix .tref{font-size:.72rem;color:var(--muted)}
+#matrix th{white-space:normal}
+#matrix .sbtn{min-width:5rem;padding:.2rem .45rem}
+#matrix th,#matrix td{padding:.5rem .55rem}
+#matrix tr.tot td{background:var(--surface2);font-size:.82rem;color:var(--muted)}
+@media (max-width:760px){.exwrap{grid-template-columns:minmax(0,1fr)}.tree{position:static}}
 .doc{border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
 .doc[hidden]{display:none}
 .dochead{font:500 .78rem var(--font-mono);padding:.55rem 1rem;background:var(--surface2);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem 1rem}
@@ -98,6 +112,7 @@ pre b{color:var(--accent);font-weight:500}
 .bar>i{display:block;height:100%;background:var(--ok);width:0;transition:width .25s}
 .sbtn{font:500 .75rem var(--font-mono);border:1px solid var(--line);background:var(--surface2);color:var(--fg);padding:.2rem .6rem;border-radius:99px;cursor:pointer;min-width:6.5rem}
 .sbtn[data-s="1"]{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.sbtn:disabled{opacity:.45;cursor:not-allowed}
 .sbtn[data-s="2"]{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
 input[type=search],input[type=number]{font:400 .95rem var(--font-body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:.45rem .7rem;width:100%;max-width:340px}
 input[type=range]{width:100%;max-width:340px;accent-color:var(--accent)}
@@ -177,7 +192,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <div class="seg" role="tablist" id="docSeg"></div>
   <div class="panel" id="docOut" aria-live="polite"></div>
   <p>La spec de cambio es el contrato. Al cerrar el evolutivo se fusiona en la spec vigente y se archiva. En una aplicación nueva no hay delta: la primera spec que se redacta pasa a ser directamente la spec vigente inicial.</p>
-  <p>La matriz de aceptación no es un documento aparte, sino una sección del delta: el PO la prepara con los escenarios y el proveedor la completa con sus pruebas y resultados.</p>
+  <p>La matriz de aceptación no es un documento aparte, sino una sección del delta: el PO la prepara con los escenarios y los requisitos que cubre cada uno, el proveedor la completa con sus pruebas automatizadas y sus resultados, y nosotros registramos el resultado de nuestra aceptación.</p>
   <p class="note"><i>Las cifras son orientativas y de criterio propio.</i></p>
 
   <h3>Calculadora de tamaño de un evolutivo</h3>
@@ -192,32 +207,45 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   </div>
 
   <h3>Ejemplo ilustrativo: aplicación GESTEXP</h3>
-  <p class="note">GESTEXP es una aplicación de gestión de expedientes inventada para ilustrar. Recorre los pasos para ver cada documento y cómo se relacionan en un evolutivo.</p>
+  <p class="note">GESTEXP es una aplicación de gestión de expedientes inventada para ilustrar. Recorre los pasos para ver cada documento, dónde vive y cómo se relacionan en un evolutivo.</p>
   <div class="seg" role="tablist" id="exSeg"></div>
   <p id="exLead" style="margin:.2rem 0 .5rem"></p>
-
-  <div class="doc" data-step="0"><div class="dochead">constitucion.md <span>Corporativa · común a todas las aplicaciones</span></div>
+  <div class="exwrap">
+  <div class="tree" aria-label="Estructura de ficheros">
+<div class="tl" data-on="0">constitucion.md <em>corporativa</em></div>
+<div class="tl">gestexp/</div>
+<div class="tl i1">specs/</div>
+<div class="tl i2">cierre-expedientes/</div>
+<div class="tl i3" data-on="1 4">spec.md <em>spec vigente</em></div>
+<div class="tl i1">changes/</div>
+<div class="tl i2">cierre-con-permiso/</div>
+<div class="tl i3" data-on="2 3">delta.md <em>delta + matriz</em></div>
+<div class="tl i2">archive/</div>
+<div class="tl i3" data-on="4">cierre-con-permiso/ <em>delta archivado</em></div>
+</div>
+  <div class="exdocs">
+  <div class="doc" data-step="0"><div class="dochead">Constitución corporativa <span>Común a todas las aplicaciones</span></div>
 <pre class="docbody"><b># Constitución corporativa (extracto)</b>
 <span class="hl">SEG-02</span>  Toda acción que cambie el estado de un expediente DEBE comprobar
         el permiso del usuario y registrar los intentos rechazados.
 SEG-05  Los registros de auditoría DEBEN conservarse 5 años.
-TRZ-01  Todo requisito DEBE tener al menos un escenario de aceptación
-        con su prueba asociada.</pre></div>
+<span class="hl">TRZ-01</span>  Todo requisito DEBE estar cubierto por al menos un escenario
+        de aceptación con su prueba automatizada.</pre></div>
 
-  <div class="doc" data-step="1"><div class="dochead">gestexp/specs/cierre-expedientes/spec.md <span>Spec vigente · antes del cambio</span></div>
+  <div class="doc" data-step="1"><div class="dochead">Spec vigente de GESTEXP <span>Antes del cambio</span></div>
 <pre class="docbody"><b># GESTEXP · Spec vigente</b>
 <b>## CAP-EXP-03 · Cierre de expedientes</b>
 REQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con
              documentos obligatorios pendientes.
 <span class="hl">REQ-EXP-031</span>  El sistema DEBE permitir cerrar un expediente abierto.</pre></div>
 
-  <div class="doc" data-step="2"><div class="dochead">gestexp/changes/cierre-con-permiso/delta.md <span>Spec de cambio · el contrato del evolutivo</span></div>
+  <div class="doc" data-step="2"><div class="dochead">Spec de cambio (delta) <span>El contrato del evolutivo</span></div>
 <pre class="docbody"><b>## Propuesta</b>
 Evitar cierres de expediente por usuarios sin permiso y dejar rastro
 de los intentos.
 
 <b>## Reglas de la constitución aplicables</b>
-SEG-02, SEG-05, TRZ-01
+SEG-02, TRZ-01
 
 <b>## MODIFICADOS</b>
 <span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un
@@ -227,27 +255,30 @@ SEG-02, SEG-05, TRZ-01
              usuario, fecha y expediente.
 
 <b>## Escenarios de aceptación</b>
-ESC-1 · Cierre sin permiso es rechazado (REQ-EXP-031)
+ESC-1 · Cierre sin permiso es rechazado
   DADO un expediente en estado abierto
   Y un usuario sin permiso CERRAR
   CUANDO intenta cerrar el expediente
   ENTONCES el sistema rechaza el cierre
-ESC-2 · Cierre con permiso funciona (REQ-EXP-031)
-ESC-3 · El intento rechazado queda registrado (REQ-EXP-032)
-ESC-4 · El registro incluye usuario y fecha (REQ-EXP-032)
+ESC-2 · Cierre con permiso funciona
+ESC-3 · El intento rechazado queda registrado con usuario y fecha
+ESC-4 · Un cierre permitido no genera registro de rechazo
 
 <b>## Matriz de aceptación</b>  → paso 4</pre></div>
 
-  <div class="doc" data-step="3"><div class="dochead">delta.md · sección «Matriz de aceptación» <span>La completa el proveedor con sus pruebas</span></div>
+  <div class="doc" data-step="3"><div class="dochead">Delta · sección «Matriz de aceptación» <span>Cobertura y resultados</span></div>
     <div class="docpad">
-      <p class="note" style="margin-top:0">Pulsa el estado de cada escenario para simular los resultados que entrega el proveedor.</p>
+      <p class="note" style="margin-top:0">Cobertura n:m: un escenario puede cubrir varios requisitos y reglas, y un requisito suele necesitar varios escenarios. Pulsa los estados para simular primero las pruebas del proveedor y después nuestra aceptación, que solo empieza cuando todas las del proveedor pasan.</p>
       <div class="tablewrap"><table id="matrix"></table></div>
       <div class="bar" aria-hidden="true"><i id="mbar"></i></div>
       <p class="note" id="mtxt"></p>
+      <p class="note"><b>Prueba automatizada:</b> referencia al caso de prueba del proveedor que ejecuta el escenario, normalmente el propio escenario Gherkin automatizado en su batería de pruebas. Su resultado sale del informe de ejecución de su integración continua. <b>Nuestra aceptación:</b> la repetimos en nuestro entorno de preproducción, como mínimo sobre los escenarios de seguridad y los de mayor riesgo.</p>
     </div></div>
 
-  <div class="doc" data-step="4"><div class="dochead">gestexp/specs/cierre-expedientes/spec.md <span id="mergeTag">Spec vigente · tras el cierre</span></div>
+  <div class="doc" data-step="4"><div class="dochead">Spec vigente de GESTEXP <span id="mergeTag">Tras el cierre</span></div>
 <pre class="docbody" id="mergeBody"></pre></div>
+  </div>
+  </div>
 </section>
 
 <section id="operativo">
@@ -477,32 +508,37 @@ var EX=[
  {label:"1 · Constitución",t:"Reglas corporativas con identificador. Cada delta indica cuáles le aplican."},
  {label:"2 · Spec vigente",t:"Cómo se comporta hoy la aplicación, organizada por capacidades y requisitos."},
  {label:"3 · Delta",t:"Qué cambia en este evolutivo: propuesta, requisitos modificados y añadidos, reglas aplicables y escenarios."},
- {label:"4 · Matriz de aceptación",t:"Cada escenario enlazado con su requisito, la prueba del proveedor y el resultado."},
- {label:"5 · Cierre",t:"Si todos los escenarios pasan, el delta se fusiona en la spec vigente y se archiva."}];
+ {label:"4 · Matriz de aceptación",t:"Qué requisitos cubre cada escenario, con el resultado de las pruebas del proveedor y de nuestra aceptación."},
+ {label:"5 · Cierre",t:"Solo si pasan las pruebas del proveedor y nuestra aceptación, el delta se fusiona en la spec vigente y se archiva."}];
 seg("exSeg",EX,function(x,i){
   $("exLead").textContent=x.t;
   [].forEach.call(document.querySelectorAll(".doc[data-step]"),function(d){d.hidden=+d.dataset.step!==i});
+  [].forEach.call(document.querySelectorAll(".tree .tl"),function(l){var on=(l.dataset.on||"").split(" ").indexOf(String(i))>-1;l.classList.toggle("on",on)});
 });
+var COLS=["REQ-EXP-031","REQ-EXP-032","SEG-02"];
 var M=[
- {id:"ESC-1",s:"Cierre sin permiso es rechazado",req:"REQ-EXP-031",test:"T-031-a"},
- {id:"ESC-2",s:"Cierre con permiso funciona",req:"REQ-EXP-031",test:"T-031-b"},
- {id:"ESC-3",s:"El intento rechazado queda registrado",req:"REQ-EXP-032",test:"T-032-a"},
- {id:"ESC-4",s:"El registro incluye usuario y fecha",req:"REQ-EXP-032",test:"T-032-b"}];
-var MS=M.map(function(){return 0});
+ {id:"ESC-1",s:"Cierre sin permiso es rechazado",cov:[1,0,1],test:"cierre.feature · ESC-1"},
+ {id:"ESC-2",s:"Cierre con permiso funciona",cov:[1,0,0],test:"cierre.feature · ESC-2"},
+ {id:"ESC-3",s:"El intento rechazado queda registrado con usuario y fecha",cov:[0,1,1],test:"cierre.feature · ESC-3"},
+ {id:"ESC-4",s:"Un cierre permitido no genera registro de rechazo",cov:[1,1,0],test:"cierre.feature · ESC-4"}];
+var PV=M.map(function(){return 0}),AC=M.map(function(){return 0});
 var LAB=["Pendiente","Pasa","Falla"];
+function btn(k,i,v,dis){return '<button type="button" class="sbtn" data-k="'+k+'" data-i="'+i+'" data-s="'+v+'"'+(dis?' disabled':'')+'>'+LAB[v]+'</button>'}
 function drawM(){
-  var h='<tr><th>Escenario</th><th>Requisito</th><th>Prueba del proveedor</th><th>Estado</th></tr>';
-  M.forEach(function(r,i){h+='<tr><td>'+r.id+' · '+r.s+'</td><td><code>'+r.req+'</code></td><td><code>'+r.test+'</code></td><td><button type="button" class="sbtn" data-i="'+i+'" data-s="'+MS[i]+'">'+LAB[MS[i]]+'</button></td></tr>'});
+  var vAll=PV.every(function(x){return x===1});if(!vAll)AC=AC.map(function(){return 0});
+  var h='<tr><th>Escenario y prueba automatizada</th>'+COLS.map(function(c){return'<th class="c">'+c.replace(/-(\d+)$/,'-<br>$1')+'</th>'}).join("")+'<th>Proveedor</th><th>Nuestra aceptación</th></tr>';
+  M.forEach(function(r,i){h+='<tr><td>'+r.id+' · '+r.s+'<br><code class="tref">'+r.test+'</code></td>'+r.cov.map(function(c){return'<td class="c">'+(c?'<span class="dot" aria-label="cubre">●</span>':'')+'</td>'}).join("")+'<td>'+btn("p",i,PV[i])+'</td><td>'+btn("a",i,AC[i],!vAll)+'</td></tr>'});
+  h+='<tr class="tot"><td>Escenarios que lo cubren</td>'+COLS.map(function(c,k){return'<td class="c">'+M.filter(function(r){return r.cov[k]}).length+'</td>'}).join("")+'<td colspan="2">Todo cubierto (TRZ-01)</td></tr>';
   $("matrix").innerHTML=h;
-  var ok=MS.filter(function(x){return x===1}).length,bad=MS.filter(function(x){return x===2}).length,all=ok===M.length;
-  $("mbar").style.width=(ok/M.length*100)+"%";
-  $("mtxt").textContent=bad?bad+" escenario(s) fallan: el entregable no se acepta.":all?"Todos los escenarios pasan: el delta se puede aceptar. Mira el paso 5.":ok+" de "+M.length+" escenarios validados.";
-  $("mergeTag").textContent=all?"Spec vigente · tras el cierre":"Spec vigente · fusión bloqueada";
+  var n=M.length,pOk=PV.filter(function(x){return x===1}).length,pBad=PV.filter(function(x){return x===2}).length,aOk=AC.filter(function(x){return x===1}).length,aBad=AC.filter(function(x){return x===2}).length,all=pOk===n&&aOk===n;
+  $("mbar").style.width=((pOk+aOk)/(2*n)*100)+"%";
+  $("mtxt").textContent=!vAll?"Entrega incompleta: todas las pruebas del proveedor deben pasar antes de entregar (criterio de entrada). Hasta entonces no empieza nuestra aceptación ("+pOk+" de "+n+" pasan).":aBad?aBad+" escenario(s) fallan en nuestra aceptación: el entregable vuelve al proveedor con el detalle de los fallos.":all?"Pasan las pruebas del proveedor y nuestra aceptación: el delta se puede aceptar. Mira el paso 5.":"Las pruebas del proveedor pasan y la entrega se admite. Nuestra aceptación: "+aOk+" de "+n+" escenarios validados.";
+  $("mergeTag").textContent=all?"Tras el cierre":"Fusión bloqueada";
   $("mergeBody").innerHTML=all
-   ?'<b># GESTEXP · Spec vigente</b>\n<b>## CAP-EXP-03 · Cierre de expedientes</b>\nREQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con\n             documentos obligatorios pendientes.\n<span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un\n             usuario sin el permiso CERRAR.          <i>← modificado</i>\n<span class="add">REQ-EXP-032</span>  CUANDO se rechaza un cierre, el sistema DEBE registrar\n             usuario, fecha y expediente.            <i>← añadido</i>\n\n<i>El delta queda archivado en changes/archive/cierre-con-permiso/</i>'
-   :'<i>La fusión está bloqueada: el delta solo se incorpora a la spec vigente\ncuando todos los escenarios de la matriz pasan (paso 4).\n\nEstado actual: '+ok+' de '+M.length+' escenarios pasan'+(bad?', '+bad+' fallan':'')+'.</i>';
+   ?'<b># GESTEXP · Spec vigente</b>\n<b>## CAP-EXP-03 · Cierre de expedientes</b>\nREQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con\n             documentos obligatorios pendientes.\n<span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un\n             usuario sin el permiso CERRAR.          <i>← modificado</i>\n<span class="add">REQ-EXP-032</span>  CUANDO se rechaza un cierre, el sistema DEBE registrar\n             usuario, fecha y expediente.            <i>← añadido</i>\n\n<i>El delta, con su matriz y la aceptación firmada por el PO,\nqueda archivado en changes/archive/cierre-con-permiso/</i>'
+   :'<i>La fusión está bloqueada: el delta solo se incorpora a la spec vigente\ncuando pasan las pruebas del proveedor y nuestra aceptación (paso 4).\n\n'+(!vAll?'Pruebas del proveedor: '+pOk+' de '+n+' pasan. La entrega aún no se admite.':'Pruebas del proveedor: todas pasan.\nNuestra aceptación: '+aOk+' de '+n+' pasan'+(aBad?', '+aBad+' fallan: el entregable vuelve al proveedor':'')+'.')+'</i>';
 }
-$("matrix").addEventListener("click",function(e){var b=e.target.closest("button[data-i]");if(!b)return;var i=+b.dataset.i;MS[i]=(MS[i]+1)%3;drawM()});
+$("matrix").addEventListener("click",function(e){var b=e.target.closest("button[data-i]");if(!b)return;var i=+b.dataset.i,A=b.dataset.k==="p"?PV:AC;A[i]=(A[i]+1)%3;drawM()});
 drawM();
 
 /* Operativo */
