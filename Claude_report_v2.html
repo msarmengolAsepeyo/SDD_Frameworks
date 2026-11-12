@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Viabilidad de SDD en Entorno Corporativo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#f5f7f8; --surface:#ffffff; --surface2:#eaeff1; --fg:#14232b; --muted:#53666f; --line:#d3dce0;
+  --accent:#0b6e77; --accent-fg:#ffffff; --accent-soft:#d7eef0;
+  --ok:#1f7a45; --ok-soft:#dcf1e4; --warn:#9a5b00; --warn-soft:#fbebc9; --bad:#b0302b; --bad-soft:#f8dedc;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --font-head:"IBM Plex Serif",Georgia,serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1a1f; --surface:#16252c; --surface2:#1d2f37; --fg:#e4edf0; --muted:#9bb0b8; --line:#2c424b;
+    --accent:#58c4cd; --accent-fg:#06262a; --accent-soft:#17383d;
+    --ok:#6fd49a; --ok-soft:#173826; --warn:#f0b659; --warn-soft:#3d2d10; --bad:#f08a84; --bad-soft:#442120;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1a1f; --surface:#16252c; --surface2:#1d2f37; --fg:#e4edf0; --muted:#9bb0b8; --line:#2c424b;
+  --accent:#58c4cd; --accent-fg:#06262a; --accent-soft:#17383d;
+  --ok:#6fd49a; --ok-soft:#173826; --warn:#f0b659; --warn-soft:#3d2d10; --bad:#f08a84; --bad-soft:#442120;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
+body{background:var(--bg);color:var(--fg);font:400 15.5px/1.6 var(--font-body);margin:0;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+a{color:var(--accent);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.shell{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:3rem;padding-block:2.5rem 5rem}
+nav.toc{position:sticky;top:2rem;align-self:start;font-size:.875rem;display:flex;flex-direction:column;gap:.2rem}
+nav.toc .lbl{font:600 .72rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
+nav.toc a{color:var(--muted);text-decoration:none;padding:.35rem .65rem;border-left:2px solid var(--line);transition:all .15s}
+nav.toc a:hover{color:var(--fg)}
+nav.toc a.on{color:var(--fg);border-left-color:var(--accent);font-weight:600}
+main{min-width:0}
+header.top{border-bottom:1px solid var(--line);padding-bottom:1.8rem;margin-bottom:1.5rem}
+header.top h1{font:600 2.2rem/1.2 var(--font-head);margin:.3rem 0 .7rem;text-wrap:balance}
+header.top .meta{font:500 .8rem var(--font-mono);color:var(--muted)}
+header.top p.lead{font-size:1.1rem;max-width:65ch;color:var(--fg);margin:0}
+section{padding-top:2.8rem}
+h2{font:600 1.55rem/1.25 var(--font-head);margin:0 0 .8rem;text-wrap:balance;border-bottom:1px solid var(--line);padding-bottom:.4rem}
+h3{font:600 1.05rem/1.3 var(--font-body);margin:1.8rem 0 .6rem}
+p{margin:.5rem 0;max-width:70ch}
+.note{font-size:.85rem;color:var(--muted);max-width:70ch}
+.tag{display:inline-block;font:600 .72rem var(--font-mono);padding:.12rem .5rem;border-radius:99px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)} .tag.warn{background:var(--warn-soft);color:var(--warn)} .tag.bad{background:var(--bad-soft);color:var(--bad)} .tag.acc{background:var(--accent-soft);color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1.1rem}
+.seg{display:flex;flex-wrap:wrap;gap:.4rem;margin:.9rem 0 .7rem}
+.seg button{font:500 .85rem var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.4rem .8rem;cursor:pointer;transition:background .15s}
+.seg button:hover{border-color:var(--accent)}
+.seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin:.8rem 0}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:.65rem .85rem;border-bottom:1px solid var(--line)}
+th{font:600 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+ul.tight,ol.tight{margin:.4rem 0;padding-left:1.25rem}
+ul.tight li,ol.tight li{margin:.3rem 0;max-width:68ch}
+code,.mono{font-family:var(--font-mono);font-size:.86em}
+pre{font:400 .82rem/1.6 var(--font-mono);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;overflow-x:auto;margin:.6rem 0}
+pre b{color:var(--accent);font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.steps{display:flex;flex-wrap:wrap;gap:.4rem;margin:.9rem 0 .6rem}
+.steps button{flex:1 1 140px;text-align:left;font:500 .82rem/1.3 var(--font-body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-top:3px solid var(--line);border-radius:6px;padding:.5rem .7rem;cursor:pointer}
+.steps button .n{display:block;font:600 .7rem var(--font-mono);color:var(--muted)}
+.steps button[aria-selected="true"]{border-top-color:var(--accent);background:var(--accent-soft)}
+.steps button.done{border-top-color:var(--ok)}
+.steps button .own{display:block;margin-top:.25rem;font:600 .68rem var(--font-mono);color:var(--accent)}
+.exwrap{display:grid;grid-template-columns:minmax(200px,240px) minmax(0,1fr);gap:1rem;align-items:start}
+.tree{font:400 .8rem/1.5 var(--font-mono);border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:.6rem .4rem;position:sticky;top:1rem}
+.tree .tl{padding:.15rem .5rem;border-radius:4px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree .tl em{font-style:normal;font-family:var(--font-body);font-size:.74rem;opacity:.85}
+.tree .i1{padding-left:1.3rem}.tree .i2{padding-left:2.1rem}.tree .i3{padding-left:2.9rem}
+.tree .tl.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.tree .tl.vend em{color:var(--warn)}
+.doc{border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.doc[hidden]{display:none}
+.dochead{font:600 .78rem var(--font-mono);padding:.55rem 1rem;background:var(--surface2);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:1rem}
+.dochead span{font-family:var(--font-body);color:var(--muted);font-weight:400}
+pre.docbody{margin:0;border:0;border-radius:0}
+.docpad{padding:.9rem 1rem}
+.docbody .hl{background:var(--accent-soft);color:var(--accent)}
+.docbody .add{background:var(--ok-soft);color:var(--ok)}
+.docbody .mod{background:var(--warn-soft);color:var(--warn)}
+#matrix th.c,#matrix td.c{text-align:center;white-space:nowrap}
+#matrix .dot{color:var(--accent);font-size:1.1rem}
+#matrix .tref{font-size:.72rem;color:var(--muted)}
+#matrix .sbtn{min-width:5.2rem;padding:.2rem .4rem}
+.sbtn{font:600 .75rem var(--font-mono);border:1px solid var(--line);background:var(--surface2);color:var(--fg);padding:.25rem .6rem;border-radius:99px;cursor:pointer}
+.sbtn[data-s="1"]{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.sbtn[data-s="2"]{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
+.sbtn:disabled{opacity:.4;cursor:not-allowed}
+.bar{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:.5rem 0}
+.bar>i{display:block;height:100%;background:var(--ok);width:0;transition:width .25s}
+.fw{border:1px solid var(--line);background:var(--surface);border-radius:8px;margin-top:.6rem}
+.fw summary{cursor:pointer;list-style:none;display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;padding:.7rem 1rem;font-weight:600}
+.fw summary::-webkit-details-marker{display:none}
+.fw summary::before{content:"+";font:600 1rem var(--font-mono);color:var(--muted);width:1ch}
+.fw[open] summary::before{content:"−"}
+.fw .body{padding:0 1rem 1rem;display:grid;gap:.8rem;font-size:.9rem}
+.fw .body h4{font:600 .72rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .2rem}
+.fw .body p{margin:0}
+.stars{color:var(--warn);letter-spacing:.1em;white-space:nowrap}.stars i{font-style:normal;color:var(--line)}
+.crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.45rem;margin-top:.7rem}
+.crit div{display:flex;gap:.5rem;align-items:center;font-size:.85rem;padding:.35rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.kbcols{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-top:.6rem}
+.kbcols h4{font:600 .7rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .25rem}
+.kbcols p{margin:0;font-size:.88rem}
+input[type=search],input[type=range]{accent-color:var(--accent)}
+input[type=search]{font:400 .9rem var(--font-body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:.45rem .7rem;width:100%;max-width:320px}
+input[type=range]{width:100%;max-width:300px}
+.out{display:flex;gap:1.5rem;margin-top:.8rem}
+.out .k{font:600 .7rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.out .v{font:600 1.5rem var(--font-head);font-variant-numeric:tabular-nums}
+dl.gl{margin:.8rem 0;display:grid;grid-template-columns:minmax(140px,220px) minmax(0,1fr);gap:.6rem 1rem}
+dl.gl dt{font-weight:600;font-family:var(--font-mono);font-size:.88rem}
+dl.gl dd{margin:0;color:var(--muted);font-size:.92rem}
+.themebtn{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:10;font:600 .75rem var(--font-mono);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:99px;padding:.4rem .9rem;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0}
+  nav.toc{position:sticky;top:0;z-index:8;flex-direction:row;overflow-x:auto;background:var(--bg);padding:.6rem 0;gap:.3rem;border-bottom:1px solid var(--line)}
+  nav.toc .lbl{display:none}
+  nav.toc a{border-left:0;border-bottom:2px solid var(--line);white-space:nowrap}
+  nav.toc a.on{border-bottom-color:var(--accent)}
+  .exwrap{grid-template-columns:minmax(0,1fr)}.tree{position:static}
+  .kbcols{grid-template-columns:1fr}
+  dl.gl{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+<nav class="toc" id="toc" aria-label="Secciones">
+  <span class="lbl">Contenido</span>
+  <a href="#resumen">1. Resumen ejecutivo</a>
+  <a href="#fundamentos">2. Fundamentos y alcance</a>
+  <a href="#documentos">3. Modelo documental</a>
+  <a href="#operativo">4. Flujo operativo</a>
+  <a href="#conocimiento">5. Conocimiento e inputs</a>
+  <a href="#especificacion">6. Especificación y calidad</a>
+  <a href="#herramientas">7. Frameworks</a>
+  <a href="#gobernanza">8. Riesgos y ruta</a>
+  <a href="#glosario">Glosario y fuentes</a>
+</nav>
+
+<main>
+<header class="top">
+  <div class="meta">Noviembre 2026 · Informe de Dirección / PO</div>
+  <h1>Viabilidad de SDD en Entorno Corporativo</h1>
+  <p class="lead">Evaluación del Desarrollo Guiado por Especificaciones (Spec-Driven Development) como modelo de gobernanza, calidad contractual y aceptación técnica para entregas de proveedores.</p>
+</header>
+
+<!-- 1. RESUMEN EJECUTIVO -->
+<section id="resumen">
+  <h2>1. Resumen ejecutivo</h2>
+  <p>Este informe evalúa la viabilidad del SDD para que el <b>Product Owner (PO)</b> gobierne nuevos desarrollos y mantenimientos evolutivos realizados por proveedores externos, garantizando trazabilidad y cumplimiento en entornos con alta exigencia de fiabilidad y seguridad.</p>
+  
+  <div class="grid2">
+    <div class="panel">
+      <span class="tag acc">Modelo: Spec-anchored</span>
+      <p>La especificación vive en el repositorio junto al código. En cada evolutivo se tramita un <b>delta</b>; tras la aceptación, el delta se fusiona en la especificación vigente.</p>
+    </div>
+    <div class="panel">
+      <span class="tag acc">Frontera contractual clara</span>
+      <p>Separación estricta entre el <b>contrato funcional</b> del PO (requisitos, escenarios y matriz de aceptación) y la <b>solución técnica</b> del proveedor (diseño y tareas).</p>
+    </div>
+    <div class="panel">
+      <span class="tag acc">Exigencia por artefactos</span>
+      <p>Al proveedor no se le impone una herramienta ni IDE concreto, sino la entrega de artefactos estandarizados: spec técnica, tests automatizados y matriz ejecutada.</p>
+    </div>
+    <div class="panel">
+      <span class="tag acc">Reutilización de activos</span>
+      <p>Conexión directa con la base documental de ingeniería inversa y el RAG corporativo para generar specs base en aplicaciones existentes sin rehacer inventarios.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. FUNDAMENTOS Y ALCANCE -->
+<section id="fundamentos">
+  <h2>2. Fundamentos y alcance del SDD</h2>
+  <p><b>Qué es:</b> El SDD convierte una especificación estructurada en la única fuente de verdad: el código, las pruebas automatizadas y los criterios de aceptación se derivan de ella y se verifican contra ella.</p>
+  <ul class="tight">
+    <li><b>Markdown estructurado:</b> Requisitos formales (patrones EARS) y escenarios de aceptación DADO/CUANDO/ENTONCES (Gherkin).</li>
+    <li><b>Contratos de interfaz (YAML/JSON):</b> Esquemas OpenAPI o JSON Schema procesables por herramientas de automatización.</li>
+  </ul>
+
+  <h3>Nivel de ambición recomendado</h3>
+  <div class="seg" role="tablist" id="lvlSeg"></div>
+  <div class="panel" id="lvlOut" aria-live="polite"></div>
+
+  <h3>Estrategia según el ciclo de vida del software</h3>
+  <div class="seg" role="tablist" id="appSeg"></div>
+  <div class="panel" id="appOut" aria-live="polite"></div>
+</section>
+
+<!-- 3. MODELO DOCUMENTAL Y CASO PRÁCTICO -->
+<section id="documentos">
+  <h2>3. Modelo documental y caso práctico</h2>
+  <p>Los artefactos se organizan por <b>autoría</b> y <b>frecuencia de cambio</b>, blindando el contrato frente a detalles de implementación:</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Nivel</th><th>Fichero</th><th>Autor</th><th>Ciclo de actualización</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>Corporativo</b></td><td><code>constitucion.md</code></td><td>DTIC</td><td>Estable (políticas transversales de seguridad y calidad).</td></tr>
+        <tr><td><b>Aplicación</b></td><td><code>product.md</code>, <code>tech.md</code></td><td>PO / Arquitectura</td><td>Estable (misión del sistema, usuarios y stack técnico).</td></tr>
+        <tr><td><b>Capacidad</b></td><td><code>specs/&lt;capacidad&gt;/spec.md</code></td><td>PO</td><td>Vigente: se actualiza al cerrar formalmente cada cambio.</td></tr>
+        <tr><td><b>Cambio (Contrato)</b></td><td><code>proposal.md</code>, <code>delta.md</code>, <code>acceptance.md</code></td><td>PO</td><td>Por evolutivo: se congela en versión 1 antes del desarrollo.</td></tr>
+        <tr><td><b>Cambio (Solución)</b></td><td><code>design.md</code>, <code>tasks.md</code></td><td>Proveedor</td><td>Durante el desarrollo: detalle técnico y plan de trabajo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Calculadora de dimensionamiento del cambio</h3>
+  <div class="panel">
+    <label for="reqN">Requisitos en el evolutivo: <b id="reqNv" class="mono">10</b></label><br>
+    <input type="range" id="reqN" min="1" max="35" value="10">
+    <div class="out">
+      <div><div class="k">Escenarios estimados (2 a 5 por req.)</div><div class="v" id="scn">20 a 50</div></div>
+      <div><div class="k">Recomendación técnica</div><div id="sizeTag"><span class="tag ok">Tamaño óptimo</span></div></div>
+    </div>
+    <p class="note" id="sizeNote">Dentro del rango manejable para un ciclo ágil de entrega.</p>
+  </div>
+
+  <h3>Simulación integral: Aplicación GESTEXP</h3>
+  <p class="note">Navega por las pestañas para ver cómo interactúan los ficheros y prueba la matriz interactiva de aceptación.</p>
+  <div class="seg" role="tablist" id="exSeg"></div>
+  <p id="exLead" style="font-weight:500;margin:.4rem 0 .6rem"></p>
+
+  <div class="exwrap">
+    <div class="tree" aria-label="Estructura del repositorio">
+      <div class="tl" data-on="0">constitucion.md <em>corporativo</em></div>
+      <div class="tl">gestexp/</div>
+      <div class="tl i1" data-on="1">product.md <em>misión</em></div>
+      <div class="tl i1" data-on="1">tech.md <em>arquitectura</em></div>
+      <div class="tl i1">specs/</div>
+      <div class="tl i2">cierre-expedientes/</div>
+      <div class="tl i3" data-on="2 6">spec.md <em>vigente</em></div>
+      <div class="tl i1">changes/cierre-con-permiso/</div>
+      <div class="tl i2" data-on="3">proposal.md <em>contrato PO</em></div>
+      <div class="tl i2" data-on="3">delta.md <em>contrato PO</em></div>
+      <div class="tl i2" data-on="5">acceptance.md <em>matriz</em></div>
+      <div class="tl i2 vend" data-on="4">design.md <em>proveedor</em></div>
+      <div class="tl i2 vend" data-on="4">tasks.md <em>proveedor</em></div>
+      <div class="tl i1">archive/</div>
+      <div class="tl i2" data-on="6">cierre-con-permiso/ <em>histórico</em></div>
+    </div>
+
+    <div class="exdocs">
+      <div class="doc" data-step="0">
+        <div class="dochead">constitucion.md <span>Reglas globales · DTIC</span></div>
+<pre class="docbody"><b># Constitución corporativa (extracto)</b>
+<span class="hl">SEG-02</span>  Toda acción que altere el estado de un expediente DEBE validar
+        el permiso específico del rol y registrar intentos denegados.
+SEG-05  Los registros de auditoría DEBEN conservarse un mínimo de 5 años.
+<span class="hl">TRZ-01</span>  Todo requisito DEBE enlazarse a un escenario de aceptación
+        cubierto por una prueba automatizada.</pre>
+      </div>
+
+      <div class="doc" data-step="1">
+        <div class="dochead">product.md / tech.md <span>Definición del sistema</span></div>
+<pre class="docbody"><b># product.md · GESTEXP</b>
+Misión: Tramitación y cierre de prestaciones sociales.
+Capacidades: CAP-01 Alta · CAP-02 Tramitación · <span class="hl">CAP-03 Cierre</span>
+
+<b># tech.md · GESTEXP</b>
+Backend Java / Spring Boot · Base de datos PostgreSQL.
+Auditoría centralizada mediante servicio de logs corporativo.</pre>
+      </div>
+
+      <div class="doc" data-step="2">
+        <div class="dochead">specs/cierre-expedientes/spec.md <span>Spec vigente inicial</span></div>
+<pre class="docbody"><b># Spec vigente · CAP-03 Cierre de expedientes</b>
+REQ-EXP-030  El sistema DEBE impedir el cierre de expedientes con trámites pendientes.
+<span class="hl">REQ-EXP-031</span>  El sistema DEBE permitir cerrar un expediente abierto. <i>[A revisar]</i></pre>
+      </div>
+
+      <div class="doc" data-step="3">
+        <div class="dochead">proposal.md / delta.md <span>Contrato del cambio · PO</span></div>
+<pre class="docbody"><b># proposal.md</b>
+Reforzar el control de accesos al cierre e implementar traza auditable.
+Constitución: SEG-02, TRZ-01.
+
+<b># delta.md</b>
+<b>## MODIFICADOS</b>
+<span class="mod">REQ-EXP-031</span>  SI el usuario no tiene el permiso CERRAR, ENTONCES el sistema
+             DEBE rechazar el cierre del expediente.
+<b>## AÑADIDOS</b>
+<span class="add">REQ-EXP-032</span>  CUANDO se rechace un cierre por permisos, el sistema DEBE
+             registrar usuario, marca de tiempo y código de expediente.
+
+<b>## Escenarios de aceptación</b>
+ESC-1: Cierre denegado a usuario no autorizado.
+ESC-2: Cierre autorizado se ejecuta correctamente.
+ESC-3: El rechazo se registra en el log de auditoría.
+ESC-4: El cierre exitoso no genera eventos de rechazo.</pre>
+      </div>
+
+      <div class="doc" data-step="4">
+        <div class="dochead">design.md / tasks.md <span>Ejecución técnica · Proveedor</span></div>
+<pre class="docbody"><b># design.md</b>
+Interceptor en ExpedienteService.cerrar() comprobando la anotación @PreAuthorize.
+Integración con AuditClient para enviar el evento estructurado.
+
+<b># tasks.md</b>
+[x] T1  Validación de seguridad en capa de servicio           -> REQ-EXP-031
+[x] T2  Envío asíncrono a log de auditoría                   -> REQ-EXP-032
+[x] T3  Automatización de ESC-1 a ESC-4 con Cucumber / Java  -> TRZ-01
+[ ] T4  Completar acceptance.md con resultados de CI</pre>
+      </div>
+
+      <div class="doc" data-step="5">
+        <div class="dochead">acceptance.md <span>Matriz de Aceptación Interactiva</span></div>
+        <div class="docpad">
+          <p class="note" style="margin-top:0">Simula el proceso: pulsa sobre los botones de estado. Nuestra aceptación solo se habilita cuando <b>todas</b> las pruebas del proveedor pasan.</p>
+          <div class="tablewrap"><table id="matrix"></table></div>
+          <div class="bar"><i id="mbar"></i></div>
+          <p class="note" id="mtxt"></p>
+        </div>
+      </div>
+
+      <div class="doc" data-step="6">
+        <div class="dochead">specs/cierre-expedientes/spec.md <span id="mergeTag">Estado final</span></div>
+        <pre class="docbody" id="mergeBody"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. FLUJO OPERATIVO Y GOBERNANZA CONTRACTUAL -->
+<section id="operativo">
+  <h2>4. Flujo operativo y gobernanza contractual</h2>
+  <p>El ciclo de vida del SDD institucionaliza la revisión previa y blinda la aceptación final frente a interpretaciones ambiguas:</p>
+
+  <div class="seg" role="tablist" id="opMode"></div>
+  <div class="steps" id="opSteps" role="tablist"></div>
+  <div class="panel" id="opOut" aria-live="polite"></div>
+
+  <h3>Cláusulas contractuales mandatorias</h3>
+  <ul class="tight">
+    <li><b>Artefactos obligatorios:</b> La entrega formal exige código fuente, batería de pruebas automatizadas enlazadas, informe de CI y matriz <code>acceptance.md</code> completa.</li>
+    <li><b>Criterio de entrada estricto:</b> Si al entregar falla una sola prueba del proveedor, la entrega <b>no se admite</b> administrativamente y los plazos contractuales siguen corriendo.</li>
+    <li><b>Aceptación vinculante:</b> La aceptación del PO se ejecuta exclusivamente sobre los escenarios acordados en la versión congelada. Cualquier petición adicional constituye un nuevo evolutivo.</li>
+    <li><b>Rondas de subsanación acotadas:</b> Máximo de dos rondas de corrección de defectos encontrados en preproducción antes de aplicar penalizaciones.</li>
+  </ul>
+</section>
+
+<!-- 5. ESTRATEGIA DE CONOCIMIENTO E INPUTS -->
+<section id="conocimiento">
+  <h2>5. Estrategia de conocimiento e inputs</h2>
+  <p>El SDD se articula con los repositorios de información existentes sin duplicar fuentes ni crear silos incoherentes:</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Fuente de conocimiento</th><th>Naturaleza</th><th>Función en el SDD</th><th>Gobernanza</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>Base Funcional (RAG)</b></td><td>Documentación viva en CI/CD</td><td><b>Contexto informativo</b> para redactar borradores.</td><td>Arquitectura corporativa.</td></tr>
+        <tr><td><b>Ingeniería Inversa</b></td><td>Foto fija del código existente</td><td><b>Línea base inicial</b> para generar la primera spec base.</td><td>Consumo puntual; no se actualiza.</td></tr>
+        <tr><td><b>Normativa DTIC</b></td><td>Políticas de seguridad y calidad</td><td><b>Origen mandatorio</b> de la constitución.</td><td>Sistemas / Seguridad.</td></tr>
+        <tr><td><b>Repo de Specs (SDD)</b></td><td>Estructurado y versionado</td><td><b>Única fuente de verdad</b> del comportamiento aceptado.</td><td>Product Owner.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel" style="margin-top:1rem">
+    <h3 style="margin-top:0">Reglas de coexistencia</h3>
+    <ol class="tight">
+      <li><b>Prevalencia:</b> En caso de discrepancia entre el RAG y la spec versionada, <b>manda siempre la spec vigente</b>. El RAG aporta contexto, pero no tiene validez contractual.</li>
+      <li><b>Consumo desacoplado:</b> El contrato jamás enlaza respuestas directas del RAG. El PO reescribe la información como requisitos formales con identificador.</li>
+      <li><b>Ciclo de vida de la ingeniería inversa:</b> Las afirmaciones extraídas de código se etiquetan como <code>[INFERIDO]</code> hasta que un evolutivo las valida mediante pruebas, pasando a <code>[CONFIRMADO]</code>.</li>
+      <li><b>Exposición segura:</b> Se recomienda exponer el RAG y las bases técnicas al PO mediante servidores <b>MCP (Model Context Protocol)</b> de solo lectura. Para los proveedores externos se entrega un paquete de contexto acotado al cambio.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 6. ESPECIFICACIÓN, REDACCIÓN ASISTIDA Y CALIDAD -->
+<section id="especificacion">
+  <h2>6. Especificación, redacción con IA y calidad</h2>
+  <p>La IA asiste la redacción pero la responsabilidad es humana. El rigor se asegura estructurando el lenguaje natural mediante sintaxis reconocidas:</p>
+
+  <h3>Patrones EARS (Easy Approach to Requirements Syntax)</h3>
+  <div class="seg" role="tablist" id="earsSeg"></div>
+  <div class="panel" id="earsOut" aria-live="polite"></div>
+
+  <h3>Control de calidad según ISO/IEC/IEEE 29148</h3>
+  <p class="note">Comprueba la diferencia entre un borrador ambiguo y un requisito formal conforme al estándar:</p>
+  <div class="seg" role="tablist" id="qSeg"></div>
+  <div class="panel">
+    <div id="qReq" style="font-weight:600"></div>
+    <div class="crit" id="qCrit"></div>
+  </div>
+</section>
+
+<!-- 7. EVALUACIÓN DE HERRAMIENTAS Y FRAMEWORKS -->
+<section id="herramientas">
+  <h2>7. Evaluación de herramientas y frameworks</h2>
+  <p>Al proveedor se le exige la entrega del estándar documental; internamente, el PO requiere una herramienta ágil para generar y mantener deltas:</p>
+
+  <div class="seg" role="tablist" id="fwSeg"></div>
+  <div id="fwList"></div>
+
+  <h3>Comparativa de idoneidad para el Product Owner</h3>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Herramienta</th><th>Curva de adopción</th><th>Alineamiento con nuestro modelo</th><th>Complejidad técnica</th><th>Licenciamiento</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>OpenSpec</b></td><td>Baja</td><td><span class="stars">★★★★★</span></td><td>Muy baja (CLI liviano, apto multi-IDE)</td><td>Gratuito (MIT)</td></tr>
+        <tr><td><b>GitHub Spec Kit</b></td><td>Media</td><td><span class="stars">★★★★<i>★</i></span></td><td>Media (Dependencia de entorno Python / uv)</td><td>Gratuito (MIT)</td></tr>
+        <tr><td><b>MUSUBI</b></td><td>Alta</td><td><span class="stars">★★★★<i>★</i></span></td><td>Alta (Herramienta compleja, un mantenedor)</td><td>Gratuito (MIT)</td></tr>
+        <tr><td><b>cc-sdd</b></td><td>Baja</td><td><span class="stars">★★★<i>★★</i></span></td><td>Baja (Requiere adaptar trazabilidad)</td><td>Gratuito (MIT)</td></tr>
+        <tr><td><b>BMAD-METHOD</b></td><td>Alta</td><td><span class="stars">★★★<i>★★</i></span></td><td>Alta (Impone metodología ágil propia)</td><td>Gratuito (MIT)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note"><b>Conclusión de mercado:</b> OpenSpec destaca como la opción óptima para el PO gracias a su gestión nativa de deltas y archivo histórico, siendo evaluado favorablemente («Trial») en el Technology Radar de Thoughtworks (noviembre 2026).</p>
+</section>
+
+<!-- 8. RIESGOS, BUENAS PRÁCTICAS Y HOJA DE RUTA -->
+<section id="gobernanza">
+  <h2>8. Riesgos, buenas prácticas y hoja de ruta</h2>
+  
+  <div class="grid2">
+    <div class="panel">
+      <h3 style="margin-top:0">Riesgos identificados</h3>
+      <ul class="tight">
+        <li><b>Teatro de especificación:</b> Redactar documentos exhaustivos que no se utilicen para la aceptación real.</li>
+        <li><b>Deriva spec-código:</b> Cambios aprobados en código sin actualizar la spec vigente.</li>
+        <li><b>Verbosismo IA:</b> Textos generados extensos pero carentes de precisión contractual.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Buenas prácticas</h3>
+      <ul class="tight">
+        <li><b>Deltas atómicos:</b> Especificaciones de 5 a 15 requisitos entregables de forma independiente.</li>
+        <li><b>Trazabilidad estricta:</b> Todo escenario debe tener un identificador que coincida con el test de CI.</li>
+        <li><b>Revisión humana obligatoria:</b> Ninguna spec pasa a desarrollo sin firma formal del PO.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Plan de implantación escalonado</h3>
+  <div class="steps" id="plSteps" role="tablist"></div>
+  <div class="panel" id="plOut" aria-live="polite"></div>
+</section>
+
+<!-- GLOSARIO Y FUENTES -->
+<section id="glosario">
+  <h2>Glosario y fuentes de referencia</h2>
+  <label for="glq" class="note">Filtrar términos:</label><br>
+  <input type="search" id="glq" placeholder="Ej. Delta, EARS, Spec-anchored...">
+  <dl class="gl" id="glList"></dl>
+
+  <h3>Fuentes técnicas de referencia</h3>
+  <ul class="tight">
+    <li>Böckeler, Birgitta (Thoughtworks): <i>Understanding Spec-Driven Development</i> (martinfowler.com, 2025).</li>
+    <li>Fission-AI: <i>OpenSpec Specification Engine</i> (github.com/Fission-AI/OpenSpec).</li>
+    <li>GitHub: <i>Spec Kit Toolkit</i> (github.com/github/spec-kit).</li>
+    <li>Mavin et al.: <i>EARS (Easy Approach to Requirements Syntax)</i>, IEEE RE'09.</li>
+    <li>ISO/IEC/IEEE 29148:2018: <i>Systems and software engineering — Life cycle processes — Requirements engineering</i>.</li>
+  </ul>
+</section>
+</main>
+</div>
+
+<button class="themebtn" id="themeBtn" type="button">Alternar tema</button>
+
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+function seg(segId,items,onSel,opts){
+  var el=$(segId);el.innerHTML="";
+  items.forEach(function(it,i){
+    var b=document.createElement("button");b.type="button";b.setAttribute("role","tab");
+    b.innerHTML=(opts&&opts.num?'<span class="n">'+String(i+1).padStart(2,"0")+'</span>':"")+it.label;
+    b.addEventListener("click",function(){pick(i)});el.appendChild(b);
+  });
+  function pick(i){
+    [].forEach.call(el.children,function(c,j){
+      c.setAttribute("aria-selected",j===i?"true":"false");
+      if(opts&&opts.num)c.classList.toggle("done",j<i);
+    });
+    onSel(items[i],i);
+  }
+  pick(0);
+}
+
+/* 2. Niveles y Tipo de App */
+var LV=[
+  {label:"Spec-first",tag:"Insuficiente",c:"warn",desc:"La spec se escribe antes de programar pero se descarta tras la entrega.",val:"Genera deuda técnica inmediata y deriva con el código."},
+  {label:"Spec-anchored",tag:"Recomendado corporativo",c:"ok",desc:"La spec vive versionada junto al código fuente y se actualiza obligatoriamente con cada evolutivo mediante deltas.",val:"Alineación total con contratos, auditoría y aceptación técnica."},
+  {label:"Spec-as-source",tag:"Prematuro",c:"bad",desc:"La spec es el único código fuente editable; el software ejecutable se regenera íntegramente con IA.",val:"Inviable hoy en software empresarial por falta de determinismo."}
+];
+seg("lvlSeg",LV,function(l){
+  $("lvlOut").innerHTML='<span class="tag '+l.c+'">'+l.tag+'</span><p style="margin:.5rem 0 .2rem">'+l.desc+'</p><p class="note"><b>Impacto:</b> '+l.val+'</p>';
+});
+
+var AP=[
+  {label:"Mantenimiento evolutivo",t:"Modelo delta estricto. Si no existe spec previa, se genera la línea base como paso preliminar."},
+  {label:"Aplicación legacy",t:"Pruebas de caracterización previa (golden master) y spec acotada exclusivamente al módulo impactado."},
+  {label:"Nueva aplicación",t:"Spec-anchored desde el diseño inicial, estructurada por capacidades modulares independientes."},
+  {label:"SaaS / Licenciado",t:"La especificación modela la configuración funcional, reglas de integración y contratos de datos."}
+];
+seg("appSeg",AP,function(a){
+  $("appOut").innerHTML='<p style="margin:0"><b>Estrategia:</b> '+a.t+'</p>';
+});
+
+/* 3. Calculadora de tamaño */
+function calc(){
+  var n=+$("reqN").value;$("reqNv").textContent=n;
+  $("scn").textContent=(2*n)+" a "+(5*n);
+  var t,c,note;
+  if(n<=15){t="Tamaño óptimo";c="ok";note="Ámbito adecuado para un ciclo de desarrollo ágil y revisión contractual sin dispersión."}
+  else if(n<=22){t="Tamaño elevado";c="warn";note="Riesgo de complejidad en la aceptación. Se sugiere evaluar división en dos entregas."}
+  else{t="Dividir cambio";c="bad";note="Excede los límites de gobernanza ágil. Debe fraccionarse en deltas atómicos independientes."}
+  $("sizeTag").innerHTML='<span class="tag '+c+'">'+t+'</span>';$("sizeNote").textContent=note;
+}
+$("reqN").addEventListener("input",calc);
+
+/* 3. Simulación GESTEXP */
+var EX=[
+  {label:"1. Constitución",t:"Políticas transversales de obligado cumplimiento impuestas por DTIC."},
+  {label:"2. Contexto",t:"Misión funcional y arquitectura base del aplicativo."},
+  {label:"3. Spec previa",t:"Comportamiento vigente de la capacidad antes de autorizar el cambio."},
+  {label:"4. Contrato",t:"Propuesta, reglas asociadas, deltas y escenarios redactados por el PO."},
+  {label:"5. Solución",t:"Diseño técnico y tareas operativas preparadas por el proveedor."},
+  {label:"6. Matriz",t:"Validación cruzada: pruebas de CI del proveedor y aceptación del PO."},
+  {label:"7. Cierre",t:"Fusión del delta en la spec vigente tras superar todos los criterios de calidad."}
+];
+seg("exSeg",EX,function(x,i){
+  $("exLead").textContent=x.t;
+  [].forEach.call(document.querySelectorAll(".doc[data-step]"),function(d){d.hidden=+d.dataset.step!==i});
+  [].forEach.call(document.querySelectorAll(".tree .tl"),function(l){
+    var on=(l.dataset.on||"").split(" ").indexOf(String(i))>-1;
+    l.classList.toggle("on",on);
+  });
+});
+
+var COLS=["REQ-EXP-031","REQ-EXP-032","SEG-02"];
+var M=[
+  {id:"ESC-1",s:"Cierre denegado por falta de permisos",cov:[1,0,1],test:"cierre.feature:10"},
+  {id:"ESC-2",s:"Cierre autorizado ejecuta correctamente",cov:[1,0,0],test:"cierre.feature:18"},
+  {id:"ESC-3",s:"Rechazo genera traza de auditoría",cov:[0,1,1],test:"cierre.feature:25"},
+  {id:"ESC-4",s:"Cierre conforme no genera traza de rechazo",cov:[1,1,0],test:"cierre.feature:32"}
+];
+var PV=[0,0,0,0],AC=[0,0,0,0];
+var LAB=["Pendiente","Pasa","Falla"];
+function drawM(){
+  var vAll=PV.every(function(x){return x===1});
+  if(!vAll) AC=[0,0,0,0];
+  var h='<thead><tr><th>Escenario y Test Automatizado</th>'+COLS.map(function(c){return'<th class="c">'+c+'</th>'}).join("")+'<th>Pruebas Proveedor</th><th>Aceptación PO</th></tr></thead><tbody>';
+  M.forEach(function(r,i){
+    h+='<tr><td><b>'+r.id+'</b>: '+r.s+'<br><code class="tref">'+r.test+'</code></td>'
+      +r.cov.map(function(c){return'<td class="c">'+(c?'<span class="dot">●</span>':'')+'</td>'}).join("")
+      +'<td><button type="button" class="sbtn" data-k="p" data-i="'+i+'" data-s="'+PV[i]+'">'+LAB[PV[i]]+'</button></td>'
+      +'<td><button type="button" class="sbtn" data-k="a" data-i="'+i+'" data-s="'+AC[i]+'"'+(!vAll?' disabled':'')+'>'+LAB[AC[i]]+'</button></td></tr>';
+  });
+  h+='</tbody>';
+  $("matrix").innerHTML=h;
+  
+  var pOk=PV.filter(function(x){return x===1}).length, aOk=AC.filter(function(x){return x===1}).length, aBad=AC.filter(function(x){return x===2}).length;
+  $("mbar").style.width=((pOk+aOk)/8*100)+"%";
+  
+  if(!vAll){
+    $("mtxt").textContent="Entrega no admitida: Las pruebas del proveedor deben pasar al 100% en CI ("+pOk+"/4 completadas). Aceptación bloqueada.";
+  } else if(aBad>0){
+    $("mtxt").textContent="Aceptación rechazada: Se han detectado "+aBad+" fallo(s). La entrega regresa al proveedor para subsanación.";
+  } else if(aOk===4){
+    $("mtxt").textContent="Aceptación conforme: 100% de escenarios superados. Se autoriza la fusión del delta.";
+  } else {
+    $("mtxt").textContent="Entrega admitida: Pruebas del proveedor superadas. Validación del PO en curso ("+aOk+"/4 validados).";
+  }
+  
+  var finished=pOk===4&&aOk===4;
+  $("mergeTag").textContent=finished?"Fusión consolidada":"Fusión bloqueada";
+  $("mergeBody").innerHTML=finished
+    ?'<b># Spec vigente · CAP-03 Cierre de expedientes</b>\nREQ-EXP-030  El sistema DEBE impedir el cierre de expedientes con trámites pendientes.\n<span class="mod">REQ-EXP-031</span>  SI el usuario no tiene el permiso CERRAR, ENTONCES el sistema\n             DEBE rechazar el cierre del expediente.                <i>[Modificado]</i>\n<span class="add">REQ-EXP-032</span>  CUANDO se rechace un cierre por permisos, el sistema DEBE\n             registrar usuario, marca de tiempo y expediente.       <i>[Añadido]</i>\n\n<i>✓ Delta y acceptance.md consolidados y archivados en changes/archive/</i>'
+    :'<i>La actualización de la spec vigente está bloqueada.\nRequiere la validación total de la batería de pruebas y la firma de aceptación del PO.</i>';
+}
+$("matrix").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-i]");if(!b)return;
+  var i=+b.dataset.i;
+  if(b.dataset.k==="p"){ PV[i]=(PV[i]+1)%3; } else { AC[i]=(AC[i]+1)%3; }
+  drawM();
+});
+drawM();
+
+/* 4. Flujo Operativo */
+var OP_DATA={
+  evo:[
+    {label:"1. Borrador",who:"Product Owner",t:"El PO formaliza la necesidad en el delta (propuesta, requisitos modificados/añadidos, constitución y criterios de aceptación)."},
+    {label:"2. Desafío técnico",who:"Proveedor",t:"El proveedor valida viabilidad, identifica impactos arquitectónicos y propone refinamientos técnicos."},
+    {label:"3. Congelación",who:"PO + Proveedor",t:"Firma formal de la versión 1 del contrato de cambio. A partir de aquí, el alcance queda cerrado."},
+    {label:"4. Construcción",who:"Proveedor",t:"Diseño técnico, codificación y automatización de pruebas. Solo se admite entrega con 100% de tests en verde."},
+    {label:"5. Aceptación",who:"Product Owner",t:"Verificación del PO en preproducción sobre los escenarios pactados en la matriz."},
+    {label:"6. Cierre",who:"Product Owner",t:"Firma de recepción, fusión del delta en la spec vigente y archivo documental del cambio."}
+  ],
+  nueva:[
+    {label:"1. Definición inicial",who:"Product Owner",t:"Redacción de la spec completa inicial desglosada por capacidades, vinculando las reglas corporativas."},
+    {label:"2. Desafío técnico",who:"Proveedor",t:"Revisión técnica, dimensionamiento y propuesta de arquitectura de integración."},
+    {label:"3. Congelación",who:"PO + Proveedor",t:"Congelación contractual de la especificación inicial por hitos de entrega modulares."},
+    {label:"4. Construcción",who:"Proveedor",t:"Desarrollo guiado por especificaciones con pruebas automatizadas continuas."},
+    {label:"5. Aceptación",who:"Product Owner",t:"Validación formal por capacidades según los criterios de aceptación acordados."},
+    {label:"6. Entrada en servicio",who:"Product Owner",t:"La especificación inicial aceptada pasa a ser la spec vigente número 1 del nuevo sistema."}
+  ]
+};
+seg("opMode",[{label:"Mantenimiento Evolutivo",k:"evo"},{label:"Nueva Aplicación",k:"nueva"}],function(m){
+  var items=OP_DATA[m.k].map(function(o){return {label:o.label+'<span class="own">'+o.who+'</span>',o:o}});
+  seg("opSteps",items,function(it){
+    $("opOut").innerHTML='<b>'+it.o.label+'</b> <span class="tag acc">'+it.o.who+'</span><p style="margin:.4rem 0 0">'+it.o.t+'</p>';
+  },{num:false});
+});
+
+/* 6. EARS */
+var EA=[
+  {label:"Ubicuo",tpl:"El <sistema> DEBE <respuesta>.",ex:"El sistema DEBE registrar toda denegación de acceso en el log de auditoría."},
+  {label:"Por evento",tpl:"CUANDO <evento>, el <sistema> DEBE <respuesta>.",ex:"CUANDO se pulse Confirmar Cierre, el sistema DEBE verificar los trámites obligatorios."},
+  {label:"Por estado",tpl:"MIENTRAS <estado>, el <sistema> DEBE <respuesta>.",ex:"MIENTRAS el expediente esté bloqueado, el sistema DEBE deshabilitar su edición."},
+  {label:"No deseado",tpl:"SI <condición anómala>, ENTONCES el <sistema> DEBE <respuesta>.",ex:"SI el usuario carece de permiso, ENTONCES el sistema DEBE abortar la operación."}
+];
+seg("earsSeg",EA,function(o){
+  $("earsOut").innerHTML='<p style="margin:0 0 .3rem"><b>Patrón sintáctico:</b></p><code>'+o.tpl.replace(/</g,"&lt;").replace(/>/g,"&gt;")+'</code><p style="margin:.6rem 0 .2rem"><b>Ejemplo aplicado:</b></p><p style="margin:0"><i>'+o.ex+'</i></p>';
+});
+
+/* 6. Calidad ISO 29148 */
+var CR=["Singular","Inequívoco","Verificable","Completo","Conforme"];
+var Q=[
+  {label:"Borrador informal",r:"El aplicativo tiene que ser rápido y permitir archivar expedientes fácilmente cuando corresponda.",bad:["Singular","Inequívoco","Verificable","Completo","Conforme"]},
+  {label:"Requisito estructurado",r:"CUANDO el supervisor autoriza el cierre, el sistema DEBE consolidar el expediente en formato PDF/A en menos de 2 segundos.",bad:[]}
+];
+seg("qSeg",Q,function(q){
+  $("qReq").textContent=q.r;
+  $("qCrit").innerHTML=CR.map(function(c){
+    var f=q.bad.indexOf(c)>-1;
+    return '<div><span class="tag '+(f?"bad":"ok")+'">'+(f?"Defecto":"Cumple")+'</span> '+c+'</div>';
+  }).join("");
+});
+
+/* 7. Frameworks */
+var FW=[
+  {n:"OpenSpec",who:"PO / Proveedor",v:"Recomendado PO",c:"ok",
+   a:"Especializado en deltas sobre specs vigentes y archivo histórico. Ligero, portable e independiente del IDE.",
+   e:"Encaje exacto con nuestro modelo de deltas contractuales y ciclo de evolutivos."},
+  {n:"GitHub Spec Kit",who:"PO / Proveedor",v:"Estándar mercado",c:"ok",
+   a:"Kit oficial con comandos de fase y validación de convergencia. Orientado a funcionalidades nuevas.",
+   e:"Excelente para fijar estándares corporativos, aunque requiere tooling técnico (Python)."},
+  {n:"MUSUBI",who:"PO / Proveedor",v:"Rigor metodológico",c:"acc",
+   a:"Matriz exhaustiva requisito ↔ diseño ↔ test. Diseñado bajo estándares EARS y C4.",
+   e:"Aporta gran valor conceptual, pero sufre riesgo de mantenimiento comunitario."},
+  {n:"cc-sdd",who:"Proveedor",v:"Nicho",c:"warn",
+   a:"Enfocado a puertas de validación humana durante el desarrollo con asistentes de código.",
+   e:"Fuerte en la fase de construcción, pero no resuelve la gestión contractual de la spec vigente."}
+];
+seg("fwSeg",[{label:"Todos los frameworks",f:null},{label:"Aptos para PO",f:"PO"}],function(f){
+  $("fwList").innerHTML=FW.filter(function(x){return!f.f||x.who.indexOf(f.f)>-1}).map(function(x){
+    return '<details class="fw"><summary>'+x.n+' <span class="tag aud">'+x.who+'</span> <span class="tag '+x.c+'">'+x.v+'</span></summary>'
+      +'<div class="body"><div><h4>Capacidades</h4><p>'+x.a+'</p></div><div><h4>Valoración estratégica</h4><p>'+x.e+'</p></div></div></details>';
+  }).join("");
+});
+
+/* 8. Plan de implantación */
+var PL=[
+  {label:"Fase 1: PoC",t:"Prueba de concepto en un aplicativo real para validar tooling (OpenSpec) y plantillas base.",r:"Estándar documental validado."},
+  {label:"Fase 2: Piloto",t:"Despliegue en 3 aplicaciones representativas con distintos proveedores.",r:"Métricas de desviación y esfuerzo."},
+  {label:"Fase 3: Normalización",t:"Incorporación de las cláusulas SDD a los pliegos y procedimientos normativos DTIC.",r:"Pliegos marco actualizados."},
+  {label:"Fase 4: Despliegue",t:"Extensión progresiva: cada aplicación incorpora su spec base al recibir su siguiente evolutivo.",r:"Gobernanza completa de aplicaciones."}
+];
+seg("plSteps",PL,function(p){
+  $("plOut").innerHTML='<b>'+p.label+'</b><p style="margin:.3rem 0 .2rem">'+p.t+'</p><p class="note"><b>Entregable clave:</b> '+p.r+'</p>';
+},{num:true});
+
+/* Glosario */
+var GL=[
+  ["Spec-anchored","Modelo en el que la especificación evoluciona versionada en el repositorio junto al código ejecutable."],
+  ["Delta","Fichero de cambios que registra de forma atómica los requisitos añadidos, modificados o eliminados en un evolutivo."],
+  ["Spec vigente","Documento consolidado que refleja el comportamiento funcional actualmente en producción."],
+  ["Constitución","Compendio de reglas no negociables de seguridad, trazabilidad y arquitectura corporativa."],
+  ["EARS","Notación estandarizada que guía la redacción de requisitos mediante eventos, estados y condiciones."],
+  ["Gherkin","Sintaxis estructurada DADO/CUANDO/ENTONCES orientada a la automatización de pruebas de aceptación."],
+  ["MCP","Model Context Protocol: estándar abierto para exponer contextos técnicos a agentes de IA de forma segura."],
+  ["Matriz de aceptación","Documento contractual que mapea requisitos, escenarios y la ejecución real de las pruebas."]
+];
+function drawG(){
+  var q=$("glq").value.trim().toLowerCase();
+  var r=GL.filter(function(g){return !q||(g[0]+" "+g[1]).toLowerCase().indexOf(q)>-1});
+  $("glList").innerHTML=r.length?r.map(function(g){return"<dt>"+g[0]+"</dt><dd>"+g[1]+"</dd>"}).join(""):"<dd>No se encontraron términos coincidentes.</dd>";
+}
+$("glq").addEventListener("input",drawG);
+drawG();
+
+/* ScrollSpy */
+var links=[].slice.call(document.querySelectorAll("#toc a"));
+var secs=links.map(function(a){return $(a.getAttribute("href").slice(1))});
+window.addEventListener("scroll",function(){
+  var y=window.scrollY+140,cur=0;
+  secs.forEach(function(s,i){if(s&&s.offsetTop<=y)cur=i});
+  links.forEach(function(a,i){a.classList.toggle("on",i===cur)});
+},{passive:true});
+
+/* Tema */
+$("themeBtn").addEventListener("click",function(){
+  var r=document.documentElement,d=r.getAttribute("data-theme");
+  var dark=d?d==="dark":window.matchMedia("(prefers-color-scheme:dark)").matches;
+  r.setAttribute("data-theme",dark?"light":"dark");
+});
+})();
+</script>
+</body>
+</html>
