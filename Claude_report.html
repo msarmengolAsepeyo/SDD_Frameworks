@@ -139,13 +139,29 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   dl.gl{grid-template-columns:minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar>i{transition:none}}
+.kbflow{display:grid;grid-template-columns:1fr auto 1.15fr auto 1fr;gap:.6rem;align-items:center;margin:.8rem 0}
+.kbflow .kb{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.8rem .9rem;font-size:.88rem}
+.kbflow .kb.core{border-color:var(--accent);background:var(--accent-soft)}
+.kbflow .kb b{display:block;font-family:var(--font-head);font-size:1rem;margin-bottom:.2rem}
+.kbflow .kb .tag{margin:.15rem 0 .35rem}
+.kbflow .kb ul{margin:.3rem 0 0;padding-left:1.1rem}
+.kbflow .arr{display:flex;flex-direction:column;gap:.5rem;font:500 .7rem/1.3 var(--font-mono);color:var(--muted);max-width:11rem}
+.kbflow .arr span{display:block}.kbflow .arr .v{display:none}
+.kbflow .arr .h,.kbflow .arr .v{display:inline;font-size:1rem}.kbflow .arr .v{display:none}
+.kbflow .arr .in{color:var(--accent)}.kbflow .arr .ret{color:var(--warn)}
+.kbp{grid-template-columns:repeat(2,minmax(0,1fr))}.kbp p{margin:.3rem 0 0}.kbt{font-family:var(--font-head)}
+#kbSteps button{flex-basis:96px}
+.kbcols{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:.4rem}
+.kbcols h4{font:500 .7rem var(--font-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .2rem}
+.kbcols p{margin:0;font-size:.9rem}
+@media (max-width:760px){.kbflow{grid-template-columns:1fr}.kbflow .arr{max-width:none;align-items:center;text-align:center}.kbflow .arr .h{display:none}.kbflow .arr .v{display:inline}.kbcols{grid-template-columns:1fr}.kbp{grid-template-columns:1fr}}
 </style>
 
 <div class="shell">
 <nav class="toc" id="toc" aria-label="Secciones">
   <span class="lbl">Contenido</span>
   <a href="#resumen">Resumen</a><a href="#niveles">Niveles de SDD</a>
-  <a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a><a href="#herramientas">Herramientas</a>
+  <a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a><a href="#herramientas">Herramientas</a><a href="#conocimiento">Bases de conocimiento</a>
   <a href="#redaccion">Redacción con IA</a><a href="#carga">Carga inicial</a><a href="#sintaxis">Sintaxis y estándares</a>
   <a href="#practicas">Buenas prácticas</a><a href="#plan">Hoja de ruta</a><a href="#glosario">Glosario y fuentes</a>
 </nav>
@@ -204,15 +220,15 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <p>La matriz de aceptación forma parte del contrato del cambio: el PO la prepara con los escenarios y los requisitos que cubre cada uno, el proveedor la completa con sus pruebas automatizadas y sus resultados, y nosotros registramos el resultado de nuestra aceptación.</p>
   <h3>Cómo lo nombra cada framework</h3>
   <div class="tablewrap"><table class="fwmap">
-    <tr><th>Nivel</th><th>Nuestro modelo</th><th>GitHub Spec Kit</th><th>OpenSpec</th><th>Kiro</th><th><a href="https://buildermethods.com/agent-os" target="_blank" rel="noopener">Agent OS</a></th></tr>
-    <tr><td><b>Corporativo</b></td><td><code>constitucion.md</code></td><td><code>.specify/memory/constitution.md</code></td><td><code>openspec/config.yaml</code> (context y rules)</td><td>Steering global (<code>~/.kiro/steering/</code>)</td><td><code>agent-os/standards/</code></td></tr>
+    <tr><th>Nivel</th><th>Nuestro modelo</th><th>GitHub Spec Kit</th><th>OpenSpec</th><th><a href="https://kiro.dev" target="_blank" rel="noopener">Kiro</a> y cc-sdd</th><th><a href="https://buildermethods.com/agent-os" target="_blank" rel="noopener">Agent OS</a></th></tr>
+    <tr><td><b>Corporativo</b></td><td><code>constitucion.md</code></td><td><code>.specify/memory/constitution.md</code></td><td><code>openspec/config.yaml</code> (context y rules)</td><td>Kiro: steering global (<code>~/.kiro/steering/</code>). cc-sdd: no hay</td><td><code>agent-os/standards/</code></td></tr>
     <tr><td><b>Aplicación</b></td><td><code>product.md</code>, <code>tech.md</code></td><td>Dentro de la constitución</td><td>Dentro de <code>config.yaml</code></td><td><code>.kiro/steering/product.md</code>, <code>tech.md</code>, <code>structure.md</code></td><td><code>agent-os/product/mission.md</code>, <code>roadmap.md</code>, <code>tech-stack.md</code></td></tr>
     <tr><td><b>Capacidad</b> (vigente)</td><td><code>specs/&lt;capacidad&gt;/spec.md</code></td><td>No hay: las specs son por funcionalidad</td><td><code>openspec/specs/</code></td><td>No hay: las specs son por funcionalidad</td><td>No hay</td></tr>
-    <tr><td><b>Cambio</b> (contrato)</td><td><code>proposal.md</code>, <code>delta.md</code>, <code>acceptance.md</code></td><td><code>specs/NNN-funcionalidad/spec.md</code></td><td><code>changes/&lt;cambio&gt;/proposal.md</code> y <code>specs/</code> (deltas)</td><td><code>requirements.md</code></td><td><code>shape.md</code></td></tr>
+    <tr><td><b>Cambio</b> (contrato)</td><td><code>proposal.md</code>, <code>delta.md</code>, <code>acceptance.md</code></td><td><code>specs/NNN-funcionalidad/spec.md</code></td><td><code>changes/&lt;cambio&gt;/proposal.md</code> y <code>specs/</code> (deltas)</td><td><code>.kiro/specs/&lt;funcionalidad&gt;/requirements.md</code></td><td><code>shape.md</code></td></tr>
     <tr><td><b>Cambio</b> (ejecución)</td><td><code>design.md</code>, <code>tasks.md</code></td><td><code>plan.md</code>, <code>research.md</code>, <code>data-model.md</code>, <code>contracts/</code>, <code>tasks.md</code></td><td><code>design.md</code>, <code>tasks.md</code></td><td><code>design.md</code>, <code>tasks.md</code></td><td><code>plan.md</code></td></tr>
     <tr><td><b>Archivo</b></td><td><code>changes/archive/</code></td><td>No hay</td><td><code>changes/archive/AAAA-MM-DD-&lt;cambio&gt;/</code></td><td>No hay</td><td>Historial en <code>agent-os/specs/</code></td></tr>
   </table></div>
-  <p class="note">Estructuras según la documentación de cada proyecto en noviembre de 2026. Ninguno incluye un documento de matriz de aceptación (<code>acceptance.md</code>): es una aportación de nuestro modelo. Solo OpenSpec mantiene una spec vigente por capacidad y archiva los cambios, de ahí su encaje. Agent OS no está en la evaluación de frameworks, pero se incluye porque sus ficheros de producto (<code>mission.md</code>, <code>tech-stack.md</code>) son una referencia muy extendida.</p>
+  <p class="note">Estructuras según la documentación de cada proyecto en noviembre de 2026. Ninguno incluye un documento de matriz de aceptación (<code>acceptance.md</code>): es una aportación de nuestro modelo. Solo OpenSpec mantiene una spec vigente por capacidad y archiva los cambios, de ahí su encaje. cc-sdd reproduce en cada proyecto la estructura de Kiro (<code>.kiro/steering/</code> y <code>.kiro/specs/</code>), por eso comparten columna. Agent OS no está en la evaluación de frameworks, pero se incluye porque sus ficheros de producto (<code>mission.md</code>, <code>tech-stack.md</code>) son una referencia muy extendida. MUSUBI y BMAD-METHOD se dejan fuera de la tabla por simplicidad; su correspondencia se revisaría en la PoC.</p>
   <p class="note"><i>Volumen orientativo: constitución de 20 a 40 reglas; spec vigente de 40 a 120 requisitos por aplicación; delta de 5 a 15 requisitos y de 10 a 30 escenarios. Las cifras son orientativas y de criterio propio.</i></p>
 
   <h3>Calculadora de tamaño de un evolutivo</h3>
@@ -365,7 +381,7 @@ de auditoría con usuario, fecha y expediente.
   </table></div>
   <p class="note">Valoración de criterio propio, pendiente de contrastar en las pruebas. La licencia MIT es una licencia de código abierto permisiva: permite usar, modificar y distribuir el software libremente, también con fines comerciales, sin pagar licencias. El coste indicado es el de la herramienta: todas necesitan además la licencia del asistente de IA que se use (Claude Code, GitHub Copilot, etc.). Kiro y Tessl no se incluyen porque se dirigen al trabajo del proveedor o de los equipos de desarrollo.</p>
   <h3>Especificar y validar: combinaciones posibles</h3>
-  <p>En nuestro modelo hay tres momentos distintos: especificar, validar la spec antes de congelarla y validar la entrega del proveedor. El uso del SDD de punta a punta requiere una combinación de herramientas.</p>
+  <p>En nuestro modelo hay tres momentos distintos, que corresponden a las fases del <a href="#operativo">modelo operativo</a>: especificar (borrador), validar la spec antes de congelarla (desafío y congelación) y validar la entrega del proveedor (aceptación). El uso del SDD de punta a punta requiere una combinación de herramientas.</p>
   <div class="tablewrap"><table>
     <tr><th>Framework</th><th>Especificar</th><th>Validar la spec</th><th>Validar la entrega</th></tr>
     <tr><td><b>OpenSpec</b></td><td>Fuerte: deltas sobre la spec vigente</td><td>Básica: formato y estructura</td><td>No</td></tr>
@@ -376,12 +392,79 @@ de auditoría con usuario, fecha y expediente.
   </table></div>
   <p>La validación de la entrega, es decir, que cada escenario tenga su prueba y que la prueba pase, es la que sostiene la aceptación contractual. No la hace el framework, sino la batería de pruebas del proveedor y nuestra matriz de aceptación. Por eso tiene sentido combinar tres piezas:</p>
   <ol class="tight">
-    <li><b>Un formato de spec común</b> para todos los proveedores: OpenSpec por su modelo de deltas, o Spec Kit si se prefiere la referencia del sector.</li>
+    <li><b>Un formato de spec común</b> para todos los proveedores: OpenSpec por su modelo de deltas, o Spec Kit si se prefiere la referencia del sector. En ese caso habría que añadir la spec vigente por capacidad y el archivo de cambios, que Spec Kit no trae y que nuestro <a href="#documentos">modelo documental</a> necesita.</li>
     <li><b>La trazabilidad de MUSUBI como modelo</b>, no necesariamente como herramienta: identificadores estables que unen requisito, escenario y prueba, con una comprobación automática de que no queda ningún requisito sin escenario ni ningún escenario sin prueba.</li>
     <li><b>Escenarios <a href="https://cucumber.io/docs/gherkin/" target="_blank" rel="noopener">Gherkin</a> ejecutables</b> en la batería de pruebas del proveedor, que alimentan la matriz de aceptación con independencia de la herramienta que use.</li>
   </ol>
   <p class="note">Capacidades según la documentación de cada proyecto; valoración de criterio propio, pendiente de contrastar en las pruebas.</p>
   <p class="note"><b>Referencia externa de madurez.</b> El <a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Technology Radar</a> de Thoughtworks es un informe semestral que clasifica tecnologías en cuatro anillos: adoptar, probar, evaluar y evitar. En noviembre de 2025 incluyó el <a href="https://www.thoughtworks.com/radar/techniques/spec-driven-development" target="_blank" rel="noopener">SDD</a> en «Assess» (evaluar): algo que conviene estudiar de cerca, pero que todavía no se recomienda probar salvo que encaje especialmente. En la edición de noviembre de 2026, <a href="https://www.thoughtworks.com/radar/tools/openspec" target="_blank" rel="noopener">OpenSpec</a> ha subido a «Trial» (probar) tras buenos resultados en varios equipos, sobre todo en aplicaciones existentes.</p>
+</section>
+
+<section id="conocimiento">
+  <h2>Integración con las bases de conocimiento</h2>
+  <p>Para incorporar el SDD a los procedimientos TIC, el repositorio de specs tendría que convivir con dos repositorios de conocimiento: la base de conocimiento funcional (RAG) que impulsa Arquitectura y la base documental de las aplicaciones obtenida por ingeniería inversa. La propuesta parte de una regla: <b>cada tipo de conocimiento tiene una sola fuente de verdad</b>, y el SDD consulta las demás sin duplicarlas.</p>
+  <div class="tablewrap"><table>
+    <tr><th>Repositorio</th><th>Qué contiene</th><th>Naturaleza</th><th>Responsable</th><th>Papel en el SDD</th></tr>
+    <tr><td><b>Base de conocimiento funcional</b> (RAG)</td><td>Información funcional capturada dentro del flujo CI/CD normativo y puesta a disposición de distintos interesados</td><td>Viva y flexible, no estructurada</td><td>Arquitectura</td><td><b>Contexto</b> para redactar specs. Circuito paralelo, informativo</td></tr>
+    <tr><td><b>Base documental obtenida por ingeniería inversa</b></td><td>Documentación de las aplicaciones generada con una herramienta del proveedor</td><td>Foto fija con fecha (en principio, una sola carga)</td><td>Por definir</td><td><b>Línea base</b> de partida de la spec vigente, nunca fuente de verdad</td></tr>
+    <tr><td><b>Procedimientos normativos</b></td><td>Normas de Sistemas y Arquitectura para la entrega, el despliegue y la seguridad</td><td>Documentos versionados</td><td>Sistemas / Arquitectura</td><td><b>Origen</b> de la constitución</td></tr>
+    <tr><td><b>Repositorio de specs</b> (SDD) de cada aplicación</td><td>Constitución, contexto de aplicación, spec vigente y cambios</td><td>Estructurado y versionado, con identificadores</td><td>PO (+ proveedor en la ejecución)</td><td>Fuente de verdad del <b>comportamiento aceptado</b> y base del contrato</td></tr>
+  </table></div>
+  <p class="note">La herramienta de ingeniería inversa es un producto propietario de un proveedor y no se nombra por confidencialidad.</p>
+
+  <h3>Esquema de diálogo: dos circuitos paralelos</h3>
+  <div class="kbflow" aria-label="Esquema de diálogo entre los repositorios">
+    <div class="kb"><b>Base de conocimiento funcional</b><span class="tag acc">Circuito de Arquitectura</span><ul class="tight"><li>Flexible, no estructurada</li><li>Para consultar</li><li>Muchos interesados</li></ul></div>
+    <div class="arr"><span class="in"><span class="h">→</span><span class="v">↓</span> Contexto para redactar (no se cita)</span><span class="ret"><span class="h">←</span><span class="v">↑</span> Specs aceptadas, por el propio flujo CI/CD</span></div>
+    <div class="kb core"><b>Repositorio de specs</b><span class="tag acc">Circuito del PO</span><ul class="tight"><li>Constitución, desde los procedimientos normativos</li><li><code>product.md</code>, <code>tech.md</code></li><li>Spec vigente por capacidad</li><li>Cambios: contrato y ejecución</li></ul></div>
+    <div class="arr"><span class="in"><span class="h">←</span><span class="v">↑</span> Línea base de la capacidad, al tocarla</span><span class="ret"><span class="h">→</span><span class="v">↓</span> Registro de cobertura (sin reescribir la base)</span></div>
+    <div class="kb"><b>Base documental de ingeniería inversa</b><span class="tag warn">Foto fija</span><ul class="tight"><li>Documentación por aplicación</li><li>Capacidades e integraciones</li><li>Fecha de la extracción</li></ul></div>
+  </div>
+  <div class="grid2 kbp">
+    <div class="panel"><b class="kbt">1 · Circuitos paralelos, fines distintos</b><p>El RAG es flexible y no estructurado, y sirve a muchos públicos para consultar. El repositorio de specs es estructurado y versionado, y sirve para el contrato y la aceptación. Que diverjan es correcto: cada uno optimiza una cosa distinta.</p></div>
+    <div class="panel"><b class="kbt">2 · Consultar en vivo, comprometer en fijo</b><p>El RAG y la base de ingeniería inversa se consultan libremente al redactar, pero el contrato nunca cita una respuesta de ellos. Lo que se aprovecha se reescribe como requisito con identificador, y solo se citan la constitución y los procedimientos normativos, con su versión y fecha.</p></div>
+    <div class="panel"><b class="kbt">3 · Manda la spec vigente</b><p>Habrá dos descripciones de la misma realidad funcional. Para el comportamiento aceptado manda la spec vigente; el RAG es informativo. Dejarlo escrito evita discusiones cuando no coincidan.</p></div>
+    <div class="panel"><b class="kbt">4 · La constitución sale de los procedimientos, no del RAG</b><p>Es una selección curada de reglas obligatorias de los procedimientos normativos de Sistemas y Arquitectura, cada una con su identificador y el procedimiento del que procede. Cuando cambia un procedimiento citado, se revisa la regla.</p></div>
+    <div class="panel"><b class="kbt">5 · La ingeniería inversa se consume, no se mantiene</b><p>Lo que procede de la base de ingeniería inversa entra como INFERIDO hasta que se confirma. Cuando una capacidad pasa a tener spec vigente aceptada, esa parte de la base queda superada y no se actualiza.</p></div>
+    <div class="panel"><b class="kbt">6 · Retorno gobernado</b><p>Ningún framework escribe directamente en el RAG ni en la base de ingeniería inversa. Lo aprendido que afecte a un procedimiento vuelve como propuesta a Sistemas o Arquitectura, que deciden.</p></div>
+  </div>
+
+  <h3>Dónde se tocan los dos circuitos</h3>
+  <ul class="tight">
+    <li><b>En el flujo CI/CD.</b> Si el RAG captura información en el despliegue, las specs, que viven en el repositorio de la aplicación, acabarán entrando en él. Puede ser una ventaja, porque le darían a Arquitectura una fuente de calidad, pero conviene acordar que solo se indexen specs aceptadas, no borradores ni cambios en curso.</li>
+    <li><b>En la aceptación, como señal de deriva.</b> Si lo que captura el RAG no cuadra con la spec vigente, es una alarma que merece revisarse: puede haber deriva entre spec y código.</li>
+  </ul>
+
+  <h3>Entradas y salidas en cada fase</h3>
+  <p class="note">Fases del <a href="#operativo">modelo operativo</a>, con una fase previa de preparación que se hace una vez por aplicación.</p>
+  <div class="steps" id="kbSteps" role="tablist"></div>
+  <div class="panel" id="kbOut" aria-live="polite"></div>
+
+  <h3>Ejemplo: referencias en GESTEXP</h3>
+<pre><b># proposal.md</b> <i>(extracto)</i>
+<b>## Reglas de la constitución aplicables</b>
+SEG-02 <i>(origen: PROC-SEG-11)</i>, TRZ-01
+<b>## Procedimientos normativos aplicables</b> <i>(se congelan al firmar la versión 1)</i>
+PROC-DESP-04  Despliegue en repositorios base   v3.2 · 15/10/2026
+PROC-SEG-11   Permisos y auditoría              v2.0 · 02/06/2026
+
+<b># specs/cierre-expedientes/spec.md</b> <i>(spec inicial extraída de la base de ingeniería inversa)</i>
+REQ-EXP-030  ...  [CONFIRMADO · ingeniería inversa §4.3]
+REQ-EXP-031  ...  [INFERIDO · ingeniería inversa §4.3 · pendiente de validar con negocio]</pre>
+  <p class="note">Identificadores, versiones y secciones inventados para ilustrar. El RAG no aparece citado: aporta contexto, no contrato.</p>
+
+  <h3>Cómo se consultan</h3>
+  <p>Para el PO y los asistentes de IA, la opción más limpia es exponer la base de ingeniería inversa y, si Arquitectura lo permite, el RAG como servidores <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a> (Model Context Protocol) de solo lectura, con operaciones del tipo «buscar información funcional de una aplicación» u «obtener la documentación de una capacidad». Así cualquier framework que funcione sobre un asistente compatible puede usarlos sin integraciones a medida.</p>
+  <p>Para los proveedores hay dos opciones, a decidir con Seguridad: acceso MCP autenticado y acotado a la aplicación, o un <b>paquete de contexto</b> exportado en cada cambio (procedimientos citados y extracto de la base de ingeniería inversa) que se adjunta al contrato. El paquete es más sencillo de gobernar y deja constancia exacta de lo que se entregó al proveedor.</p>
+  <h3>Riesgos y salvaguardas</h3>
+  <ul class="tight">
+    <li><b>Contradicciones entre el RAG y las specs:</b> manda la spec vigente, y la divergencia se trata como posible deriva.</li>
+    <li><b>Respuestas del RAG incompletas o inventadas:</b> nunca se citan en el contrato; lo útil se reescribe como requisito y se valida.</li>
+    <li><b>Base de ingeniería inversa con errores o desactualizada:</b> todo lo que procede de ella es INFERIDO hasta que negocio o los escenarios lo confirman.</li>
+    <li><b>Procedimientos que cambian a mitad de un cambio:</b> la versión congelada rige hasta el cierre, salvo un cambio de seguridad que obligue a una nueva versión del contrato.</li>
+    <li><b>Confidencialidad:</b> compartir información funcional y documentación de aplicaciones con proveedores requiere criterio de Seguridad.</li>
+  </ul>
+  <p class="note">Propuesta de criterio propio, pendiente de contrastar con Sistemas, Arquitectura y Seguridad.</p>
 </section>
 
 <section id="redaccion">
@@ -608,6 +691,18 @@ seg("opMode",[{label:"Evolutivo",k:"evo"},{label:"Aplicación nueva",k:"nueva"}]
   var items=OPM[m.k].map(function(o){return {label:o.label+'<span class="own">'+o.who.join(" + ")+'</span>',name:o.label,who:o.who,t:o.t}});
   seg("opSteps",items,function(o){$("opOut").innerHTML='<b>'+o.name+'</b> '+o.who.map(function(w){return'<span class="tag aud">'+w+'</span>'}).join(" ")+'<p style="margin:.4rem 0 0">'+o.t+'</p>'},{num:true});
 });
+
+/* Bases de conocimiento */
+var KB=[
+ {label:"Preparación",who:"Una vez por aplicación",rag:"Aporta contexto funcional de la aplicación (qué hace y quién la usa) para redactar <code>product.md</code>.",rea:"Inicializa <code>product.md</code> y <code>tech.md</code> (capacidades, usuarios, integraciones). Se abre el registro de cobertura con todas las capacidades en estado «Solo ingeniería inversa».",out:"Contexto de aplicación revisado por el PO y Arquitectura. La constitución se extrae de los procedimientos normativos, no del RAG."},
+ {label:"Borrador",who:"PO",rag:"Contexto funcional del área afectada para preparar el borrador. Lo que se aprovecha se reescribe como requisito con identificador; el RAG no se cita.",rea:"Si la capacidad aún no tiene spec vigente, se extrae «al tocar», con cada afirmación etiquetada CONFIRMADO, INFERIDO o LAGUNA y su origen.",out:"<code>proposal.md</code> con reglas de la constitución y procedimientos normativos citados, <code>delta.md</code> y, si no existía, la spec inicial de la capacidad."},
+ {label:"Desafío",who:"Proveedor",rag:"Opcional: si el proveedor tiene acceso, contrasta el delta con la información funcional capturada.",rea:"Contrasta el extracto de la base con el código real y señala discrepancias.",out:"Ajustes al delta; lagunas resueltas o anotadas."},
+ {label:"Congelación",who:"PO + Proveedor",rag:"Sin intercambio: el contrato no cita el RAG.",rea:"Sin intercambio.",out:"Contrato versión 1, con la versión y la fecha de cada procedimiento normativo citado."},
+ {label:"Desarrollo y entrega",who:"Proveedor",rag:"El flujo CI/CD normativo captura la información funcional del despliegue, como en cualquier entrega.",rea:"Sin intercambio.",out:"Código, pruebas, informe de ejecución, matriz y evidencia de cumplimiento de los procedimientos."},
+ {label:"Aceptación",who:"PO",rag:"Si lo capturado no cuadra con la spec, se revisa como posible deriva.",rea:"Las afirmaciones INFERIDO que cubre el cambio quedan confirmadas o corregidas por los escenarios.",out:"Aceptación firmada o devolución al proveedor."},
+ {label:"Cierre",who:"PO",rag:"La spec vigente actualizada llega al RAG por el propio flujo CI/CD: solo specs aceptadas, nunca borradores.",rea:"El registro de cobertura marca la capacidad como «Spec vigente»: esa parte de la base queda superada.",out:"Spec vigente actualizada, registro de cobertura y, si procede, propuestas de mejora a los procedimientos."}];
+seg("kbSteps",KB.map(function(k){return {label:k.label+'<span class="own">'+k.who+'</span>',k:k}}),function(o){var k=o.k;
+  $("kbOut").innerHTML='<b>'+k.label+'</b> <span class="tag aud">'+k.who+'</span><div class="kbcols"><div><h4>Del RAG</h4><p>'+k.rag+'</p></div><div><h4>De la ingeniería inversa</h4><p>'+k.rea+'</p></div><div><h4>Sale</h4><p>'+k.out+'</p></div></div>'},{num:true});
 
 /* Redacción */
 var DR=[
