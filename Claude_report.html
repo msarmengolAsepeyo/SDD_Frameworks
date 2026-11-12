@@ -162,7 +162,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <span class="lbl">Contenido</span>
   <a href="#resumen">Resumen</a><a href="#niveles">Niveles de SDD</a>
   <a href="#documentos">Documentos</a><a href="#operativo">Modelo operativo</a><a href="#herramientas">Herramientas</a><a href="#conocimiento">Bases de conocimiento</a>
-  <a href="#redaccion">Redacción con IA</a><a href="#carga">Carga inicial</a><a href="#sintaxis">Sintaxis y estándares</a>
+  <a href="#redaccion">Redacción con IA</a><a href="#carga">Inputs de las specs</a><a href="#sintaxis">Sintaxis y estándares</a>
   <a href="#practicas">Buenas prácticas</a><a href="#plan">Hoja de ruta</a><a href="#glosario">Glosario y fuentes</a>
 </nav>
 
@@ -181,7 +181,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
     <div class="panel"><span class="tag acc">Documentos</span><p>Organizados por niveles: constitución corporativa, contexto de aplicación, spec vigente por capacidad y, en cada cambio, el contrato del PO separado de la solución técnica del proveedor.</p></div>
     <div class="panel"><span class="tag acc">Herramientas proveedor</span><p>Al proveedor se le exigen los artefactos (spec, escenarios y matriz de aceptación), no una herramienta concreta.</p></div>
     <div class="panel"><span class="tag acc">Herramientas PO</span><p>En este estudio se valoran distintas opciones de framework para el trabajo del PO, entre ellas <a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec</a>, <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a>, <a href="https://github.com/nahisaho/MUSUBI" target="_blank" rel="noopener">MUSUBI</a>, <a href="https://github.com/gotalab/cc-sdd" target="_blank" rel="noopener">cc-sdd</a> y <a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank" rel="noopener">BMAD-METHOD</a>.</p></div>
-    <div class="panel"><span class="tag acc">Carga inicial</span><p>Incremental: extraer la spec de cada capacidad solo cuando se toca.</p></div>
+    <div class="panel"><span class="tag acc">Inputs de las specs</span><ul class="tight"><li><b>Aplicación nueva:</b> la spec se genera desde cero.</li><li><b>Evolutivo con spec base:</b> flujo operativo del SDD, con su delta.</li><li><b>Evolutivo sin spec base:</b> paso previo para generar la spec base a partir del RAG y de la base documental obtenida por ingeniería inversa.</li></ul></div>
     <div class="panel"><span class="tag acc">Próximos pasos</span><ol class="tight"><li>Contrastar el documento con las otras áreas implicadas: Sistemas, Seguridad y Arquitectura.</li><li>Seleccionar la arquitectura y los componentes para una prueba de concepto (PoC) sobre una aplicación real.</li></ol></div>
   </div>
 </section>
@@ -201,7 +201,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <h3>Enfoque por tipo de aplicación</h3>
   <div class="seg" role="tablist" id="appSeg"></div>
   <div class="panel" id="appOut" aria-live="polite"></div>
-  <p class="note">La extracción «al tocar», el tratamiento de SaaS y la línea base por configuración son criterio propio, no una práctica documentada en las fuentes.</p>
+  <p class="note">La generación de la spec base como paso previo, el tratamiento de SaaS y la línea base por configuración son criterio propio, no una práctica documentada en las fuentes.</p>
   <p class="note fn" id="nota1"><a href="#ref1">1</a>. Birgitta Böckeler es Distinguished Engineer en <a href="https://www.thoughtworks.com" target="_blank" rel="noopener">Thoughtworks</a>, consultora tecnológica internacional, y experta en desarrollo asistido por IA. Definición y niveles tomados de su artículo «<a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl</a>» (martinfowler.com, 15 de octubre de 2025).</p>
 </section>
 
@@ -210,13 +210,13 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <p>Los frameworks reparten la spec en varios documentos siguiendo la misma regla: separarlos por <b>quién los escribe</b> y por <b>lo a menudo que cambian</b>. Aplicada a nuestro modelo queda así:</p>
   <div class="tablewrap"><table>
     <tr><th>Nivel</th><th>Documentos</th><th>Responsable</th><th>Cuándo cambia</th></tr>
-    <tr><td><b>Corporativo</b></td><td>Constitución</td><td>PO / Arquitectura</td><td>Rara vez</td></tr>
-    <tr><td><b>Aplicación</b> (estable)</td><td>Misión o producto; tecnología o arquitectura</td><td>PO (+ proveedor en lo técnico)</td><td>Con cambios de alcance o de arquitectura</td></tr>
+    <tr><td><b>Corporativo</b></td><td>Constitución</td><td>DTIC (Dirección de Tecnologías de Información)</td><td>Rara vez</td></tr>
+    <tr><td><b>Aplicación</b> (estable)</td><td>Misión o producto; tecnología o arquitectura</td><td>PO (+ proveedor en lo técnico) / Arquitectura</td><td>Con cambios de alcance o de arquitectura</td></tr>
     <tr><td><b>Capacidad</b> (vigente)</td><td>spec.md con requisitos y escenarios</td><td>PO</td><td>Al cerrar cada cambio</td></tr>
     <tr><td><b>Cambio</b> (contrato)</td><td>Propuesta, delta de requisitos y escenarios, matriz de aceptación</td><td>PO</td><td>En cada cambio; se congela</td></tr>
     <tr><td><b>Cambio</b> (ejecución)</td><td>Diseño, tareas</td><td>Proveedor</td><td>Durante el desarrollo</td></tr>
   </table></div>
-  <p>Separarlo así delimita qué parte es <b>contrato</b> (del PO) y qué parte es <b>solución técnica</b> (del proveedor). Al cerrar el cambio, el delta se fusiona en la spec vigente y el cambio se archiva. En una aplicación nueva no hay delta: la primera spec que se redacta pasa a ser directamente la spec vigente inicial.</p>
+  <p>Separarlo así delimita qué parte es <b>contrato</b> (del PO) y qué parte es <b>solución técnica</b> (del proveedor). Al cerrar el cambio, el delta se fusiona en la spec vigente y el cambio se archiva. En una aplicación nueva no hay delta: la primera spec que se redacta pasa a ser directamente la spec vigente inicial. En una aplicación existente sin spec, la spec base se genera como paso previo al primer evolutivo (ver <a href="#carga">Inputs de las specs</a>).</p>
   <p>La matriz de aceptación forma parte del contrato del cambio: el PO la prepara con los escenarios y los requisitos que cubre cada uno, el proveedor la completa con sus pruebas automatizadas y sus resultados, y nosotros registramos el resultado de nuestra aceptación.</p>
   <h3>Cómo lo nombra cada framework</h3>
   <div class="tablewrap"><table class="fwmap">
@@ -266,7 +266,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 <div class="tl i3" data-on="6">cierre-con-permiso/ <em>archivado</em></div>
 </div>
   <div class="exdocs">
-  <div class="doc" data-step="0"><div class="dochead">constitucion.md <span>Corporativo · PO / Arquitectura</span></div>
+  <div class="doc" data-step="0"><div class="dochead">constitucion.md <span>Corporativo · DTIC</span></div>
 <pre class="docbody"><b># Constitución corporativa (extracto)</b>
 <span class="hl">SEG-02</span>  Toda acción que cambie el estado de un expediente DEBE comprobar
         el permiso del usuario y registrar los intentos rechazados.
@@ -274,7 +274,7 @@ SEG-05  Los registros de auditoría DEBEN conservarse 5 años.
 <span class="hl">TRZ-01</span>  Todo requisito DEBE estar cubierto por al menos un escenario
         de aceptación con su prueba automatizada.</pre></div>
 
-  <div class="doc" data-step="1"><div class="dochead">product.md · tech.md <span>Aplicación · PO (+ proveedor en lo técnico)</span></div>
+  <div class="doc" data-step="1"><div class="dochead">product.md · tech.md <span>Aplicación · PO (+ proveedor en lo técnico) / Arquitectura</span></div>
 <pre class="docbody"><b># product.md · GESTEXP</b>
 Gestión de expedientes de prestaciones: alta, tramitación y cierre.
 Usuarios: tramitadores, supervisores y auditoría interna.
@@ -417,7 +417,7 @@ de auditoría con usuario, fecha y expediente.
     <div class="kb"><b>Base de conocimiento funcional</b><span class="tag acc">Circuito de Arquitectura</span><ul class="tight"><li>Flexible, no estructurada</li><li>Para consultar</li><li>Muchos interesados</li></ul></div>
     <div class="arr"><span class="in"><span class="h">→</span><span class="v">↓</span> Contexto para redactar (no se cita)</span><span class="ret"><span class="h">←</span><span class="v">↑</span> Specs aceptadas, por el propio flujo CI/CD</span></div>
     <div class="kb core"><b>Repositorio de specs</b><span class="tag acc">Circuito del PO</span><ul class="tight"><li>Constitución, desde los procedimientos normativos</li><li><code>product.md</code>, <code>tech.md</code></li><li>Spec vigente por capacidad</li><li>Cambios: contrato y ejecución</li></ul></div>
-    <div class="arr"><span class="in"><span class="h">←</span><span class="v">↑</span> Línea base de la capacidad, al tocarla</span><span class="ret"><span class="h">→</span><span class="v">↓</span> Registro de cobertura (sin reescribir la base)</span></div>
+    <div class="arr"><span class="in"><span class="h">←</span><span class="v">↑</span> Input para generar la spec base</span><span class="ret"><span class="h">→</span><span class="v">↓</span> Registro de cobertura (sin reescribir la base)</span></div>
     <div class="kb"><b>Base documental de ingeniería inversa</b><span class="tag warn">Foto fija</span><ul class="tight"><li>Documentación por aplicación</li><li>Capacidades e integraciones</li><li>Fecha de la extracción</li></ul></div>
   </div>
   <div class="grid2 kbp">
@@ -469,19 +469,20 @@ REQ-EXP-031  ...  [INFERIDO · ingeniería inversa §4.3 · pendiente de validar
 
 <section id="redaccion">
   <h2>Redacción asistida por IA y fragilidad en la toma de requisitos</h2>
-  <p>La IA puede generar borradores rigurosos a partir de texto libre, pero no sustituye el criterio del PM ni la revisión humana. La dependencia de una persona se reduce con un proceso, no con una herramienta.</p>
+  <p>La IA puede generar borradores rigurosos a partir de texto libre, pero no sustituye el criterio del Product Owner (PO) ni la revisión humana. La dependencia de una persona se reduce con un proceso, no con una herramienta.</p>
   <div class="steps" id="drSteps" role="tablist"></div>
   <div class="panel" id="drOut" aria-live="polite"></div>
-  <p class="note">Referencia: un benchmark de una sola consultora (Uvik) cifra la mediana en 128 líneas de markdown por ticket. Es un dato aislado. La fragilidad no desaparece, se desplaza: la calidad depende de un buen brief y de una revisión real.</p>
+  <p class="note">Referencia: un <a href="https://uvik.net/blog/spec-driven-development-benchmark/" target="_blank" rel="noopener">benchmark</a> de una sola consultora (Uvik) cifra la mediana en 128 líneas de markdown por ticket. Es un dato aislado. La fragilidad no desaparece, se desplaza: la calidad depende de un buen brief y de una revisión real.</p>
 </section>
 
 <section id="carga">
-  <h2>Carga inicial de especificaciones</h2>
-  <p>No hace falta extraer la especificación de las 120 aplicaciones. La estrategia depende del tipo de aplicación y es incremental.</p>
+  <h2>Inputs de las specs</h2>
+  <p>De dónde sale la spec depende de si la aplicación es nueva y de si ya tiene spec base. No hace falta generar la spec de las 120 aplicaciones de golpe: la spec base se genera cuando una aplicación recibe su primer evolutivo.</p>
   <div class="seg" role="tablist" id="ldSeg"></div>
   <div class="panel" id="ldOut" aria-live="polite"></div>
-  <p><b>Herramientas de apoyo.</b> Para extraer specs de código existente están <a href="https://sandeco.github.io/reversa/" target="_blank" rel="noopener">Reversa</a> (licencia MIT, publicado en mayo de 2026, con un solo caso exploratorio de COBOL a Go) y <a href="https://github.com/clay-good/spec-gen" target="_blank" rel="noopener">spec-gen</a> (proyecto de la comunidad que genera specs en formato OpenSpec). Para fijar el comportamiento actual antes de tocar el código existen generadores de pruebas de caracterización: un plugin de Claude Code para Go, Python, TypeScript, JavaScript, Kotlin y Java, y <a href="https://www.nuget.org/packages/Pinion" target="_blank" rel="noopener">Pinion</a> para .NET.</p>
-  <p>El patrón Strangler Fig permite sustituir un legacy por partes. Sobre Reversa, el único caso conocido (COBOL a Go) arrojó 517 afirmaciones: 490 confirmadas, 24 inferidas y 3 lagunas. Su índice de confianza del 97,1 % es interno y no tiene auditoría externa.</p>
+  <p class="note"><b>Casos particulares.</b> En aplicaciones legacy conviene fijar antes el comportamiento actual con pruebas de caracterización (<i>golden master</i>, idea de Michael Feathers en <a href="https://www.oreilly.com/library/view/working-effectively-with/0131177052/" target="_blank" rel="noopener"><i>Working Effectively with Legacy Code</i></a>). En productos licenciados o SaaS no hay código que analizar: la línea base es la configuración, las integraciones y la documentación del proveedor.</p>
+  <p><b>Herramientas de apoyo.</b> El input principal para generar la spec base es la base documental obtenida por ingeniería inversa, junto con el RAG. Como alternativas para extraer specs de código existente están <a href="https://sandeco.github.io/reversa/" target="_blank" rel="noopener">Reversa</a> (licencia MIT, publicado en mayo de 2026, con un solo caso exploratorio de COBOL a Go) y <a href="https://github.com/clay-good/spec-gen" target="_blank" rel="noopener">spec-gen</a> (proyecto de la comunidad que genera specs en formato OpenSpec). Para fijar el comportamiento actual antes de tocar el código existen herramientas de pruebas de caracterización (o de aprobación) para nuestras tecnologías: <a href="https://github.com/approvals/ApprovalTests.Java" target="_blank" rel="noopener">ApprovalTests.Java</a> para Java (OpenJDK) y <a href="https://github.com/approvals/Approvals.NodeJS" target="_blank" rel="noopener">Approvals.NodeJS</a> o las pruebas de instantánea de <a href="https://jestjs.io/docs/snapshot-testing" target="_blank" rel="noopener">Jest</a> para TypeScript y Angular, además de skills y plugins de la comunidad para los asistentes de IA. En aplicaciones Lotus Notes no hay generadores conocidos: la caracterización tendría que hacerse a través de la interfaz o de forma manual.</p>
+  <p>El patrón <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank" rel="noopener">Strangler Fig</a> permite sustituir un legacy por partes. Sobre Reversa, el único caso conocido (COBOL a Go) arrojó 517 afirmaciones: 490 confirmadas, 24 inferidas y 3 lagunas. Su índice de confianza del 97,1 % es interno y no tiene auditoría externa.</p>
   <h3>Comprobaciones previas</h3>
   <ul class="tight">
     <li>Asistente de IA aprobado para analizar código.</li>
@@ -493,22 +494,22 @@ REQ-EXP-031  ...  [INFERIDO · ingeniería inversa §4.3 · pendiente de validar
 <section id="sintaxis">
   <h2>Sintaxis, notaciones y estándares</h2>
   <p>La semántica es el qué se exige; la sintaxis es cómo se escribe. Se recomienda lenguaje natural estructurado con plantillas markdown, apoyado en notaciones ligeras y estándares conocidos.</p>
-  <h3>EARS: seis patrones de requisito</h3>
+  <h3><a href="https://alistairmavin.com/ears/" target="_blank" rel="noopener">EARS</a>: seis patrones de requisito</h3>
   <p class="note">Creado en Rolls-Royce (Mavin et al., RE'09, 2009). Los ejemplos son ilustrativos.</p>
   <div class="seg" role="tablist" id="earsSeg"></div>
   <div class="panel" id="earsOut" aria-live="polite"></div>
 
   <h3>Gherkin y RFC 2119</h3>
   <div class="grid2">
-    <div class="panel"><b>Gherkin</b>
+    <div class="panel"><b><a href="https://cucumber.io/docs/gherkin/" target="_blank" rel="noopener">Gherkin</a></b>
       <p>Feature, Scenario, Given/When/Then, And/But, Background, Scenario Outline/Examples.</p>
       <ul class="tight"><li>Declarativo, un comportamiento por escenario.</li><li>Valores concretos y actor en tercera persona.</li><li>Redacción colaborativa.</li></ul></div>
-    <div class="panel"><b>RFC 2119 / BCP 14 y RFC 8174</b>
+    <div class="panel"><b><a href="https://datatracker.ietf.org/doc/html/rfc2119" target="_blank" rel="noopener">RFC 2119</a> / BCP 14 y <a href="https://datatracker.ietf.org/doc/html/rfc8174" target="_blank" rel="noopener">RFC 8174</a></b>
       <p>MUST, SHOULD, MAY, solo en mayúsculas. Equivalentes DEBE, DEBERÍA, PUEDE (convención propia).</p></div>
   </div>
 
-  <h3>ISO/IEC/IEEE 29148:2018: revisa un requisito</h3>
-  <p class="note">Estándar de procesos, elementos de información (BRS, StRS, SyRS, SRS, OpsCon) y criterios de calidad. No es certificable. Ejemplo ilustrativo; la fuente consultada nombraba ocho de las nueve características individuales.</p>
+  <h3><a href="https://www.iso.org/standard/72089.html" target="_blank" rel="noopener">ISO/IEC/IEEE 29148:2018</a>: revisa un requisito</h3>
+  <p class="note">Estándar de procesos, elementos de información (BRS, StRS, SyRS, SRS, OpsCon) y criterios de calidad. No es certificable. Ejemplo ilustrativo con las nueve características de un requisito individual; «Conforme» significa que sigue el formato y las convenciones acordadas.</p>
   <div class="seg" role="tablist" id="qSeg"></div>
   <div class="panel"><div id="qReq" style="font-weight:500"></div><div class="crit" id="qCrit"></div></div>
   <p class="note">Criterios del conjunto: completo, consistente, viable, comprensible y validable. Contratos de interfaz (OpenAPI, AsyncAPI, JSON Schema) e identificadores estables: recomendación propia, sin fuente.</p>
@@ -523,7 +524,7 @@ REQ-EXP-031  ...  [INFERIDO · ingeniería inversa §4.3 · pendiente de validar
 
 <section id="plan">
   <h2>Posible hoja de ruta (si se decide avanzar)</h2>
-  <p>Solo si la valoración resulta positiva: empezar con un piloto acotado antes de plantear su extensión a las 120 aplicaciones.</p>
+  <p>Solo si la valoración resulta positiva: empezar con una prueba de concepto y un piloto acotado antes de plantear su extensión a las 120 aplicaciones.</p>
   <div class="steps" id="plSteps" role="tablist"></div>
   <div class="panel" id="plOut" aria-live="polite"></div>
 </section>
@@ -535,17 +536,24 @@ REQ-EXP-031  ...  [INFERIDO · ingeniería inversa §4.3 · pendiente de validar
   <dl class="gl" id="glList"></dl>
   <h3>Fuentes</h3>
   <ul class="tight">
+    <li><a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Birgitta Böckeler (martinfowler.com): definición de SDD, niveles y críticas a las herramientas</a></li>
     <li><a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a></li>
     <li><a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec (Fission-AI)</a></li>
+    <li><a href="https://github.com/nahisaho/MUSUBI" target="_blank" rel="noopener">MUSUBI</a></li>
+    <li><a href="https://github.com/gotalab/cc-sdd" target="_blank" rel="noopener">cc-sdd</a></li>
+    <li><a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank" rel="noopener">BMAD-METHOD</a></li>
     <li><a href="https://kiro.dev" target="_blank" rel="noopener">Kiro (AWS)</a></li>
+    <li><a href="https://tessl.io" target="_blank" rel="noopener">Tessl</a></li>
+    <li><a href="https://buildermethods.com/agent-os" target="_blank" rel="noopener">Agent OS</a></li>
+    <li><a href="https://sandeco.github.io/reversa/" target="_blank" rel="noopener">Reversa</a></li>
+    <li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol (MCP)</a></li>
+    <li><a href="https://www.thoughtworks.com/radar" target="_blank" rel="noopener">Thoughtworks Technology Radar (noviembre de 2025 y noviembre de 2026)</a></li>
+    <li><a href="https://alistairmavin.com/ears/" target="_blank" rel="noopener">EARS (Mavin et al., RE'09, 2009)</a></li>
+    <li><a href="https://www.iso.org/standard/72089.html" target="_blank" rel="noopener">ISO/IEC/IEEE 29148:2018</a></li>
+    <li><a href="https://cucumber.io/docs/gherkin/" target="_blank" rel="noopener">Gherkin (Cucumber)</a></li>
     <li><a href="https://datatracker.ietf.org/doc/html/rfc2119" target="_blank" rel="noopener">RFC 2119</a> y <a href="https://datatracker.ietf.org/doc/html/rfc8174" target="_blank" rel="noopener">RFC 8174</a></li>
-    <li><a href="https://martinfowler.com" target="_blank" rel="noopener">Martin Fowler</a>, críticas y análisis de herramientas SDD</li>
-    <li>Birgitta Böckeler, <a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">definición de SDD y clasificación en niveles</a></li>
-    <li>Mavin et al., EARS (RE'09, 2009)</li>
-    <li>ISO/IEC/IEEE 29148:2018</li>
-    <li>Thoughtworks Technology Radar, noviembre de 2025</li>
   </ul>
-  <p class="note">Las cifras de volumen, el enfoque para SaaS y la estrategia «extraer al tocar» son criterio propio y deben validarse antes de cualquier decisión de implantación.</p>
+  <p class="note">Las cifras de volumen, el enfoque para SaaS y la generación de la spec base como paso previo son criterio propio y deben validarse antes de cualquier decisión de implantación.</p>
 </section>
 </main>
 </div>
@@ -573,7 +581,7 @@ var LV=[
  {label:"Spec-as-source",tag:"Prematuro",c:"bad",t:"Solo se edita la spec y el código se regenera.",v:"Herramientas inmaduras y no deterministas (Tessl está en beta)."}];
 seg("lvlSeg",LV,function(l){$("lvlOut").innerHTML='<span class="tag '+l.c+'">'+l.tag+'</span><p>'+l.t+'</p><p><b>Valoración:</b> '+l.v+'</p>'});
 var AP=[
- {label:"Viva",t:"Spec-anchored por deltas, con extracción de la spec «al tocar»."},
+ {label:"Viva",t:"Spec-anchored por deltas. Si aún no tiene spec base, se genera como paso previo al primer evolutivo."},
  {label:"Legacy",t:"Pruebas de caracterización y spec mínima de las capacidades que se modifican."},
  {label:"Nueva",t:"Spec-anchored desde el inicio, con spec vigente y deltas."},
  {label:"Licenciado o SaaS",t:"Sin extracción de código: la línea base es la configuración, las integraciones y la documentación del proveedor."}];
@@ -674,7 +682,7 @@ drawM();
 /* Operativo */
 var OPM={
  evo:[
-  {label:"Borrador",who:["PO"],t:"El PO redacta el delta con apoyo de IA: propuesta, requisitos modificados y añadidos, reglas de la constitución aplicables y escenarios de aceptación."},
+  {label:"Borrador",who:["PO"],t:"Si la aplicación aún no tiene spec base, se genera antes como paso previo (ver Inputs de las specs). El PO redacta el delta con apoyo de IA: propuesta, requisitos modificados y añadidos, reglas de la constitución aplicables y escenarios de aceptación."},
   {label:"Desafío",who:["Proveedor"],t:"El proveedor revisa viabilidad, ambigüedades y estimación, y propone ajustes."},
   {label:"Congelación",who:["PO","Proveedor"],t:"Ambos acuerdan la versión 1 del delta, que queda congelada como contrato. Cualquier cambio posterior genera una nueva versión."},
   {label:"Desarrollo y entrega",who:["Proveedor"],t:"El proveedor redacta el diseño y las tareas, implementa, automatiza los escenarios y ejecuta su batería de pruebas. Solo entrega cuando todas pasan (criterio de entrada): código, pruebas, informe de ejecución y matriz completa."},
@@ -695,7 +703,7 @@ seg("opMode",[{label:"Evolutivo",k:"evo"},{label:"Aplicación nueva",k:"nueva"}]
 /* Bases de conocimiento */
 var KB=[
  {label:"Preparación",who:"Una vez por aplicación",rag:"Aporta contexto funcional de la aplicación (qué hace y quién la usa) para redactar <code>product.md</code>.",rea:"Inicializa <code>product.md</code> y <code>tech.md</code> (capacidades, usuarios, integraciones). Se abre el registro de cobertura con todas las capacidades en estado «Solo ingeniería inversa».",out:"Contexto de aplicación revisado por el PO y Arquitectura. La constitución se extrae de los procedimientos normativos, no del RAG."},
- {label:"Borrador",who:"PO",rag:"Contexto funcional del área afectada para preparar el borrador. Lo que se aprovecha se reescribe como requisito con identificador; el RAG no se cita.",rea:"Si la capacidad aún no tiene spec vigente, se extrae «al tocar», con cada afirmación etiquetada CONFIRMADO, INFERIDO o LAGUNA y su origen.",out:"<code>proposal.md</code> con reglas de la constitución y procedimientos normativos citados, <code>delta.md</code> y, si no existía, la spec inicial de la capacidad."},
+ {label:"Borrador",who:"PO",rag:"Contexto funcional del área afectada para preparar el borrador. Lo que se aprovecha se reescribe como requisito con identificador; el RAG no se cita.",rea:"Si la aplicación aún no tiene spec base, se genera como paso previo, con cada afirmación etiquetada CONFIRMADO, INFERIDO o LAGUNA y su origen.",out:"<code>proposal.md</code> con reglas de la constitución y procedimientos normativos citados, <code>delta.md</code> y, si no existía, la spec base."},
  {label:"Desafío",who:"Proveedor",rag:"Opcional: si el proveedor tiene acceso, contrasta el delta con la información funcional capturada.",rea:"Contrasta el extracto de la base con el código real y señala discrepancias.",out:"Ajustes al delta; lagunas resueltas o anotadas."},
  {label:"Congelación",who:"PO + Proveedor",rag:"Sin intercambio: el contrato no cita el RAG.",rea:"Sin intercambio.",out:"Contrato versión 1, con la versión y la fecha de cada procedimiento normativo citado."},
  {label:"Desarrollo y entrega",who:"Proveedor",rag:"El flujo CI/CD normativo captura la información funcional del despliegue, como en cualquier entrega.",rea:"Sin intercambio.",out:"Código, pruebas, informe de ejecución, matriz y evidencia de cumplimiento de los procedimientos."},
@@ -706,8 +714,8 @@ seg("kbSteps",KB.map(function(k){return {label:k.label+'<span class="own">'+k.wh
 
 /* Redacción */
 var DR=[
- {label:"Brief libre",t:"El PM describe la necesidad en texto libre."},
- {label:"Borrador con IA",t:"Se genera la spec de cambio con la plantilla."},
+ {label:"Brief libre",t:"El PO describe la necesidad en texto libre."},
+ {label:"Borrador con IA",t:"Se genera la spec de cambio con la plantilla. La IA de ayuda a la redacción usa como base de conocimiento el RAG y la base documental obtenida por ingeniería inversa (ver Bases de conocimiento)."},
  {label:"Rondas de entrevista",t:"La IA pregunta lo que falta o es ambiguo."},
  {label:"Auditoría de calidad",t:"Se contrasta con la constitución y con los criterios de calidad (ver Sintaxis y estándares)."},
  {label:"Segundo revisor",t:"Otra persona humana valida el borrador."},
@@ -716,10 +724,9 @@ seg("drSteps",DR,function(o){$("drOut").innerHTML='<b>'+o.label+'</b><p style="m
 
 /* Carga */
 var LD=[
- {label:"Aplicación viva",t:"«Extraer al tocar»: se extrae solo la capacidad afectada. Cada afirmación se etiqueta CONFIRMADO, INFERIDO o LAGUNA; negocio valida lo inferido y las lagunas; se ejecutan los escenarios contra la aplicación real."},
- {label:"Legacy",t:"Pruebas de caracterización (golden master, idea de Feathers) y ejecución en paralelo de lo antiguo y lo nuevo."},
- {label:"Crítica o a modernizar",t:"Extracción completa, con un piloto de Reversa."},
- {label:"SaaS o licenciado",t:"Sin extracción: línea base de configuración, integraciones y documentación del proveedor."}];
+ {label:"Aplicación nueva",t:"La spec se genera desde cero: el PO la redacta organizada por capacidades, con la constitución aplicable y los escenarios. Al aceptarse pasa a ser la spec vigente inicial."},
+ {label:"Evolutivo con spec base",t:"Flujo operativo del SDD: el PO redacta el delta sobre la spec vigente y, al cerrar el cambio, el delta se fusiona en ella."},
+ {label:"Evolutivo sin spec base",t:"Paso previo: se genera la spec base de la aplicación a partir del RAG y de la base documental obtenida por ingeniería inversa. Cada afirmación se etiqueta CONFIRMADO, INFERIDO o LAGUNA; negocio valida lo inferido y las lagunas, y se ejecutan los escenarios contra la aplicación real. Después, el cambio sigue el flujo con su delta."}];
 seg("ldSeg",LD,function(o){$("ldOut").innerHTML='<b>'+o.label+'</b><p style="margin:.3rem 0 0">'+o.t+'</p>'});
 
 /* EARS */
@@ -730,12 +737,12 @@ var EA=[
  {label:"Opcional",tpl:"DONDE <característica incluida>, el <sistema> DEBE <respuesta>.",ex:"DONDE el módulo de firma está activo, el sistema DEBE solicitar firma al cerrar."},
  {label:"No deseado",tpl:"SI <condición no deseada>, ENTONCES el <sistema> DEBE <respuesta>.",ex:"SI el usuario no tiene permiso CERRAR, ENTONCES el sistema DEBE rechazar el cierre."},
  {label:"Complejo",tpl:"Combina varios patrones, por ejemplo MIENTRAS + CUANDO.",ex:"MIENTRAS un expediente está abierto, CUANDO se solicita el cierre, el sistema DEBE validar los documentos obligatorios."}];
-seg("earsSeg",EA,function(o){$("earsOut").innerHTML='<p style="margin:0"><b>Plantilla</b></p><pre style="margin:.3rem 0">'+o.tpl+'</pre><p style="margin:0"><b>Ejemplo ilustrativo</b></p><p style="margin:.2rem 0 0">'+o.ex+'</p>'});
+seg("earsSeg",EA,function(o){$("earsOut").innerHTML='<p style="margin:0"><b>Plantilla</b></p><pre style="margin:.3rem 0">'+o.tpl.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre><p style="margin:0"><b>Ejemplo ilustrativo</b></p><p style="margin:.2rem 0 0">'+o.ex+'</p>'});
 
 /* Calidad */
-var CR=["Necesario","Completo","Singular","Inequívoco","Correcto","Verificable","Apropiado","Viable"];
+var CR=["Necesario","Apropiado","Inequívoco","Completo","Singular","Viable","Verificable","Correcto","Conforme"];
 var Q=[
- {label:"Borrador flojo",r:"El sistema debería ser rápido y permitir exportar y archivar expedientes cuando sea posible.",bad:["Singular","Inequívoco","Verificable","Completo"]},
+ {label:"Borrador flojo",r:"El sistema debería ser rápido y permitir exportar y archivar expedientes cuando sea posible.",bad:["Singular","Inequívoco","Verificable","Completo","Conforme"]},
  {label:"Reescrito",r:"CUANDO el usuario solicita exportar un expediente, el sistema DEBE generar un PDF con todos sus documentos.",bad:[]}];
 seg("qSeg",Q,function(q){
   $("qReq").textContent=q.r;
@@ -744,17 +751,18 @@ seg("qSeg",Q,function(q){
 
 /* Prácticas */
 var BP=[
- {label:"Buenas prácticas",a:["Specs pequeñas, revisables por una persona y divididas en piezas entregables de forma independiente (INVEST, MoSCoW).","Editar a mano el texto generado por IA y especificar solo el cambio en curso.","Identificadores estables y trazabilidad entre requisito, escenario y prueba.","Actualizar la spec como parte de «terminado», con validación automatizada contra la deriva.","Analizar las interacciones entre funcionalidades.","Tres niveles de límites: siempre, preguntar antes, nunca."],src:"Osmani, intent-driven.dev"},
+ {label:"Buenas prácticas",a:["Specs pequeñas, revisables por una persona y divididas en piezas entregables de forma independiente (<a href=\"https://en.wikipedia.org/wiki/INVEST_(mnemonic)\" target=\"_blank\" rel=\"noopener\">INVEST</a>, <a href=\"https://en.wikipedia.org/wiki/MoSCoW_method\" target=\"_blank\" rel=\"noopener\">MoSCoW</a>).","Editar a mano el texto generado por IA y especificar solo el cambio en curso.","Identificadores estables y trazabilidad entre requisito, escenario y prueba.","Actualizar la spec como parte de «terminado», con validación automatizada contra la deriva.","Analizar las interacciones entre funcionalidades.","Tres niveles de límites: siempre, preguntar antes, nunca."],src:"<a href=\"https://addyosmani.com\" target=\"_blank\" rel=\"noopener\">Addy Osmani</a>, <a href=\"https://intent-driven.dev\" target=\"_blank\" rel=\"noopener\">intent-driven.dev</a>"},
  {label:"Riesgos",a:["Teatro de especificación: documentos que nadie usa para decidir.","Exhaustividad prematura.","Deriva entre spec y código.","Ignorar efectos entre funcionalidades.","Texto de IA sin editar y excesivo."]},
- {label:"Críticas",a:["Parecido con el modelo en cascada (Beck, Fowler).","Verbosidad: en un caso citado, 2.577 líneas de markdown frente a 689 de código.","Eco del desarrollo dirigido por modelos (MDD) y no determinismo de la generación.","Exceso para cambios pequeños."],n:"<b>Sobre el MDD.</b> No es una alternativa al SDD, sino su precedente. El desarrollo dirigido por modelos (MDA de la OMG, 2001) usaba modelos formales como fuente de verdad y generaba el código de forma determinista. Triunfó en nichos como sistemas embebidos y automoción, pero no en el software de negocio por la rigidez de los modelos y la deriva entre modelo y código. El SDD sustituye el modelo por lenguaje natural estructurado y el generador por un LLM: gana flexibilidad y pierde determinismo. Esta guía mitiga el riesgo descartando spec-as-source en favor de spec-anchored, validando con escenarios y matriz de aceptación, y reservando el modelo formal para los contratos de interfaz (OpenAPI, AsyncAPI, JSON Schema). Ambos enfoques se complementan."}];
+ {label:"Críticas",a:["Parecido con el modelo en cascada (Beck, Fowler).","Verbosidad: en un caso citado, 2.577 líneas de markdown frente a 689 de código.","Eco del desarrollo dirigido por modelos (MDD) y no determinismo de la generación.","Exceso para cambios pequeños."],n:"<b>Sobre el MDD.</b> No es una alternativa al SDD, sino su precedente. El desarrollo dirigido por modelos (<a href=\"https://www.omg.org/mda/\" target=\"_blank\" rel=\"noopener\">MDA de la OMG</a>, 2001) usaba modelos formales como fuente de verdad y generaba el código de forma determinista. Triunfó en nichos como sistemas embebidos y automoción, pero no en el software de negocio por la rigidez de los modelos y la deriva entre modelo y código. El SDD sustituye el modelo por lenguaje natural estructurado y el generador por un LLM: gana flexibilidad y pierde determinismo. Esta guía mitiga el riesgo descartando spec-as-source en favor de spec-anchored, validando con escenarios y matriz de aceptación, y reservando el modelo formal para los contratos de interfaz (OpenAPI, AsyncAPI, JSON Schema). Ambos enfoques se complementan."}];
 seg("bpSeg",BP,function(b){$("bpOut").innerHTML=list(b.a)+(b.n?'<p class="note" style="margin:.5rem 0 0">'+b.n+'</p>':"")+(b.src?'<p class="note" style="margin:.3rem 0 0">Fuente: '+b.src+'</p>':"")});
 
 /* Plan */
 var PL=[
+ {label:"Prueba de concepto",t:"Una aplicación real para seleccionar la arquitectura y los componentes.",r:"Decisión sobre arquitectura y componentes."},
  {label:"Preparación",t:"Constitución corporativa, plantilla de delta y comprobaciones previas.",r:"Documentos base aprobados."},
  {label:"Piloto",t:"3 o 4 aplicaciones que representen cada arquetipo: viva, legacy, nueva y con otro proveedor.",r:"Evidencia propia de esfuerzo, calidad y aceptación."},
  {label:"Ajuste",t:"Revisar plantillas, cláusulas y métricas con lo aprendido.",r:"Modelo ajustado."},
- {label:"Extensión",t:"Incorporar aplicaciones al tocarlas y renovar contratos con las cláusulas.",r:"Cobertura progresiva."}];
+ {label:"Extensión",t:"Incorporar aplicaciones al recibir su primer evolutivo, generando su spec base, y renovar contratos con las cláusulas.",r:"Cobertura progresiva."}];
 seg("plSteps",PL,function(p){$("plOut").innerHTML='<b>'+p.label+'</b><p style="margin:.3rem 0">'+p.t+'</p><p style="margin:0"><b>Resultado esperado:</b> '+p.r+'</p>'},{num:true});
 
 /* Glosario */
@@ -767,6 +775,17 @@ var GL=[
  ["Matriz de aceptación","Tabla que enlaza cada escenario con su prueba y resultado."],
  ["Prueba de caracterización","Prueba que fija el comportamiento actual de un código sin documentar."],
  ["Spec drift","Deriva entre la especificación y el código."],
+ ["Spec base","Primera spec de una aplicación existente, generada como paso previo a su primer evolutivo. Al aceptarse pasa a ser la spec vigente."],
+ ["Spec-anchored","Nivel de SDD en el que la spec se mantiene viva junto al código y se actualiza en cada cambio."],
+ ["PO","Product Owner: redacta el qué y el porqué de cada cambio y firma la aceptación."],
+ ["DTIC","Dirección de Tecnologías de Información. Responsable de la constitución corporativa."],
+ ["RAG","Base de conocimiento funcional que impulsa Arquitectura. Captura información en el flujo CI/CD y sirve de contexto para redactar specs."],
+ ["Base documental obtenida por ingeniería inversa","Documentación de las aplicaciones generada analizando las aplicaciones existentes. Foto fija: es input de la spec base, no fuente de verdad."],
+ ["Registro de cobertura","Lista de capacidades que indica cuáles tienen ya spec vigente y cuáles solo documentación de ingeniería inversa."],
+ ["Paquete de contexto","Extracto de procedimientos y documentación que se entrega al proveedor junto con el contrato de un cambio."],
+ ["MCP","Model Context Protocol: estándar abierto para que los asistentes de IA consulten fuentes de datos y herramientas."],
+ ["EARS","Patrones para redactar requisitos en lenguaje natural estructurado (CUANDO, MIENTRAS, SI… ENTONCES)."],
+ ["Gherkin","Formato de escenarios DADO/CUANDO/ENTONCES que se pueden automatizar como pruebas."],
  ["MDD","Desarrollo dirigido por modelos: un modelo formal es la fuente de verdad y el código se genera de forma determinista. Precedente del SDD."]];
 function drawG(){var q=$("glq").value.trim().toLowerCase();
   var r=GL.filter(function(g){return !q||(g[0]+" "+g[1]).toLowerCase().indexOf(q)>-1});
