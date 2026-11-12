@@ -68,6 +68,8 @@ code,.mono{font-family:var(--font-mono);font-size:.85em}
 .tree .tl em{font-style:normal;font-family:var(--font-body);font-size:.72rem;opacity:.8}
 .tree .i1{padding-left:1.3rem}.tree .i2{padding-left:2.1rem}.tree .i3{padding-left:2.9rem}
 .tree .tl.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.tree .tl.vend em{color:var(--warn)}
+.fwmap td{font-size:.82rem}.fwmap code{font-size:.78rem;white-space:normal;word-break:break-word}
 #matrix th.c,#matrix td.c{text-align:center;white-space:nowrap}
 #matrix .dot{color:var(--accent)}
 #matrix .tref{font-size:.72rem;color:var(--muted)}
@@ -95,6 +97,7 @@ pre b{color:var(--accent);font-weight:500}
 .steps button .n{display:block;font:500 .7rem var(--font-mono);color:var(--muted)}
 .steps button[aria-selected="true"]{border-top-color:var(--accent);background:var(--accent-soft)}
 .steps button.done{border-top-color:var(--ok)}
+.steps button .own{display:block;margin-top:.25rem;font:500 .68rem var(--font-mono);color:var(--accent)}
 .fw{border:1px solid var(--line);background:var(--surface);border-radius:8px}
 .fw+.fw{margin-top:.6rem}
 .fw summary{cursor:pointer;list-style:none;display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;padding:.7rem 1rem;font-weight:500}
@@ -149,7 +152,7 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 
 <main>
 <header class="top">
-  <div class="meta">Actualizado a 11 nov 2026 · Marina, Product Owner</div>
+  <div class="meta">Actualizado a 12 nov 2026 · Marina, Product Owner</div>
   <h1>Viabilidad del SDD en nuestro entorno corporativo</h1>
   <p class="lead">Análisis y evaluación del enfoque SDD (Spec-Driven Development) como posible marco de gobernanza, calidad y aceptación contractual para guiar y validar las entregas de proveedores.</p>
 </header>
@@ -159,11 +162,11 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <p>El objetivo de este estudio es analizar la viabilidad de usar el SDD para gestionar, desde el rol de Product Owner, nuevos desarrollos y procesos de implantación (nuevas aplicaciones y evolutivos), y para guiar y validar los entregables de distintos proveedores, con requisitos estrictos de seguridad y fiabilidad.</p>
   <div class="grid2">
     <div class="panel"><span class="tag acc">Spec propuesta</span><p><i>Spec-anchored</i>: vive junto al código y se actualiza con un delta en cada evolutivo.</p></div>
-    <div class="panel"><span class="tag acc">Documentos</span><p>Constitución corporativa, spec vigente por aplicación y spec de cambio (delta) como contrato.</p></div>
+    <div class="panel"><span class="tag acc">Documentos</span><p>Organizados por niveles: constitución corporativa, contexto de aplicación, spec vigente por capacidad y, en cada cambio, el contrato del PO separado de la solución técnica del proveedor.</p></div>
     <div class="panel"><span class="tag acc">Herramientas proveedor</span><p>Al proveedor se le exigen los artefactos (spec, escenarios y matriz de aceptación), no una herramienta concreta.</p></div>
     <div class="panel"><span class="tag acc">Herramientas PO</span><p>En este estudio se valoran distintas opciones de framework para el trabajo del PO, entre ellas <a href="https://github.com/Fission-AI/OpenSpec" target="_blank" rel="noopener">OpenSpec</a>, <a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">GitHub Spec Kit</a>, <a href="https://github.com/nahisaho/MUSUBI" target="_blank" rel="noopener">MUSUBI</a>, <a href="https://github.com/gotalab/cc-sdd" target="_blank" rel="noopener">cc-sdd</a> y <a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank" rel="noopener">BMAD-METHOD</a>.</p></div>
     <div class="panel"><span class="tag acc">Carga inicial</span><p>Incremental: extraer la spec de cada capacidad solo cuando se toca.</p></div>
-    <div class="panel"><span class="tag acc">Próximos pasos</span><p>Contrastar el documento con las otras áreas implicadas: Sistemas, Seguridad y Arquitectura.</p></div>
+    <div class="panel"><span class="tag acc">Próximos pasos</span><ol class="tight"><li>Contrastar el documento con las otras áreas implicadas: Sistemas, Seguridad y Arquitectura.</li><li>Seleccionar la arquitectura y los componentes para una prueba de concepto (PoC) sobre una aplicación real.</li></ol></div>
   </div>
 </section>
 
@@ -188,12 +191,29 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
 
 <section id="documentos">
   <h2>Modelo documental</h2>
-  <p>Tres documentos: una constitución corporativa, una spec vigente por aplicación y una spec de cambio (delta) por evolutivo.</p>
-  <div class="seg" role="tablist" id="docSeg"></div>
-  <div class="panel" id="docOut" aria-live="polite"></div>
-  <p>La spec de cambio es el contrato. Al cerrar el evolutivo se fusiona en la spec vigente y se archiva. En una aplicación nueva no hay delta: la primera spec que se redacta pasa a ser directamente la spec vigente inicial.</p>
-  <p>La matriz de aceptación no es un documento aparte, sino una sección del delta: el PO la prepara con los escenarios y los requisitos que cubre cada uno, el proveedor la completa con sus pruebas automatizadas y sus resultados, y nosotros registramos el resultado de nuestra aceptación.</p>
-  <p class="note"><i>Las cifras son orientativas y de criterio propio.</i></p>
+  <p>Los frameworks reparten la spec en varios documentos siguiendo la misma regla: separarlos por <b>quién los escribe</b> y por <b>lo a menudo que cambian</b>. Aplicada a nuestro modelo queda así:</p>
+  <div class="tablewrap"><table>
+    <tr><th>Nivel</th><th>Documentos</th><th>Responsable</th><th>Cuándo cambia</th></tr>
+    <tr><td><b>Corporativo</b></td><td>Constitución</td><td>PO / Arquitectura</td><td>Rara vez</td></tr>
+    <tr><td><b>Aplicación</b> (estable)</td><td>Misión o producto; tecnología o arquitectura</td><td>PO (+ proveedor en lo técnico)</td><td>Con cambios de alcance o de arquitectura</td></tr>
+    <tr><td><b>Capacidad</b> (vigente)</td><td>spec.md con requisitos y escenarios</td><td>PO</td><td>Al cerrar cada cambio</td></tr>
+    <tr><td><b>Cambio</b> (contrato)</td><td>Propuesta, delta de requisitos y escenarios, matriz de aceptación</td><td>PO</td><td>En cada cambio; se congela</td></tr>
+    <tr><td><b>Cambio</b> (ejecución)</td><td>Diseño, tareas</td><td>Proveedor</td><td>Durante el desarrollo</td></tr>
+  </table></div>
+  <p>Separarlo así delimita qué parte es <b>contrato</b> (del PO) y qué parte es <b>solución técnica</b> (del proveedor). Al cerrar el cambio, el delta se fusiona en la spec vigente y el cambio se archiva. En una aplicación nueva no hay delta: la primera spec que se redacta pasa a ser directamente la spec vigente inicial.</p>
+  <p>La matriz de aceptación forma parte del contrato del cambio: el PO la prepara con los escenarios y los requisitos que cubre cada uno, el proveedor la completa con sus pruebas automatizadas y sus resultados, y nosotros registramos el resultado de nuestra aceptación.</p>
+  <h3>Cómo lo nombra cada framework</h3>
+  <div class="tablewrap"><table class="fwmap">
+    <tr><th>Nivel</th><th>Nuestro modelo</th><th>GitHub Spec Kit</th><th>OpenSpec</th><th>Kiro</th><th><a href="https://buildermethods.com/agent-os" target="_blank" rel="noopener">Agent OS</a></th></tr>
+    <tr><td><b>Corporativo</b></td><td><code>constitucion.md</code></td><td><code>.specify/memory/constitution.md</code></td><td><code>openspec/config.yaml</code> (context y rules)</td><td>Steering global (<code>~/.kiro/steering/</code>)</td><td><code>agent-os/standards/</code></td></tr>
+    <tr><td><b>Aplicación</b></td><td><code>product.md</code>, <code>tech.md</code></td><td>Dentro de la constitución</td><td>Dentro de <code>config.yaml</code></td><td><code>.kiro/steering/product.md</code>, <code>tech.md</code>, <code>structure.md</code></td><td><code>agent-os/product/mission.md</code>, <code>roadmap.md</code>, <code>tech-stack.md</code></td></tr>
+    <tr><td><b>Capacidad</b> (vigente)</td><td><code>specs/&lt;capacidad&gt;/spec.md</code></td><td>No hay: las specs son por funcionalidad</td><td><code>openspec/specs/</code></td><td>No hay: las specs son por funcionalidad</td><td>No hay</td></tr>
+    <tr><td><b>Cambio</b> (contrato)</td><td><code>proposal.md</code>, <code>delta.md</code>, <code>acceptance.md</code></td><td><code>specs/NNN-funcionalidad/spec.md</code></td><td><code>changes/&lt;cambio&gt;/proposal.md</code> y <code>specs/</code> (deltas)</td><td><code>requirements.md</code></td><td><code>shape.md</code></td></tr>
+    <tr><td><b>Cambio</b> (ejecución)</td><td><code>design.md</code>, <code>tasks.md</code></td><td><code>plan.md</code>, <code>research.md</code>, <code>data-model.md</code>, <code>contracts/</code>, <code>tasks.md</code></td><td><code>design.md</code>, <code>tasks.md</code></td><td><code>design.md</code>, <code>tasks.md</code></td><td><code>plan.md</code></td></tr>
+    <tr><td><b>Archivo</b></td><td><code>changes/archive/</code></td><td>No hay</td><td><code>changes/archive/AAAA-MM-DD-&lt;cambio&gt;/</code></td><td>No hay</td><td>Historial en <code>agent-os/specs/</code></td></tr>
+  </table></div>
+  <p class="note">Estructuras según la documentación de cada proyecto en noviembre de 2026. Ninguno incluye un documento de matriz de aceptación (<code>acceptance.md</code>): es una aportación de nuestro modelo. Solo OpenSpec mantiene una spec vigente por capacidad y archiva los cambios, de ahí su encaje. Agent OS no está en la evaluación de frameworks, pero se incluye porque sus ficheros de producto (<code>mission.md</code>, <code>tech-stack.md</code>) son una referencia muy extendida.</p>
+  <p class="note"><i>Volumen orientativo: constitución de 20 a 40 reglas; spec vigente de 40 a 120 requisitos por aplicación; delta de 5 a 15 requisitos y de 10 a 30 escenarios. Las cifras son orientativas y de criterio propio.</i></p>
 
   <h3>Calculadora de tamaño de un evolutivo</h3>
   <div class="panel">
@@ -214,17 +234,23 @@ dl.gl dt{font-weight:600} dl.gl dd{margin:0;color:var(--muted)}
   <div class="tree" aria-label="Estructura de ficheros">
 <div class="tl" data-on="0">constitucion.md <em>corporativa</em></div>
 <div class="tl">gestexp/</div>
+<div class="tl i1" data-on="1">product.md <em>misión</em></div>
+<div class="tl i1" data-on="1">tech.md <em>tecnología</em></div>
 <div class="tl i1">specs/</div>
 <div class="tl i2">cierre-expedientes/</div>
-<div class="tl i3" data-on="1 4">spec.md <em>spec vigente</em></div>
+<div class="tl i3" data-on="2 6">spec.md <em>vigente</em></div>
 <div class="tl i1">changes/</div>
 <div class="tl i2">cierre-con-permiso/</div>
-<div class="tl i3" data-on="2 3">delta.md <em>delta + matriz</em></div>
+<div class="tl i3" data-on="3">proposal.md <em>contrato</em></div>
+<div class="tl i3" data-on="3">delta.md <em>contrato</em></div>
+<div class="tl i3" data-on="5">acceptance.md <em>contrato</em></div>
+<div class="tl i3 vend" data-on="4">design.md <em>proveedor</em></div>
+<div class="tl i3 vend" data-on="4">tasks.md <em>proveedor</em></div>
 <div class="tl i2">archive/</div>
-<div class="tl i3" data-on="4">cierre-con-permiso/ <em>delta archivado</em></div>
+<div class="tl i3" data-on="6">cierre-con-permiso/ <em>archivado</em></div>
 </div>
   <div class="exdocs">
-  <div class="doc" data-step="0"><div class="dochead">Constitución corporativa <span>Común a todas las aplicaciones</span></div>
+  <div class="doc" data-step="0"><div class="dochead">constitucion.md <span>Corporativo · PO / Arquitectura</span></div>
 <pre class="docbody"><b># Constitución corporativa (extracto)</b>
 <span class="hl">SEG-02</span>  Toda acción que cambie el estado de un expediente DEBE comprobar
         el permiso del usuario y registrar los intentos rechazados.
@@ -232,21 +258,34 @@ SEG-05  Los registros de auditoría DEBEN conservarse 5 años.
 <span class="hl">TRZ-01</span>  Todo requisito DEBE estar cubierto por al menos un escenario
         de aceptación con su prueba automatizada.</pre></div>
 
-  <div class="doc" data-step="1"><div class="dochead">Spec vigente de GESTEXP <span>Antes del cambio</span></div>
+  <div class="doc" data-step="1"><div class="dochead">product.md · tech.md <span>Aplicación · PO (+ proveedor en lo técnico)</span></div>
+<pre class="docbody"><b># product.md · GESTEXP</b>
+Gestión de expedientes de prestaciones: alta, tramitación y cierre.
+Usuarios: tramitadores, supervisores y auditoría interna.
+Capacidades: CAP-EXP-01 Alta · CAP-EXP-02 Tramitación · <span class="hl">CAP-EXP-03 Cierre</span>
+
+<b># tech.md · GESTEXP</b>
+Aplicación web Java con base de datos relacional.
+Autenticación con el directorio corporativo; permisos por rol.
+Auditoría centralizada en el servicio corporativo de logs.</pre></div>
+
+  <div class="doc" data-step="2"><div class="dochead">specs/cierre-expedientes/spec.md <span>Spec vigente · PO · antes del cambio</span></div>
 <pre class="docbody"><b># GESTEXP · Spec vigente</b>
 <b>## CAP-EXP-03 · Cierre de expedientes</b>
 REQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con
              documentos obligatorios pendientes.
 <span class="hl">REQ-EXP-031</span>  El sistema DEBE permitir cerrar un expediente abierto.</pre></div>
 
-  <div class="doc" data-step="2"><div class="dochead">Spec de cambio (delta) <span>El contrato del evolutivo</span></div>
-<pre class="docbody"><b>## Propuesta</b>
+  <div class="doc" data-step="3"><div class="dochead">proposal.md · delta.md <span>Cambio · contrato · PO</span></div>
+<pre class="docbody"><b># proposal.md</b>
+<b>## Propuesta</b>
 Evitar cierres de expediente por usuarios sin permiso y dejar rastro
 de los intentos.
 
 <b>## Reglas de la constitución aplicables</b>
 SEG-02, TRZ-01
 
+<b># delta.md</b>
 <b>## MODIFICADOS</b>
 <span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un
              usuario sin el permiso CERRAR.
@@ -262,11 +301,21 @@ ESC-1 · Cierre sin permiso es rechazado
   ENTONCES el sistema rechaza el cierre
 ESC-2 · Cierre con permiso funciona
 ESC-3 · El intento rechazado queda registrado con usuario y fecha
-ESC-4 · Un cierre permitido no genera registro de rechazo
+ESC-4 · Un cierre permitido no genera registro de rechazo</pre></div>
 
-<b>## Matriz de aceptación</b>  → paso 4</pre></div>
+  <div class="doc" data-step="4"><div class="dochead">design.md · tasks.md <span>Cambio · ejecución · Proveedor</span></div>
+<pre class="docbody"><b># design.md</b>  <i>(lo redacta el proveedor)</i>
+Comprobación del permiso CERRAR en el servicio de expedientes antes
+de cambiar el estado. Los rechazos se envían al servicio corporativo
+de auditoría con usuario, fecha y expediente.
 
-  <div class="doc" data-step="3"><div class="dochead">Delta · sección «Matriz de aceptación» <span>Cobertura y resultados</span></div>
+<b># tasks.md</b>
+[x] T1  Comprobar permiso en ExpedienteService.cerrar()      REQ-EXP-031
+[x] T2  Registrar el rechazo en auditoría                    REQ-EXP-032
+[x] T3  Automatizar ESC-1 a ESC-4 en cierre.feature
+[ ] T4  Actualizar spec.md con el delta y completar acceptance.md</pre></div>
+
+  <div class="doc" data-step="5"><div class="dochead">acceptance.md <span>Cambio · contrato · PO prepara, proveedor y PO completan</span></div>
     <div class="docpad">
       <p class="note" style="margin-top:0">Cobertura n:m: un escenario puede cubrir varios requisitos y reglas, y un requisito suele necesitar varios escenarios. Pulsa los estados para simular primero las pruebas del proveedor y después nuestra aceptación, que solo empieza cuando todas las del proveedor pasan.</p>
       <div class="tablewrap"><table id="matrix"></table></div>
@@ -275,7 +324,7 @@ ESC-4 · Un cierre permitido no genera registro de rechazo
       <p class="note"><b>Prueba automatizada:</b> referencia al caso de prueba del proveedor que ejecuta el escenario, normalmente el propio escenario Gherkin automatizado en su batería de pruebas. Su resultado sale del informe de ejecución de su integración continua. <b>Nuestra aceptación:</b> la repetimos en nuestro entorno de preproducción, como mínimo sobre los escenarios de seguridad y los de mayor riesgo.</p>
     </div></div>
 
-  <div class="doc" data-step="4"><div class="dochead">Spec vigente de GESTEXP <span id="mergeTag">Tras el cierre</span></div>
+  <div class="doc" data-step="6"><div class="dochead">specs/cierre-expedientes/spec.md <span id="mergeTag">Tras el cierre</span></div>
 <pre class="docbody" id="mergeBody"></pre></div>
   </div>
   </div>
@@ -283,14 +332,17 @@ ESC-4 · Un cierre permitido no genera registro de rechazo
 
 <section id="operativo">
   <h2>Modelo operativo</h2>
-  <p>El PO redacta el qué y el porqué, el proveedor cuestiona la viabilidad y la versión 1 se congela como contrato.</p>
+  <p>El PO redacta el qué y el porqué, el proveedor cuestiona la viabilidad y la versión 1 se congela como contrato. El flujo cambia ligeramente según se trate de un evolutivo o de una aplicación nueva.</p>
+  <div class="seg" role="tablist" id="opMode"></div>
   <div class="steps" id="opSteps" role="tablist"></div>
   <div class="panel" id="opOut" aria-live="polite"></div>
   <h3>Cláusulas contractuales</h3>
   <ul class="tight">
-    <li>Los artefactos (spec, pruebas, matriz) son entregables obligatorios.</li>
-    <li>«Terminado» incluye la spec actualizada y la matriz de aceptación.</li>
-    <li>La aceptación se basa en los escenarios aprobados.</li>
+    <li>Los artefactos (spec, pruebas automatizadas, informe de ejecución y matriz de aceptación) son entregables obligatorios.</li>
+    <li>«Terminado» incluye la spec actualizada y la matriz de aceptación completa.</li>
+    <li><b>Entrega no admitida:</b> si no pasan todas las pruebas del proveedor, no cuenta como entrega y el plazo sigue corriendo.</li>
+    <li><b>Entrega rechazada en aceptación:</b> cuenta como entrega. Se fija un número máximo de rondas de corrección antes de escalar.</li>
+    <li>La aceptación se basa en los escenarios de la versión congelada; cualquier cambio posterior genera una nueva versión.</li>
     <li>Se regula el uso de IA y su trazabilidad.</li>
   </ul>
   <p class="note">En entornos regulados la firma humana es indelegable.</p>
@@ -313,7 +365,7 @@ ESC-4 · Un cierre permitido no genera registro de rechazo
   </table></div>
   <p class="note">Valoración de criterio propio, pendiente de contrastar en las pruebas. La licencia MIT es una licencia de código abierto permisiva: permite usar, modificar y distribuir el software libremente, también con fines comerciales, sin pagar licencias. El coste indicado es el de la herramienta: todas necesitan además la licencia del asistente de IA que se use (Claude Code, GitHub Copilot, etc.). Kiro y Tessl no se incluyen porque se dirigen al trabajo del proveedor o de los equipos de desarrollo.</p>
   <h3>Especificar y validar: combinaciones posibles</h3>
-  <p>En nuestro modelo hay tres momentos distintos: especificar, validar la spec antes de congelarla y validar la entrega del proveedor. Ninguna herramienta cubre bien los tres.</p>
+  <p>En nuestro modelo hay tres momentos distintos: especificar, validar la spec antes de congelarla y validar la entrega del proveedor. El uso del SDD de punta a punta requiere una combinación de herramientas.</p>
   <div class="tablewrap"><table>
     <tr><th>Framework</th><th>Especificar</th><th>Validar la spec</th><th>Validar la entrega</th></tr>
     <tr><td><b>OpenSpec</b></td><td>Fuerte: deltas sobre la spec vigente</td><td>Básica: formato y estructura</td><td>No</td></tr>
@@ -484,13 +536,6 @@ seg("fwSeg",FF,function(f){
       +'<p class="fwlink"><a href="'+x.u+'" target="_blank" rel="noopener">Web oficial de '+x.n+' ↗</a></p></div></details>'}).join("");
 });
 
-/* Documentos */
-var DOC=[
- {label:"Constitución corporativa",t:"Reglas con identificador (por ejemplo SEG-02) y nota de verificación.",v:"20 a 40 reglas, 2 a 4 páginas."},
- {label:"Spec vigente",t:"Por aplicación, organizada en capacidades (CAP-xxx) con requisitos (REQ).",v:"40 a 120 requisitos por aplicación."},
- {label:"Spec de cambio (delta)",t:"Propuesta, AÑADIDOS/MODIFICADOS/ELIMINADOS, reglas de la constitución aplicables y matriz de aceptación.",v:"5 a 15 requisitos, 10 a 30 escenarios, 2 a 4 páginas."}];
-seg("docSeg",DOC,function(d){$("docOut").innerHTML='<p style="margin:0"><b>Contenido:</b> '+d.t+'</p><p style="margin:.4rem 0 0"><b>Volumen orientativo:</b> '+d.v+'</p>'});
-
 /* Calculadora */
 function calc(){
   var n=+$("reqN").value;$("reqNv").textContent=n;$("scn").textContent=(2*n)+" a "+(5*n);
@@ -505,11 +550,13 @@ $("reqN").addEventListener("input",calc);calc();
 
 /* Ejemplo GESTEXP */
 var EX=[
- {label:"1 · Constitución",t:"Reglas corporativas con identificador. Cada delta indica cuáles le aplican."},
- {label:"2 · Spec vigente",t:"Cómo se comporta hoy la aplicación, organizada por capacidades y requisitos."},
- {label:"3 · Delta",t:"Qué cambia en este evolutivo: propuesta, requisitos modificados y añadidos, reglas aplicables y escenarios."},
- {label:"4 · Matriz de aceptación",t:"Qué requisitos cubre cada escenario, con el resultado de las pruebas del proveedor y de nuestra aceptación."},
- {label:"5 · Cierre",t:"Solo si pasan las pruebas del proveedor y nuestra aceptación, el delta se fusiona en la spec vigente y se archiva."}];
+ {label:"1 · Constitución",t:"Nivel corporativo: reglas con identificador, comunes a todas las aplicaciones. Cada cambio indica cuáles le aplican."},
+ {label:"2 · Aplicación",t:"Contexto estable de la aplicación: para qué sirve y con qué tecnología está construida."},
+ {label:"3 · Spec vigente",t:"Cómo se comporta hoy cada capacidad, con sus requisitos."},
+ {label:"4 · Contrato del cambio",t:"Lo que redacta el PO y se congela: propuesta, reglas aplicables, requisitos modificados y añadidos, y escenarios."},
+ {label:"5 · Ejecución",t:"La solución técnica, que redacta el proveedor: diseño y tareas, enlazadas con los requisitos."},
+ {label:"6 · Matriz de aceptación",t:"Qué requisitos cubre cada escenario, con el resultado de las pruebas del proveedor y de nuestra aceptación."},
+ {label:"7 · Cierre",t:"Solo si pasan las pruebas del proveedor y nuestra aceptación, el delta se fusiona en la spec vigente y el cambio se archiva."}];
 seg("exSeg",EX,function(x,i){
   $("exLead").textContent=x.t;
   [].forEach.call(document.querySelectorAll(".doc[data-step]"),function(d){d.hidden=+d.dataset.step!==i});
@@ -532,24 +579,35 @@ function drawM(){
   $("matrix").innerHTML=h;
   var n=M.length,pOk=PV.filter(function(x){return x===1}).length,pBad=PV.filter(function(x){return x===2}).length,aOk=AC.filter(function(x){return x===1}).length,aBad=AC.filter(function(x){return x===2}).length,all=pOk===n&&aOk===n;
   $("mbar").style.width=((pOk+aOk)/(2*n)*100)+"%";
-  $("mtxt").textContent=!vAll?"Entrega incompleta: todas las pruebas del proveedor deben pasar antes de entregar (criterio de entrada). Hasta entonces no empieza nuestra aceptación ("+pOk+" de "+n+" pasan).":aBad?aBad+" escenario(s) fallan en nuestra aceptación: el entregable vuelve al proveedor con el detalle de los fallos.":all?"Pasan las pruebas del proveedor y nuestra aceptación: el delta se puede aceptar. Mira el paso 5.":"Las pruebas del proveedor pasan y la entrega se admite. Nuestra aceptación: "+aOk+" de "+n+" escenarios validados.";
+  $("mtxt").textContent=!vAll?"Entrega incompleta: todas las pruebas del proveedor deben pasar antes de entregar (criterio de entrada). Hasta entonces no empieza nuestra aceptación ("+pOk+" de "+n+" pasan).":aBad?aBad+" escenario(s) fallan en nuestra aceptación: el entregable vuelve al proveedor con el detalle de los fallos.":all?"Pasan las pruebas del proveedor y nuestra aceptación: el delta se puede aceptar. Mira el paso 7.":"Las pruebas del proveedor pasan y la entrega se admite. Nuestra aceptación: "+aOk+" de "+n+" escenarios validados.";
   $("mergeTag").textContent=all?"Tras el cierre":"Fusión bloqueada";
   $("mergeBody").innerHTML=all
    ?'<b># GESTEXP · Spec vigente</b>\n<b>## CAP-EXP-03 · Cierre de expedientes</b>\nREQ-EXP-030  El sistema DEBE impedir el cierre de un expediente con\n             documentos obligatorios pendientes.\n<span class="mod">REQ-EXP-031</span>  El sistema DEBE rechazar el cierre de un expediente por un\n             usuario sin el permiso CERRAR.          <i>← modificado</i>\n<span class="add">REQ-EXP-032</span>  CUANDO se rechaza un cierre, el sistema DEBE registrar\n             usuario, fecha y expediente.            <i>← añadido</i>\n\n<i>El delta, con su matriz y la aceptación firmada por el PO,\nqueda archivado en changes/archive/cierre-con-permiso/</i>'
-   :'<i>La fusión está bloqueada: el delta solo se incorpora a la spec vigente\ncuando pasan las pruebas del proveedor y nuestra aceptación (paso 4).\n\n'+(!vAll?'Pruebas del proveedor: '+pOk+' de '+n+' pasan. La entrega aún no se admite.':'Pruebas del proveedor: todas pasan.\nNuestra aceptación: '+aOk+' de '+n+' pasan'+(aBad?', '+aBad+' fallan: el entregable vuelve al proveedor':'')+'.')+'</i>';
+   :'<i>La fusión está bloqueada: el delta solo se incorpora a la spec vigente\ncuando pasan las pruebas del proveedor y nuestra aceptación (paso 6).\n\n'+(!vAll?'Pruebas del proveedor: '+pOk+' de '+n+' pasan. La entrega aún no se admite.':'Pruebas del proveedor: todas pasan.\nNuestra aceptación: '+aOk+' de '+n+' pasan'+(aBad?', '+aBad+' fallan: el entregable vuelve al proveedor':'')+'.')+'</i>';
 }
 $("matrix").addEventListener("click",function(e){var b=e.target.closest("button[data-i]");if(!b)return;var i=+b.dataset.i,A=b.dataset.k==="p"?PV:AC;A[i]=(A[i]+1)%3;drawM()});
 drawM();
 
 /* Operativo */
-var OP=[
- {label:"Borrador",t:"El PO redacta la spec de cambio con apoyo de IA: el qué y el porqué."},
- {label:"Desafío",t:"El proveedor revisa viabilidad, ambigüedades y estimación."},
- {label:"Congelación",t:"La versión 1 queda congelada y es el contrato."},
- {label:"Entrega",t:"El proveedor entrega código, pruebas, spec actualizada y matriz de aceptación rellena."},
- {label:"Validación",t:"El PO revisa el delta y la cobertura de escenarios por pruebas, y ejecuta pruebas de aceptación propias en el CI del proveedor."},
- {label:"Cierre",t:"El delta se fusiona en la spec vigente y se archiva."}];
-seg("opSteps",OP,function(o){$("opOut").innerHTML='<b>'+o.label+'</b><p style="margin:.3rem 0 0">'+o.t+'</p>'},{num:true});
+var OPM={
+ evo:[
+  {label:"Borrador",who:["PO"],t:"El PO redacta el delta con apoyo de IA: propuesta, requisitos modificados y añadidos, reglas de la constitución aplicables y escenarios de aceptación."},
+  {label:"Desafío",who:["Proveedor"],t:"El proveedor revisa viabilidad, ambigüedades y estimación, y propone ajustes."},
+  {label:"Congelación",who:["PO","Proveedor"],t:"Ambos acuerdan la versión 1 del delta, que queda congelada como contrato. Cualquier cambio posterior genera una nueva versión."},
+  {label:"Desarrollo y entrega",who:["Proveedor"],t:"El proveedor redacta el diseño y las tareas, implementa, automatiza los escenarios y ejecuta su batería de pruebas. Solo entrega cuando todas pasan (criterio de entrada): código, pruebas, informe de ejecución y matriz completa."},
+  {label:"Aceptación",who:["PO"],t:"El PO revisa la matriz y la cobertura, y repite la aceptación en nuestro entorno de preproducción, como mínimo en los escenarios de seguridad y de mayor riesgo. Si algo falla, el entregable vuelve al proveedor con el detalle."},
+  {label:"Cierre",who:["PO"],t:"El PO firma la aceptación. El delta se fusiona en la spec vigente y se archiva."}],
+ nueva:[
+  {label:"Borrador",who:["PO"],t:"No hay spec vigente previa: el PO redacta la spec inicial completa, organizada por capacidades, junto con la constitución aplicable y los escenarios. Conviene trocearla en entregas por capacidad."},
+  {label:"Desafío",who:["Proveedor"],t:"El proveedor revisa viabilidad, ambigüedades y estimación, y propone el diseño técnico."},
+  {label:"Congelación",who:["PO","Proveedor"],t:"Ambos acuerdan la versión 1 de la spec inicial (o de cada capacidad), que queda congelada como contrato."},
+  {label:"Desarrollo y entrega",who:["Proveedor"],t:"Igual que en un evolutivo: el proveedor solo entrega cuando todas sus pruebas pasan, con código, pruebas, informe de ejecución y matriz completa."},
+  {label:"Aceptación",who:["PO"],t:"Igual que en un evolutivo: revisión de la matriz y aceptación propia en preproducción."},
+  {label:"Cierre",who:["PO"],t:"La spec inicial aceptada pasa a ser la spec vigente de la aplicación. A partir de aquí, cada cambio se gestiona como evolutivo, con su delta."}]};
+seg("opMode",[{label:"Evolutivo",k:"evo"},{label:"Aplicación nueva",k:"nueva"}],function(m){
+  var items=OPM[m.k].map(function(o){return {label:o.label+'<span class="own">'+o.who.join(" + ")+'</span>',name:o.label,who:o.who,t:o.t}});
+  seg("opSteps",items,function(o){$("opOut").innerHTML='<b>'+o.name+'</b> '+o.who.map(function(w){return'<span class="tag aud">'+w+'</span>'}).join(" ")+'<p style="margin:.4rem 0 0">'+o.t+'</p>'},{num:true});
+});
 
 /* Redacción */
 var DR=[
