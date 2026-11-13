@@ -18,10 +18,12 @@ Investigación y análisis sobre frameworks SDD
 ARTEFACTOS CLAUDE
 
 Te cuento una historia
+
 https://claude.ai/artifact/1ZWtmQvAeLidPAUCks7HpC?sk=hvxH1fJ3cuO0D-rXfkCPfA
 
 Te cuento la película :)
-https://claude.ai/artifact/LuMHSr6eJqyhvqQD8E5cT3?sk=vbsTFAEmvYMERQAVshpnSQ#play-15dd8cd198dd
+
+https://claude.ai/artifact/45KNnxhGttzv4cveJM5NLZ?sk=ww4PkXuH7JloeBfgQlwd_w
 https://claude.ai/artifact/X6w8iyoXiberSwLhjQD9GL?sk=qrRtnFgnUAYCob3WGAnR3w
 https://claude.ai/artifact/NUZSWRhArchax8aMdXFGMC?sk=B9Q-XnXaUMHzZPgIUUYl_g
 
