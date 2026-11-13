@@ -18,3 +18,4 @@ Investigación y análisis sobre frameworks SDD
 ARTEFACTOS CLAUDE
 
 https://claude.ai/artifact/LuMHSr6eJqyhvqQD8E5cT3?sk=vbsTFAEmvYMERQAVshpnSQ#play-15dd8cd198dd
+https://claude.ai/artifact/1ZWtmQvAeLidPAUCks7HpC?sk=hvxH1fJ3cuO0D-rXfkCPfA
