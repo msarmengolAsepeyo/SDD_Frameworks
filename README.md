@@ -11,6 +11,7 @@ Investigación y análisis sobre frameworks SDD
 | Studio report v2 | https://msarmengolasepeyo.github.io/SDD_Frameworks/Studio_report_v2.html |
 | Claude report | https://msarmengolasepeyo.github.io/SDD_Frameworks/Claude_report.html |
 | Claude report v2| https://msarmengolasepeyo.github.io/SDD_Frameworks/Claude_report_v2.html |
+| Claude report v3| https://msarmengolasepeyo.github.io/SDD_Frameworks/Claude_report_v3.html |
 | Informe de implantación SDD | https://msarmengolasepeyo.github.io/SDD_Frameworks/SDD_informe_implantacion.html |
 
 ---------------------------
